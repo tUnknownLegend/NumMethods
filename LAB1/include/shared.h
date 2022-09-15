@@ -6,7 +6,7 @@
 // input file for vector
 #define IN_FILE_VECTOR "../../../inputVector.txt"
 // output file for matrix
-#define OUT_FILE_MATRIX "../../../outputMatrix.txt"
+#define OUT_FILE_MATRIX stdout
 // output file for vector
 #define OUT_FILE_VECTOR "../../../outputVector.txt"
 // compare for double

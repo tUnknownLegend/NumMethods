@@ -16,6 +16,6 @@ set(HEADERS ./include/shared.h ./include/Gauss.h ./include/QR.h)
 #find_package(GTest REQUIRED)
 #include_directories(${GTEST_INCLUDE_DIRS})
 
-add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS} "include/gt.h")
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
 #install(TARGETS ${PROJECT_NAME} DESTINATION "LAB1/bin")
