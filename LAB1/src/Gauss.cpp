@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include "shared.h"
 
 using std::vector;
@@ -9,7 +9,7 @@ vector<double> CalcGaussMethod() {
 	inputMatrix(matrix);
 	inputVector(rightVect);
 
-	vector<double> resultVect(rightVect.size(), 0.0);
+	vector<double> resultVect(rightVect.size(), 0.0); // инициализация вектора 
 
 	for (int k = 0; k < rightVect.size(); ++k) {
 		//  partial selection
@@ -17,6 +17,7 @@ vector<double> CalcGaussMethod() {
 		for (int i = k + 1; i < rightVect.size(); ++i) {
 			maxValInd = matrix[i][k] > matrix[maxValInd][k] ? i : maxValInd;
 		}
+
 		
 		if (abs(matrix[maxValInd][k]) > COMPARE_RATE) {
 			std::swap(matrix[maxValInd], matrix[k]);
