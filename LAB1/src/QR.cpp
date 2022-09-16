@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include "shared.h"
 
 using std::vector;
@@ -46,15 +46,38 @@ vector<vector<double>> transpoceMatrix(const vector<vector<double>>& matrix) {
 
 vector<double> CalcQRmethod() {
 	vector<vector<double>> matrix;
+	//vector<vector<double>> R; 
+	//vector<vector<double>> Q;
+	//vector<vector<double>> T_vr;
 	vector<double> rightVect;
 	inputMatrix(matrix);
 	inputVector(rightVect);
-
+	double c;
+	double s;
+	bool flag;
 	vector<double> resultVect(rightVect.size(), 0.0);
+	vector<double> add(rightVect.size(), 0.0);
 
+	for (int i = 0; i < rightVect.size() - 1; ++i) {
+		for (int j = i + 1; j < rightVect.size(); ++j) {
+			if (abs(matrix[i][j]) > COMPARE_RATE) {
+				c = matrix[i][i] / sqrt(matrix[i][i] * matrix[i][i] + matrix[j][i] * matrix[j][i]);
+				s = matrix[j][i] / sqrt(matrix[i][i] * matrix[i][i] + matrix[j][i] * matrix[j][i]);
+				for (int k = 0; k < rightVect.size(); ++k) {
+					double tm = matrix[i][k];
+					matrix[i][k] = c * matrix[i][k] + s * matrix[j][k];
+					matrix[j][k] = -s * tm + c * matrix[j][k];
+				}
+				double tv = add[i];
+				add[i] = c * add[i] + s * add[j];
+				add[j] = -s * tv + c * add[j];
+			}
+		}
+		
+	}
 	//outputMatrix(matrixMultiplication(matrix, matrix));
 	//outputVector(MultiplicationMatrixvsVector(matrix, rightVect));
-	outputMatrix(transpoceMatrix(matrix));
+	//outputMatrix(transpoceMatrix(matrix));
 	return {};
 }
 
@@ -64,39 +87,3 @@ vector<double> getQR() {
 
 	return res;
 }
-
-
-
-/* vector<double> QR_decomp(const matrix<T>& A, const vector<T>& b)
-{
-	matrix<T> Q, R, T_vr;
-	vector<T> x, add;
-	T c, s;
-	bool flag;
-	equal(R, A);
-	add = b;
-
-	for (int i = 0; i < A.size() - 1; ++i)
-	{
-		for (int j = i + 1; j < A.size(); ++j)
-		{
-			if (abs(R[i][j]) > 0.1e-10)
-			{
-				c = R[i][i] / sqrt(R[i][i] * R[i][i] + R[j][i] * R[j][i]);
-				s = R[j][i] / sqrt(R[i][i] * R[i][i] + R[j][i] * R[j][i]);
-				for (int k = 0; k < A.size(); ++k)
-				{
-					T tm = R[i][k];
-					R[i][k] = c * R[i][k] + s * R[j][k];
-					R[j][k] = -s * tm + c * R[j][k];
-					if (abs(R[j][k]) < 0.1e-10)
-					{
-						R[j][k] = 0.0;
-					}
-				}
-				T tv = add[i];
-				add[i] = c * add[i] + s * add[j];
-				add[j] = -s * tv + c * add[j];
-			}
-		}
-}*/
