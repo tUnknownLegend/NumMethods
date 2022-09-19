@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.3) (preloaded format=pdflatex 2022.6.11)  18 SEP 2022 18:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.3) (preloaded format=pdflatex 2022.6.11)  19 SEP 2022 20:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -709,13 +709,13 @@ File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 Package hyperref Info: Link coloring ON on input line 28.
 \c@lstlisting=\count306
 <<t2a.cmap>><<ot1.cmap>><<oml.cmap>><<oms.cmap>><<omx.cmap>>
-LaTeX Font Info:    Trying to load font information for U+msa on input line 43.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 40.
 
 
 (C:\Users\pinev\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 43.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 40.
 
 
 (C:\Users\pinev\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
@@ -724,7 +724,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 [1{C:/Users/pinev/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}
 
 ] [2]
-Overfull \hbox (43.84473pt too wide) in paragraph at lines 76--79
+Overfull \hbox (43.84473pt too wide) in paragraph at lines 93--96
 \T2A/cmr/m/n/12 URL: https://www.phys.uconn.edu/ rozman/Courses/m3511_18s/downl
 oads/condnumber.pdf 
  []
@@ -737,11 +737,11 @@ See the caption package documentation for explanation.
 Here is how much of TeX's memory you used:
  15750 strings out of 478614
  252204 string characters out of 2843122
- 547729 words of memory out of 3000000
+ 545729 words of memory out of 3000000
  33617 multiletter control sequences out of 15000+600000
  481366 words of font info for 62 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 87i,8n,91p,779b,563s stack positions out of 10000i,1000n,20000p,200000b,80000s
+ 87i,8n,91p,1261b,600s stack positions out of 10000i,1000n,20000p,200000b,80000s
  <C:\Users\pinev\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappe
 n/ec/dpi600\tcrm1200.pk> <C:\Users\pinev\AppData\Local\MiKTeX\fonts/pk/ljfour/l
 h/lh-t2a/dpi600\labx1200.pk> <C:\Users\pinev\AppData\Local\MiKTeX\fonts/pk/ljfo
@@ -757,9 +757,9 @@ ers/pinev/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb
 msy10.pfb><C:/Users/pinev/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsf
 onts/cm/cmsy8.pfb><C:/Users/pinev/AppData/Local/Programs/MiKTeX/fonts/type1/pub
 lic/amsfonts/symbols/msbm10.pfb>
-Output written on report.pdf (3 pages, 140802 bytes).
+Output written on report.pdf (3 pages, 144735 bytes).
 PDF statistics:
- 278 PDF objects out of 1000 (max. 8388607)
+ 283 PDF objects out of 1000 (max. 8388607)
  28 named destinations out of 1000 (max. 500000)
  37 words of extra memory for PDF output out of 10000 (max. 10000000)
 
