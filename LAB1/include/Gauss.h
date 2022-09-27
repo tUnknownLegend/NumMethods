@@ -5,6 +5,6 @@
 
 #include <vector>
 
-std::vector<double> CalcGaussMethod();
+std::vector<double> CalcGaussMethod(std::vector<std::vector<double>> matr, std::vector<double> vect);
 
 std::vector<double> getGauss();

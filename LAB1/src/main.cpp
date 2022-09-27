@@ -3,6 +3,7 @@
 
 int main()
 {
+	
 	//getGauss();
 	getQR();
 

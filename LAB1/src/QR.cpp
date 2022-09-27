@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include "shared.h"
+#include "Gauss.h"
 
 using std::vector;
 
@@ -43,15 +44,61 @@ vector<vector<double>> transpoceMatrix(const vector<vector<double>>& matrix) {
 	return resMatrix;
 }
 
+vector<vector<double>> identityMatrix(vector<vector<double>>& matrix, int size) {
+	vector<vector<double>> resMatrix;
+	vector<double> str;
+	for (int i = 0; i < size; ++i) {
+		for (int j = 0; j <size; ++j) {
+			if (i == j) {
+				str.push_back(1.0);
+			}
+			else{
+				str.push_back(0.0);
+			}
+		}
+		resMatrix.push_back(str);
+		str.clear();
+	}
+	return resMatrix;
+}
+
+  vector<vector<double>> inverseMatrix(vector<vector<double>>& matrix) {
+	vector<double> res(matrix.size(),0.0);
+	vector<double> str;
+	vector<vector<double>> resMatrix;
+
+	vector<vector<double>> E;
+	vector<vector<double>> EE;
+	E.reserve(matrix.size());
+	EE =identityMatrix(E, matrix.size());
+
+	for (int i = 0; i < matrix.size(); ++i) {
+		for (int j = 0; j < matrix.size(); ++j) {
+			str.push_back(EE[j][i]);
+		}
+		res = CalcGaussMethod(matrix,str);
+		resMatrix.push_back(res);
+		str.clear();
+	}
+	return transpoceMatrix(resMatrix);
+	/*for (int i = 0; i < matrix.size(); ++i)
+	{
+		resMatrix.push_back(CalcGaussMethod(matrix, E[i]));
+	}
+	return transpoceMatrix(resMatrix);*/
+}
+
+
+
 
 vector<double> CalcQRmethod() {
 	vector<vector<double>> matrix;
-	//vector<vector<double>> R; 
 	//vector<vector<double>> Q;
 	//vector<vector<double>> T_vr;
 	vector<double> rightVect;
 	inputMatrix(matrix);
 	inputVector(rightVect);
+	vector<vector<double>> R(matrix);
 	double c;
 	double s;
 	bool flag;
@@ -60,13 +107,13 @@ vector<double> CalcQRmethod() {
 
 	for (int i = 0; i < rightVect.size() - 1; ++i) {
 		for (int j = i + 1; j < rightVect.size(); ++j) {
-			if (abs(matrix[i][j]) > COMPARE_RATE) {
-				c = matrix[i][i] / sqrt(matrix[i][i] * matrix[i][i] + matrix[j][i] * matrix[j][i]);
-				s = matrix[j][i] / sqrt(matrix[i][i] * matrix[i][i] + matrix[j][i] * matrix[j][i]);
+			if (abs(R[i][j]) > COMPARE_RATE) {
+				c = R[i][i] / sqrt(R[i][i] * R[i][i] + R[j][i] * R[j][i]);
+				s = R[j][i] / sqrt(R[i][i] * R[i][i] + R[j][i] * R[j][i]);
 				for (int k = 0; k < rightVect.size(); ++k) {
-					double tm = matrix[i][k];
-					matrix[i][k] = c * matrix[i][k] + s * matrix[j][k];
-					matrix[j][k] = -s * tm + c * matrix[j][k];
+					double tm = R[i][k];
+					R[i][k] = c * R[i][k] + s * R[j][k];
+					R[j][k] = -s * tm + c * R[j][k];
 				}
 				double tv = add[i];
 				add[i] = c * add[i] + s * add[j];
@@ -75,6 +122,11 @@ vector<double> CalcQRmethod() {
 		}
 		
 	}
+
+	vector<vector<double>> ZZ = inverseMatrix(matrix);
+	outputMatrix(ZZ);
+	//outputMatrix(identityMatrix(matrix));
+	//outputMatrix(R);
 	//outputMatrix(matrixMultiplication(matrix, matrix));
 	//outputVector(MultiplicationMatrixvsVector(matrix, rightVect));
 	//outputMatrix(transpoceMatrix(matrix));
