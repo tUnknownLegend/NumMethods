@@ -320,10 +320,67 @@ vector<vector<double>> inverseMatrix(vector<vector<double>>& matrix) {
 	}
 	return transpoceMatrix(resMatrix);
 }
+
+//Умножение матриц
+vector<vector<double>> matrixMultiplication(const vector<vector<double>>& firstM, const vector<vector<double>>& secondM) {
+	vector<vector<double>> resMatrix(firstM.size(), vector<double>(firstM.size(), 0));
+
+	for (int i = 0; i < firstM.size(); ++i) {
+		for (int j = 0; j < secondM.size(); ++j) {
+			for (int k = 0; k < firstM.size(); ++k) {
+				resMatrix[i][j] += firstM[i][k] * secondM[k][j];
+			}
+		}
+	}
+
+	return resMatrix;
+}
+
 // Вычисление числа обусловленности
 double condMatrix(vector<vector<double>>& A, double(*normMatrix)(const vector<vector<double>>&))
 {
 	return normMatrix(inverseMatrix(A)) * normMatrix(A);
 }
 
+// Вносим возмущение, находим решение с возмущением, сравниваем его с решением без возмущений 
+void disturbAndCond(vector<vector<double>>& A, vector<double> b, const vector<double>& x, double(*normVector)(const vector<double>&))
+{
+	vector<double> db;
+	for (int i = 0; i < b.size(); ++i)
+	{
+		db.push_back(0.01);
+	}
 
+	vector<double> b1;
+	for (int i = 0; i < b.size(); ++i)
+	{
+		b1.push_back(b[i] + db[i]);
+	}
+
+	vector<double> x1(b.size(), 0.0);
+	//vector<double> x1;
+	vector<double> dx;
+
+	std::cout << "Vector b with disturbance: ";
+	outputOnTheScreenVector(b1);
+	std::cout << std::endl;
+
+	x1 = CalcGaussMethod(A, b1);
+	std::cout << "Vector x with disturbance: ";
+	outputOnTheScreenVector(x1);
+	std::cout << std::endl;
+
+	//cout << "\nНорма вектора невязки (с возмущением): " << normResidual(A, b1, x1, norm_1_vec);
+
+	std::cout << "Comparison of solutions: ";
+	for (int i = 0; i < x.size(); ++i)
+	{
+		dx.push_back(x1[i] - x[i]);
+	}
+	outputOnTheScreenVector(dx);
+	std::cout << std::endl;
+
+	double deltaX = normVector(dx) / normVector(x);
+	double deltaB = normVector(db) / normVector(b);
+	std::cout << "cond A >=  " << deltaX / deltaB << std::endl;
+}

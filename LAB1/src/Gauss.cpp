@@ -55,6 +55,12 @@ vector<double> getGauss() {
 	inputVector(rightVect);
 	vector<double> res = CalcGaussMethod(matrix,rightVect);
 	outputVector(res);
+	std::cout << "Inverse matrix:" << std::endl;
+	outputOnTheScreenMatrix(inverseMatrix(matrix));
+	std::cout << std::endl;
+	std::cout << "Matrix multiplication:" << std::endl;
+	outputOnTheScreenMatrix(matrixMultiplication(matrix, inverseMatrix(matrix)));
+	disturbAndCond(matrix, rightVect, res, norm1Vector);
 
 	return res;
 }

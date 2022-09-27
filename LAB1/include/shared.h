@@ -58,3 +58,7 @@ double condMatrix(std::vector<std::vector<double>>& A, double(*normMatrix)(const
 void outputOnTheScreenMatrix(const std::vector<std::vector<double>>& matrix);
 
 void outputOnTheScreenVector(const std::vector<double>& vector);
+
+std::vector<std::vector<double>> matrixMultiplication(const std::vector<std::vector<double>>& firstM, const std::vector<std::vector<double>>& secondM);
+
+void disturbAndCond(std::vector<std::vector<double>>& A, std::vector<double> b, const std::vector<double>& x, double(*normVector)(const std::vector<double>&));
