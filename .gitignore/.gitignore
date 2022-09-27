@@ -1,4 +1,8 @@
+*.idea/
+*.vs/
+*/cmake-build-debug/
+*/out/
 .idea/
 .vs/
-cmake-build-debug/
-out/
+/cmake-build-debug/
+/out/
