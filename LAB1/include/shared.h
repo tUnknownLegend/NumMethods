@@ -33,3 +33,28 @@ void outputVector(int amtOfElements);
 void inputVector(std::vector<double>& vect);
 
 void outputVector(const std::vector<double>& vect);
+
+double normInfVector(const std::vector<double>& vect);
+
+double norm1Vector(const std::vector<double>& vect);
+
+double normInfMatrix(const std::vector<std::vector<double>>& matrix);
+
+double norm1Matrix(const std::vector<std::vector<double>>& matrix);
+
+std::vector<double> MultiplicationMatrixvsVector(const std::vector<std::vector<double>>& matrix, const std::vector<double>& vect);
+
+double normDiffer(const std::vector<std::vector<double>>& A, const std::vector<double>& b, const std::vector<double>& x,
+	double(*normVector)(const std::vector<double>&));
+
+std::vector<std::vector<double>> transpoceMatrix(const std::vector<std::vector<double>>& matrix);
+
+std::vector<std::vector<double>> identityMatrix(std::vector<std::vector<double>>& matrix, int size);
+
+std::vector<std::vector<double>> inverseMatrix(std::vector<std::vector<double>>& matrix);
+
+double condMatrix(std::vector<std::vector<double>>& A, double(*normMatrix)(const std::vector<std::vector<double>>&));
+
+void outputOnTheScreenMatrix(const std::vector<std::vector<double>>& matrix);
+
+void outputOnTheScreenVector(const std::vector<double>& vector);

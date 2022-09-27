@@ -1,7 +1,8 @@
-#include <fstream>
+﻿#include <fstream>
 #include <iostream>
 #include <random>
 #include "shared.h"
+#include "Gauss.h"
 
 using std::ifstream;
 using std::vector;
@@ -153,3 +154,176 @@ void outputMatrix(int amtOfVertices) {
 	}
 	outFile.close();
 }
+
+// вывод матрицы на экран
+void outputOnTheScreenMatrix(const vector<vector<double>>& matrix)
+{
+	for (int i = 0; i < matrix.size(); ++i)
+	{
+		for (int j = 0; j < matrix.size(); ++j)
+		{
+			cout << matrix[i][j] << ' ';
+		}
+		cout << std::endl;
+	}
+}
+
+// вывод вектора на экран
+void outputOnTheScreenVector(const std::vector<double>& vector)
+{
+	for (int i = 0; i < vector.size(); ++i)
+	{
+		cout << vector[i] << ' ';
+	}
+	cout << std::endl;
+}
+// Кубическая норма вектора
+double normInfVector(const vector<double>& vect)
+{
+	double norm = abs(vect[0]);
+	for (int i = 1; i < vect.size(); ++i)
+	{
+		if (norm < abs(vect[i]))
+			norm = abs(vect[i]);
+	}
+	return norm;
+}
+
+// Октэрическая норма вектора
+double norm1Vector(const vector<double>& vect)
+{
+	double norm = 0;
+	for (int i = 0; i < vect.size(); ++i)
+	{
+		norm += abs(vect[i]);
+	}
+	return norm;
+}
+
+// Кубическая норма матрицы
+double normInfMatrix(const vector<vector<double>>& matrix)
+{
+	double norm = 0;
+
+	for (int i = 0; i < matrix.size(); ++i)
+	{
+		double sum = 0;
+		for (int j = 0; j < matrix.size(); ++j)
+		{
+			sum += abs(matrix[i][j]);
+		}
+		if (norm < sum)
+			norm = sum;
+	}
+	return norm;
+}
+
+// Октаэдрическая норма матрицы
+double norm1Matrix(const vector<vector<double>>& matrix)
+{
+	double norm = 0;
+
+	for (int j = 0; j < matrix.size(); ++j)
+	{
+		double sum = 0;
+		for (int i = 0; i < matrix.size(); ++i)
+		{
+			sum += abs(matrix[i][j]);
+		}
+		if (norm < sum)
+			norm = sum;
+	}
+	return norm;
+}
+
+vector<double> MultiplicationMatrixvsVector(const vector<vector<double>>& matrix, const vector<double>& vect) {
+	vector<double> resVector;
+	double s;
+	for (int i = 0; i < matrix.size(); ++i) {
+		s = 0;
+		for (int j = 0; j < matrix.size(); ++j) {
+			s += matrix[i][j] * vect[j];
+		}
+		resVector.push_back(s);
+	}
+
+	return resVector;
+}
+
+// Норма невязки 
+double normDiffer(const vector<vector<double>>& A, const vector<double>& b, const vector<double>& x,
+	 double(*normVector)(const vector<double>&)) {
+	vector<double> differ;
+	vector<double> b1;
+
+	//differ.reserve(A.size());
+
+	b1 = MultiplicationMatrixvsVector(A, x);
+
+	for (int i = 0; i < b.size(); ++i)
+	{
+		differ.push_back(b[i] - b1[i]);
+	}
+	return normVector(differ);
+}
+
+vector<vector<double>> transpoceMatrix(const vector<vector<double>>& matrix) {
+	vector<vector<double>> resMatrix;
+	vector<double> str;
+	for (int j = 0; j < matrix.size(); ++j) {
+		for (int i = 0; i < matrix.size(); ++i) {
+			str.push_back(matrix[i][j]);
+		}
+		resMatrix.push_back(str);
+		str.clear();
+	}
+	return resMatrix;
+}
+
+// Единичная матрица
+vector<vector<double>> identityMatrix(vector<vector<double>>& matrix, int size) {
+	vector<vector<double>> resMatrix;
+	vector<double> str;
+	for (int i = 0; i < size; ++i) {
+		for (int j = 0; j < size; ++j) {
+			if (i == j) {
+				str.push_back(1.0);
+			}
+			else {
+				str.push_back(0.0);
+			}
+		}
+		resMatrix.push_back(str);
+		str.clear();
+	}
+	return resMatrix;
+}
+
+// Обратная матрица
+vector<vector<double>> inverseMatrix(vector<vector<double>>& matrix) {
+	vector<double> res(matrix.size(), 0.0);
+	vector<double> str;
+	vector<vector<double>> resMatrix;
+
+	vector<vector<double>> E;
+	vector<vector<double>> EE;
+	E.reserve(matrix.size());
+	EE = identityMatrix(E, matrix.size());
+
+	for (int i = 0; i < matrix.size(); ++i) {
+		for (int j = 0; j < matrix.size(); ++j) {
+			str.push_back(EE[j][i]);
+		}
+		res = CalcGaussMethod(matrix, str);
+		resMatrix.push_back(res);
+		str.clear();
+	}
+	return transpoceMatrix(resMatrix);
+}
+// Вычисление числа обусловленности
+double condMatrix(vector<vector<double>>& A, double(*normMatrix)(const vector<vector<double>>&))
+{
+	return normMatrix(inverseMatrix(A)) * normMatrix(A);
+}
+
+
