@@ -3,13 +3,16 @@
 
 using std::vector;
 
-vector<double> CalcGaussMethod(vector<vector<double>> matr, vector<double> vect) {
+#define TT double
 
-	vector<double> resultVect(vect.size(), 0.0); // инициализация вектора 
+
+vector<TT> CalcGaussMethod(vector<vector<TT>> matr, vector<TT> vect) {
+
+	vector<TT> resultVect(vect.size(), 0.0); // инициализация вектора 
 
 	for (int k = 0; k < vect.size(); ++k) {
 		//  partial selection
-		double maxValInd = k;
+		TT maxValInd = k;
 		for (int i = k + 1; i <vect.size(); ++i) {
 			maxValInd = matr[i][k] > matr[maxValInd][k] ? i : maxValInd;
 		}
@@ -21,7 +24,7 @@ vector<double> CalcGaussMethod(vector<vector<double>> matr, vector<double> vect)
 
 			//  straight
 			for (int i = k + 1; i < vect.size(); ++i) {
-				double c = (matr[i][k] / matr[k][k]);
+				TT c = (matr[i][k] / matr[k][k]);
 				for (int j = k; j < vect.size(); ++j) {
 					matr[i][j] -= c * matr[k][j];
 				}
@@ -37,7 +40,7 @@ vector<double> CalcGaussMethod(vector<vector<double>> matr, vector<double> vect)
 
 	//  reverse
 	for (int i = vect.size() - 1; i >= 0; --i) {
-		double sumJ = 0.0;
+		TT sumJ = 0.0;
 		for (int j = i + 1; j < vect.size(); ++j) {
 			sumJ += matr[i][j] * resultVect[j];
 		}
@@ -48,18 +51,25 @@ vector<double> CalcGaussMethod(vector<vector<double>> matr, vector<double> vect)
 	return resultVect;
 }
 
-vector<double> getGauss() {
-	vector<vector<double>> matrix;
-	vector<double> rightVect;
+vector<TT> getGauss() {
+	vector<vector<TT>> matrix;
+	vector<TT> rightVect;
 	inputMatrix(matrix);
 	inputVector(rightVect);
-	vector<double> res = CalcGaussMethod(matrix,rightVect);
+	vector<TT> res = CalcGaussMethod(matrix,rightVect);
 	outputVector(res);
 	std::cout << "Inverse matrix:" << std::endl;
 	outputOnTheScreenMatrix(inverseMatrix(matrix));
 	std::cout << std::endl;
 	std::cout << "Matrix multiplication:" << std::endl;
 	outputOnTheScreenMatrix(matrixMultiplication(matrix, inverseMatrix(matrix)));
+	std::cout << std::endl;
+	std::cout << "Residual norm : " << normDiffer(matrix, rightVect, res, norm1Vector) << std::endl;
+	std::cout << std::endl;
+	std::cout << "condA_1 = " << condMatrix(matrix, norm1Matrix) << std::endl;
+	std::cout << std::endl;
+	std::cout << "condA_inf = " << condMatrix(matrix, normInfMatrix) << std::endl;
+	std::cout << std::endl;
 	disturbAndCond(matrix, rightVect, res, norm1Vector);
 
 	return res;

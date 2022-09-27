@@ -10,6 +10,8 @@ using std::cerr;
 using std::ofstream;
 using std::cout;
 
+#define TT double
+
 //  This function generates a random double in [i, j]
 double GetRandomDouble(double i, double j) {
 	std::random_device rd;  // Will be used to obtain a seed for the random number engine
@@ -18,7 +20,7 @@ double GetRandomDouble(double i, double j) {
 	return dis(gen);
 }
 
-void inputMatrix(vector<vector<double>>& matrix) {
+void inputMatrix(vector<vector<TT>>& matrix) {
 	ifstream inFile(IN_FILE_MATRIX);
 	if (!inFile.is_open()) {
 		cerr << "error // input.txt open\n";
@@ -30,8 +32,8 @@ void inputMatrix(vector<vector<double>>& matrix) {
 	matrix.reserve(amtOfVertices);
 
 	{
-		vector<double> str;
-		double node = 0.0;
+		vector<TT> str;
+		TT node = 0.0;
 		for (int i = 0; i < amtOfVertices; ++i) {
 
 			for (int j = 0; j < amtOfVertices; ++j) {
@@ -45,7 +47,7 @@ void inputMatrix(vector<vector<double>>& matrix) {
 	inFile.close();
 }
 
-void inputVector(vector<double>& vect) {
+void inputVector(vector<TT>& vect) {
 	ifstream inFile(IN_FILE_VECTOR);
 	if (!inFile.is_open()) {
 		cerr << "error // input.txt open\n";
@@ -57,8 +59,8 @@ void inputVector(vector<double>& vect) {
 	vect.reserve(amtOfVertices);
 
 	{
-		vector<double> str;
-		double node = 0.0;
+		vector<TT> str;
+		TT node = 0.0;
 		for (int j = 0; j < amtOfVertices; ++j) {
 			inFile >> node;
 			str.push_back(node);
@@ -80,7 +82,7 @@ void outputVector(int amtOfElements) {
 	{
 		const int leftBound = 1;
 		const int rightBound = 10;
-		double node = 0.0;
+		TT node = 0.0;
 		for (int j = 0; j < amtOfElements; ++j) {
 			outFile << GetRandomDouble(leftBound, rightBound) << " ";
 		}
@@ -89,7 +91,7 @@ void outputVector(int amtOfElements) {
 	outFile.close();
 }
 
-void outputVector(const vector<double>& vect) {
+void outputVector(const vector<TT>& vect) {
 	ofstream outFile(OUT_FILE_VECTOR);
 	if (!outFile.is_open()) {
 		cerr << "error // output.txt open\n";
@@ -99,7 +101,7 @@ void outputVector(const vector<double>& vect) {
 	outFile << vect.size() << std::endl;
 
 	{
-		double node = 0.0;
+		TT node = 0.0;
 		for (auto& el : vect) {
 			outFile << el << " ";
 		}
@@ -108,7 +110,7 @@ void outputVector(const vector<double>& vect) {
 	outFile.close();
 }
 
-void outputMatrix(const vector<vector<double>>& matrix) {
+void outputMatrix(const vector<vector<TT>>& matrix) {
 	ofstream outFile(OUT_FILE_MATRIX);
 	if (!outFile.is_open()) {
 		cerr << "error // output.txt open\n";
@@ -120,7 +122,7 @@ void outputMatrix(const vector<vector<double>>& matrix) {
 	{
 		const int leftBound = 0;
 		const int rightBound = 10;
-		double node = 0.0;
+		TT node = 0.0;
 		for (auto& raw : matrix) {
 			for (auto& el : raw) {
 				outFile << el << " ";
@@ -143,7 +145,7 @@ void outputMatrix(int amtOfVertices) {
 	{
 		const int leftBound = 0;
 		const int rightBound = 10;
-		double node = 0.0;
+		TT node = 0.0;
 		for (int i = 0; i < amtOfVertices; ++i) {
 
 			for (int j = 0; j < amtOfVertices; ++j) {
@@ -156,7 +158,7 @@ void outputMatrix(int amtOfVertices) {
 }
 
 // вывод матрицы на экран
-void outputOnTheScreenMatrix(const vector<vector<double>>& matrix)
+void outputOnTheScreenMatrix(const vector<vector<TT>>& matrix)
 {
 	for (int i = 0; i < matrix.size(); ++i)
 	{
@@ -169,7 +171,7 @@ void outputOnTheScreenMatrix(const vector<vector<double>>& matrix)
 }
 
 // вывод вектора на экран
-void outputOnTheScreenVector(const std::vector<double>& vector)
+void outputOnTheScreenVector(const std::vector<TT>& vector)
 {
 	for (int i = 0; i < vector.size(); ++i)
 	{
@@ -178,9 +180,9 @@ void outputOnTheScreenVector(const std::vector<double>& vector)
 	cout << std::endl;
 }
 // Кубическая норма вектора
-double normInfVector(const vector<double>& vect)
+TT normInfVector(const vector<TT>& vect)
 {
-	double norm = abs(vect[0]);
+	TT norm = abs(vect[0]);
 	for (int i = 1; i < vect.size(); ++i)
 	{
 		if (norm < abs(vect[i]))
@@ -190,9 +192,9 @@ double normInfVector(const vector<double>& vect)
 }
 
 // Октэрическая норма вектора
-double norm1Vector(const vector<double>& vect)
+TT norm1Vector(const vector<TT>& vect)
 {
-	double norm = 0;
+	TT norm = 0;
 	for (int i = 0; i < vect.size(); ++i)
 	{
 		norm += abs(vect[i]);
@@ -201,13 +203,13 @@ double norm1Vector(const vector<double>& vect)
 }
 
 // Кубическая норма матрицы
-double normInfMatrix(const vector<vector<double>>& matrix)
+TT normInfMatrix(const vector<vector<TT>>& matrix)
 {
-	double norm = 0;
+	TT norm = 0;
 
 	for (int i = 0; i < matrix.size(); ++i)
 	{
-		double sum = 0;
+		TT sum = 0;
 		for (int j = 0; j < matrix.size(); ++j)
 		{
 			sum += abs(matrix[i][j]);
@@ -219,13 +221,13 @@ double normInfMatrix(const vector<vector<double>>& matrix)
 }
 
 // Октаэдрическая норма матрицы
-double norm1Matrix(const vector<vector<double>>& matrix)
+TT norm1Matrix(const vector<vector<TT>>& matrix)
 {
-	double norm = 0;
+	TT norm = 0;
 
 	for (int j = 0; j < matrix.size(); ++j)
 	{
-		double sum = 0;
+		TT sum = 0;
 		for (int i = 0; i < matrix.size(); ++i)
 		{
 			sum += abs(matrix[i][j]);
@@ -236,9 +238,9 @@ double norm1Matrix(const vector<vector<double>>& matrix)
 	return norm;
 }
 
-vector<double> MultiplicationMatrixvsVector(const vector<vector<double>>& matrix, const vector<double>& vect) {
-	vector<double> resVector;
-	double s;
+vector<TT> MultiplicationMatrixvsVector(const vector<vector<TT>>& matrix, const vector<TT>& vect) {
+	vector<TT> resVector;
+	TT s;
 	for (int i = 0; i < matrix.size(); ++i) {
 		s = 0;
 		for (int j = 0; j < matrix.size(); ++j) {
@@ -251,10 +253,10 @@ vector<double> MultiplicationMatrixvsVector(const vector<vector<double>>& matrix
 }
 
 // Норма невязки 
-double normDiffer(const vector<vector<double>>& A, const vector<double>& b, const vector<double>& x,
-	 double(*normVector)(const vector<double>&)) {
-	vector<double> differ;
-	vector<double> b1;
+TT normDiffer(const vector<vector<TT>>& A, const vector<TT>& b, const vector<TT>& x,
+	 TT(*normVector)(const vector<TT>&)) {
+	vector<TT> differ;
+	vector<TT> b1;
 
 	//differ.reserve(A.size());
 
@@ -267,9 +269,9 @@ double normDiffer(const vector<vector<double>>& A, const vector<double>& b, cons
 	return normVector(differ);
 }
 
-vector<vector<double>> transpoceMatrix(const vector<vector<double>>& matrix) {
-	vector<vector<double>> resMatrix;
-	vector<double> str;
+vector<vector<TT>> transpoceMatrix(const vector<vector<TT>>& matrix) {
+	vector<vector<TT>> resMatrix;
+	vector<TT> str;
 	for (int j = 0; j < matrix.size(); ++j) {
 		for (int i = 0; i < matrix.size(); ++i) {
 			str.push_back(matrix[i][j]);
@@ -281,9 +283,9 @@ vector<vector<double>> transpoceMatrix(const vector<vector<double>>& matrix) {
 }
 
 // Единичная матрица
-vector<vector<double>> identityMatrix(vector<vector<double>>& matrix, int size) {
-	vector<vector<double>> resMatrix;
-	vector<double> str;
+vector<vector<TT>> identityMatrix(vector<vector<TT>>& matrix, int size) {
+	vector<vector<TT>> resMatrix;
+	vector<TT> str;
 	for (int i = 0; i < size; ++i) {
 		for (int j = 0; j < size; ++j) {
 			if (i == j) {
@@ -300,13 +302,13 @@ vector<vector<double>> identityMatrix(vector<vector<double>>& matrix, int size) 
 }
 
 // Обратная матрица
-vector<vector<double>> inverseMatrix(vector<vector<double>>& matrix) {
-	vector<double> res(matrix.size(), 0.0);
-	vector<double> str;
-	vector<vector<double>> resMatrix;
+vector<vector<TT>> inverseMatrix(vector<vector<TT>>& matrix) {
+	vector<TT> res(matrix.size(), 0.0);
+	vector<TT> str;
+	vector<vector<TT>> resMatrix;
 
-	vector<vector<double>> E;
-	vector<vector<double>> EE;
+	vector<vector<TT>> E;
+	vector<vector<TT>> EE;
 	E.reserve(matrix.size());
 	EE = identityMatrix(E, matrix.size());
 
@@ -322,8 +324,8 @@ vector<vector<double>> inverseMatrix(vector<vector<double>>& matrix) {
 }
 
 //Умножение матриц
-vector<vector<double>> matrixMultiplication(const vector<vector<double>>& firstM, const vector<vector<double>>& secondM) {
-	vector<vector<double>> resMatrix(firstM.size(), vector<double>(firstM.size(), 0));
+vector<vector<TT>> matrixMultiplication(const vector<vector<TT>>& firstM, const vector<vector<TT>>& secondM) {
+	vector<vector<TT>> resMatrix(firstM.size(), vector<TT>(firstM.size(), 0));
 
 	for (int i = 0; i < firstM.size(); ++i) {
 		for (int j = 0; j < secondM.size(); ++j) {
@@ -337,29 +339,29 @@ vector<vector<double>> matrixMultiplication(const vector<vector<double>>& firstM
 }
 
 // Вычисление числа обусловленности
-double condMatrix(vector<vector<double>>& A, double(*normMatrix)(const vector<vector<double>>&))
+TT condMatrix(vector<vector<TT>>& A, TT(*normMatrix)(const vector<vector<TT>>&))
 {
 	return normMatrix(inverseMatrix(A)) * normMatrix(A);
 }
 
 // Вносим возмущение, находим решение с возмущением, сравниваем его с решением без возмущений 
-void disturbAndCond(vector<vector<double>>& A, vector<double> b, const vector<double>& x, double(*normVector)(const vector<double>&))
+void disturbAndCond(vector<vector<TT>>& A, vector<TT> b, const vector<TT>& x, TT(*normVector)(const vector<TT>&))
 {
-	vector<double> db;
+	vector<TT> db;
 	for (int i = 0; i < b.size(); ++i)
 	{
 		db.push_back(0.01);
 	}
 
-	vector<double> b1;
+	vector<TT> b1;
 	for (int i = 0; i < b.size(); ++i)
 	{
 		b1.push_back(b[i] + db[i]);
 	}
 
-	vector<double> x1(b.size(), 0.0);
-	//vector<double> x1;
-	vector<double> dx;
+	vector<TT> x1(b.size(), 0.0);
+	//vector<TT> x1;
+	vector<TT> dx;
 
 	std::cout << "Vector b with disturbance: ";
 	outputOnTheScreenVector(b1);
@@ -380,7 +382,7 @@ void disturbAndCond(vector<vector<double>>& A, vector<double> b, const vector<do
 	outputOnTheScreenVector(dx);
 	std::cout << std::endl;
 
-	double deltaX = normVector(dx) / normVector(x);
-	double deltaB = normVector(db) / normVector(b);
+	TT deltaX = normVector(dx) / normVector(x);
+	TT deltaB = normVector(db) / normVector(b);
 	std::cout << "cond A >=  " << deltaX / deltaB << std::endl;
 }

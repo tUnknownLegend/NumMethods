@@ -5,6 +5,8 @@
 
 #include <vector>
 
-std::vector<double> CalcQRmethod();
+#define TT double
 
-std::vector<double> getQR();
+std::vector<TT> CalcQRmethod();
+
+std::vector<TT> getQR();

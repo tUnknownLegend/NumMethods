@@ -2,9 +2,9 @@
 #define INC_LAB1_SHARED_H
 
 // input file for matrix
-#define IN_FILE_MATRIX "../../../test2m.txt"
+#define IN_FILE_MATRIX "../../../test12_2M.txt"
 // input file for vector
-#define IN_FILE_VECTOR "../../../test2v.txt"
+#define IN_FILE_VECTOR "../../../test12_2V.txt"
 // output file for matrix
 #define OUT_FILE_MATRIX "../../../outputMatrix.txt"
 // output file for vector
@@ -19,46 +19,48 @@
 #include <vector>
 #include <algorithm>
 
-//  This function generates a random double in [i, j]
+#define TT double
+
+//  This function generates a random TT in [i, j]
 double GetRandomDouble(double i, double j);
 
-void inputMatrix(std::vector<std::vector<double>>& matrix);
+void inputMatrix(std::vector<std::vector<TT>>& matrix);
 
-void outputMatrix(const std::vector<std::vector<double>>& matrix);
+void outputMatrix(const std::vector<std::vector<TT>>& matrix);
 
 void outputMatrix(int amtOfVertices);
 
 void outputVector(int amtOfElements);
 
-void inputVector(std::vector<double>& vect);
+void inputVector(std::vector<TT>& vect);
 
-void outputVector(const std::vector<double>& vect);
+void outputVector(const std::vector<TT>& vect);
 
-double normInfVector(const std::vector<double>& vect);
+TT normInfVector(const std::vector<TT>& vect);
 
-double norm1Vector(const std::vector<double>& vect);
+TT norm1Vector(const std::vector<TT>& vect);
 
-double normInfMatrix(const std::vector<std::vector<double>>& matrix);
+TT normInfMatrix(const std::vector<std::vector<TT>>& matrix);
 
-double norm1Matrix(const std::vector<std::vector<double>>& matrix);
+TT norm1Matrix(const std::vector<std::vector<TT>>& matrix);
 
-std::vector<double> MultiplicationMatrixvsVector(const std::vector<std::vector<double>>& matrix, const std::vector<double>& vect);
+std::vector<TT> MultiplicationMatrixvsVector(const std::vector<std::vector<TT>>& matrix, const std::vector<TT>& vect);
 
-double normDiffer(const std::vector<std::vector<double>>& A, const std::vector<double>& b, const std::vector<double>& x,
-	double(*normVector)(const std::vector<double>&));
+TT normDiffer(const std::vector<std::vector<TT>>& A, const std::vector<TT>& b, const std::vector<TT>& x,
+	TT(*normVector)(const std::vector<TT>&));
 
-std::vector<std::vector<double>> transpoceMatrix(const std::vector<std::vector<double>>& matrix);
+std::vector<std::vector<TT>> transpoceMatrix(const std::vector<std::vector<TT>>& matrix);
 
-std::vector<std::vector<double>> identityMatrix(std::vector<std::vector<double>>& matrix, int size);
+std::vector<std::vector<TT>> identityMatrix(std::vector<std::vector<TT>>& matrix, int size);
 
-std::vector<std::vector<double>> inverseMatrix(std::vector<std::vector<double>>& matrix);
+std::vector<std::vector<TT>> inverseMatrix(std::vector<std::vector<TT>>& matrix);
 
-double condMatrix(std::vector<std::vector<double>>& A, double(*normMatrix)(const std::vector<std::vector<double>>&));
+TT condMatrix(std::vector<std::vector<TT>>& A, TT(*normMatrix)(const std::vector<std::vector<TT>>&));
 
-void outputOnTheScreenMatrix(const std::vector<std::vector<double>>& matrix);
+void outputOnTheScreenMatrix(const std::vector<std::vector<TT>>& matrix);
 
-void outputOnTheScreenVector(const std::vector<double>& vector);
+void outputOnTheScreenVector(const std::vector<TT>& vector);
 
-std::vector<std::vector<double>> matrixMultiplication(const std::vector<std::vector<double>>& firstM, const std::vector<std::vector<double>>& secondM);
+std::vector<std::vector<TT>> matrixMultiplication(const std::vector<std::vector<TT>>& firstM, const std::vector<std::vector<TT>>& secondM);
 
-void disturbAndCond(std::vector<std::vector<double>>& A, std::vector<double> b, const std::vector<double>& x, double(*normVector)(const std::vector<double>&));
+void disturbAndCond(std::vector<std::vector<TT>>& A, std::vector<TT> b, const std::vector<TT>& x, TT(*normVector)(const std::vector<TT>&));
