@@ -3,6 +3,10 @@
     "",
     "\\src"
   ],
+<<<<<<< Updated upstream
   "SelectedNode": "\\src\\Gauss.cpp",
+=======
+  "SelectedNode": "\\CMakeLists.txt",
+>>>>>>> Stashed changes
   "PreviewInSolutionExplorer": false
 }
