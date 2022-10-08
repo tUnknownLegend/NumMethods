@@ -1,35 +1,37 @@
-#include <iostream>
+﻿#include <iostream>
 #include "shared.h"
 
 using std::vector;
 
-vector<double> CalcGaussMethod() {
-	vector<vector<double>> matrix;
-	vector<double> rightVect;
-	inputMatrix(matrix);
-	inputVector(rightVect);
+//#define TT double
 
-	vector<double> resultVect(rightVect.size(), 0.0);
 
-	for (int k = 0; k < rightVect.size(); ++k) {
+vector<TT> CalcGaussMethod(vector<vector<TT>> matr, vector<TT> vect) {
+
+	vector<TT> resultVect(vect.size(), 0.0); // инициализация вектора 
+	unsigned int mltB = 0;
+	for (int k = 0; k < vect.size(); ++k) {
 		//  partial selection
-		double maxValInd = k;
-		for (int i = k + 1; i < rightVect.size(); ++i) {
-			maxValInd = matrix[i][k] > matrix[maxValInd][k] ? i : maxValInd;
+		TT maxValInd = k;
+		for (int i = k + 1; i <vect.size(); ++i) {
+			maxValInd = matr[i][k] > matr[maxValInd][k] ? i : maxValInd;
 		}
+
 		
-		if (abs(matrix[maxValInd][k]) > COMPARE_RATE) {
-			std::swap(matrix[maxValInd], matrix[k]);
-			std::swap(rightVect[maxValInd], rightVect[k]);
+		if (abs(matr[maxValInd][k]) > COMPARE_RATE) {
+			std::swap(matr[maxValInd], matr[k]);
+			std::swap(vect[maxValInd], vect[k]);
 
 			//  straight
-			for (int i = k + 1; i < rightVect.size(); ++i) {
-				double c = (matrix[i][k] / matrix[k][k]);
-				for (int j = k; j < rightVect.size(); ++j) {
-					matrix[i][j] -= c * matrix[k][j];
+			for (int i = k + 1; i < vect.size(); ++i) {
+				TT c = (matr[i][k] / matr[k][k]);
+				for (int j = k; j < vect.size(); ++j) {
+					++mltB;
+					matr[i][j] -= c * matr[k][j];
 				}
 
-				rightVect[i] -= c * rightVect[k];
+				++mltB;
+				vect[i] -= c * vect[k];
 			}
 		}
 		else {
@@ -39,25 +41,46 @@ vector<double> CalcGaussMethod() {
 	}
 
 	//  reverse
-	for (int i = rightVect.size() - 1; i >= 0; --i) {
-		double sumJ = 0.0;
-		for (int j = i + 1; j < rightVect.size(); ++j) {
-			sumJ += matrix[i][j] * resultVect[j];
+	for (int i = vect.size() - 1; i >= 0; --i) {
+		TT sumJ = 0.0;
+		for (int j = i + 1; j < vect.size(); ++j) {
+			++mltB;
+			sumJ += matr[i][j] * resultVect[j];
 		}
 
-		resultVect[i] = (rightVect[i] - sumJ) / matrix[i][i];
+		resultVect[i] = (vect[i] - sumJ) / matr[i][i];
 	}
+	outputMatrix(matr);
 
-	outputMatrix(matrix);
-	//outputMatrix(10);
-	//outputVector(resultVect);
+	//std::cout << "\nAmount of mltB: " << mltB << "\n";
 	return resultVect;
-	//outputVector(10);
 }
 
-vector<double> getGauss() {
-	vector<double> res = CalcGaussMethod();
+vector<TT> getGauss() {
+	vector<vector<TT>> matrix;
+	vector<TT> rightVect;
+	inputMatrix(matrix);
+	inputVector(rightVect);
+	vector<TT> res = CalcGaussMethod(matrix,rightVect);
+	std::cout << "Gauss method:\n";
 	outputVector(res);
+	std::cout << "Inverse matrix:" << std::endl;
+	outputOnTheScreenMatrix(inverseMatrix(matrix));
+	std::cout << std::endl;
+	std::cout << "Matrix multiplication:" << std::endl;
+	outputOnTheScreenMatrix(matrixMultiplication(matrix, inverseMatrix(matrix)));
+	std::cout << std::endl;
+	std::cout << "Residual norm : " << normDiffer(matrix, rightVect, res, norm1Vector) << std::endl;
+	std::cout << std::endl;
+	std::cout << "condA_1 = " << condMatrix(matrix, norm1Matrix) << std::endl;
+	std::cout << std::endl;
+	std::cout << "condA_inf = " << condMatrix(matrix, normInfMatrix) << std::endl;
+	std::cout << std::endl;
+
+	for (TT i = 0.001; i <= 0.1; i*=3) {
+		std::cout << "i = " << i << "\n";
+		disturbAndCond(matrix, rightVect, res, norm1Vector, i);
+	}
 
 	return res;
 }
