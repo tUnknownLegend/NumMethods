@@ -1,6 +1,0 @@
-# ninja log v5
-14	1195	686012875	CMakeFiles/LAB1.dir/src/main.cpp.obj	60c395767be994ca
-19	1599	686012875	CMakeFiles/LAB1.dir/src/QR.cpp.obj	3e37ecea4a149fac
-1855	2144	686012876	LAB1.exe	c6d69de47c1391e6
-1	1637	686012875	CMakeFiles/LAB1.dir/src/Gauss.cpp.obj	e28ff9db23f11aba
-8	1854	686012876	CMakeFiles/LAB1.dir/src/shared.cpp.obj	c19ac2fe763aca54

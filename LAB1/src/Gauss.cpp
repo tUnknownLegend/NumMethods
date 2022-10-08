@@ -3,13 +3,13 @@
 
 using std::vector;
 
-#define TT double
+//#define TT double
 
 
 vector<TT> CalcGaussMethod(vector<vector<TT>> matr, vector<TT> vect) {
 
 	vector<TT> resultVect(vect.size(), 0.0); // инициализация вектора 
-
+	unsigned int mltB = 0;
 	for (int k = 0; k < vect.size(); ++k) {
 		//  partial selection
 		TT maxValInd = k;
@@ -26,9 +26,11 @@ vector<TT> CalcGaussMethod(vector<vector<TT>> matr, vector<TT> vect) {
 			for (int i = k + 1; i < vect.size(); ++i) {
 				TT c = (matr[i][k] / matr[k][k]);
 				for (int j = k; j < vect.size(); ++j) {
+					++mltB;
 					matr[i][j] -= c * matr[k][j];
 				}
 
+				++mltB;
 				vect[i] -= c * vect[k];
 			}
 		}
@@ -42,12 +44,15 @@ vector<TT> CalcGaussMethod(vector<vector<TT>> matr, vector<TT> vect) {
 	for (int i = vect.size() - 1; i >= 0; --i) {
 		TT sumJ = 0.0;
 		for (int j = i + 1; j < vect.size(); ++j) {
+			++mltB;
 			sumJ += matr[i][j] * resultVect[j];
 		}
 
 		resultVect[i] = (vect[i] - sumJ) / matr[i][i];
 	}
 	outputMatrix(matr);
+
+	//std::cout << "\nAmount of mltB: " << mltB << "\n";
 	return resultVect;
 }
 
@@ -57,6 +62,7 @@ vector<TT> getGauss() {
 	inputMatrix(matrix);
 	inputVector(rightVect);
 	vector<TT> res = CalcGaussMethod(matrix,rightVect);
+	std::cout << "Gauss method:\n";
 	outputVector(res);
 	std::cout << "Inverse matrix:" << std::endl;
 	outputOnTheScreenMatrix(inverseMatrix(matrix));
@@ -70,7 +76,11 @@ vector<TT> getGauss() {
 	std::cout << std::endl;
 	std::cout << "condA_inf = " << condMatrix(matrix, normInfMatrix) << std::endl;
 	std::cout << std::endl;
-	disturbAndCond(matrix, rightVect, res, norm1Vector);
+
+	for (TT i = 0.001; i <= 0.1; i*=3) {
+		std::cout << "i = " << i << "\n";
+		disturbAndCond(matrix, rightVect, res, norm1Vector, i);
+	}
 
 	return res;
 }

@@ -1,12 +1,10 @@
 ﻿#include "Gauss.h"
 #include "QR.h"
-#include "shared.h"
+//#include "shared.h"
 
-int main()
-{
-	
-	getGauss();
-	//getQR();
+int main() {
+	//getGauss();
+	getQR();
 
 	return 0;
 }

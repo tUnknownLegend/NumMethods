@@ -1,6 +1,8 @@
 ﻿#include <fstream>
 #include <iostream>
 #include <random>
+#include <iomanip>
+#include "QR.h"
 #include "shared.h"
 #include "Gauss.h"
 
@@ -10,7 +12,7 @@ using std::cerr;
 using std::ofstream;
 using std::cout;
 
-#define TT double
+//#define TT double
 
 //  This function generates a random double in [i, j]
 double GetRandomDouble(double i, double j) {
@@ -84,7 +86,7 @@ void outputVector(int amtOfElements) {
 		const int rightBound = 10;
 		TT node = 0.0;
 		for (int j = 0; j < amtOfElements; ++j) {
-			outFile << GetRandomDouble(leftBound, rightBound) << " ";
+			outFile << std::setprecision(8) << GetRandomDouble(leftBound, rightBound) << " ";
 		}
 		outFile << std::endl;
 	}
@@ -103,7 +105,7 @@ void outputVector(const vector<TT>& vect) {
 	{
 		TT node = 0.0;
 		for (auto& el : vect) {
-			outFile << el << " ";
+			outFile << std::setprecision(8) << el << " ";
 		}
 		outFile << std::endl;
 	}
@@ -125,7 +127,7 @@ void outputMatrix(const vector<vector<TT>>& matrix) {
 		TT node = 0.0;
 		for (auto& raw : matrix) {
 			for (auto& el : raw) {
-				outFile << el << " ";
+				outFile << std::setprecision(8) << el << " ";
 			}
 			outFile << std::endl;
 		}
@@ -149,7 +151,7 @@ void outputMatrix(int amtOfVertices) {
 		for (int i = 0; i < amtOfVertices; ++i) {
 
 			for (int j = 0; j < amtOfVertices; ++j) {
-				outFile << GetRandomDouble(leftBound, rightBound) << " ";
+				outFile << std::setprecision(8) << GetRandomDouble(leftBound, rightBound) << " ";
 			}
 			outFile << std::endl;
 		}
@@ -164,7 +166,7 @@ void outputOnTheScreenMatrix(const vector<vector<TT>>& matrix)
 	{
 		for (int j = 0; j < matrix.size(); ++j)
 		{
-			cout << matrix[i][j] << ' ';
+			cout << std::setprecision(8) << matrix[i][j] << ' ';
 		}
 		cout << std::endl;
 	}
@@ -175,7 +177,7 @@ void outputOnTheScreenVector(const std::vector<TT>& vector)
 {
 	for (int i = 0; i < vector.size(); ++i)
 	{
-		cout << vector[i] << ' ';
+		cout << std::setprecision(8) << vector[i] << ' ';
 	}
 	cout << std::endl;
 }
@@ -256,50 +258,112 @@ vector<TT> MultiplicationMatrixvsVector(const vector<vector<TT>>& matrix, const 
 TT normDiffer(const vector<vector<TT>>& A, const vector<TT>& b, const vector<TT>& x,
 	 TT(*normVector)(const vector<TT>&)) {
 	vector<TT> differ;
-	vector<TT> b1;
+	vector<TT> b1 = MultiplicationMatrixvsVector(A, x);
 
-	//differ.reserve(A.size());
-
-	b1 = MultiplicationMatrixvsVector(A, x);
-
-	for (int i = 0; i < b.size(); ++i)
-	{
+	for (int i = 0; i < b.size(); ++i) {
 		differ.push_back(b[i] - b1[i]);
 	}
 	return normVector(differ);
 }
 
 vector<vector<TT>> transpoceMatrix(const vector<vector<TT>>& matrix) {
-	vector<vector<TT>> resMatrix;
-	vector<TT> str;
+	vector<vector<TT>> resMatrix(matrix);
 	for (int j = 0; j < matrix.size(); ++j) {
 		for (int i = 0; i < matrix.size(); ++i) {
-			str.push_back(matrix[i][j]);
+			resMatrix[j][i] = matrix[i][j];
 		}
-		resMatrix.push_back(str);
-		str.clear();
 	}
 	return resMatrix;
 }
 
 // Единичная матрица
-vector<vector<TT>> identityMatrix(vector<vector<TT>>& matrix, int size) {
-	vector<vector<TT>> resMatrix;
-	vector<TT> str;
+vector<vector<TT>> identityMatrix(int size) {
+	vector<vector<TT>> resMatrix(size, vector<TT>(size, 0.0));
 	for (int i = 0; i < size; ++i) {
-		for (int j = 0; j < size; ++j) {
-			if (i == j) {
-				str.push_back(1.0);
-			}
-			else {
-				str.push_back(0.0);
-			}
-		}
-		resMatrix.push_back(str);
-		str.clear();
+		resMatrix[i][i] = 1.0;
 	}
 	return resMatrix;
 }
+
+void CalcR(const vector<vector<TT>>& matrix, const vector<TT> rightVect, vector<vector<TT>>& R) {
+	TT c;
+	TT s;
+	unsigned int coounter = 0;
+	unsigned int mltB = 0;
+
+	for (int i = 0; i < rightVect.size(); ++i) {  // - 1
+		for (int j = i + 1; j < rightVect.size(); ++j) {
+			if (abs(R[i][j]) > COMPARE_RATE) {
+				coounter += 6;
+				TT tempres = sqrt(pow(R[i][i], 2) + pow(R[j][i], 2));
+				c = R[i][i] / tempres;
+				s = R[j][i] / tempres;
+				for (int k = 0; k < rightVect.size(); ++k) {
+					TT tr = R[i][k];
+					coounter += 6;
+					R[i][k] = c * R[i][k] + s * R[j][k];
+					R[j][k] = -s * tr + c * R[j][k];
+
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i < matrix.size(); ++i) {
+		if (std::abs(R[i][i]) < COMPARE_RATE) {
+			std::cerr << "Matrix is singular";
+			return;
+		}
+	}
+
+	return;
+}
+
+vector<TT> CalcPartQR(vector<vector<TT>>& matrix, vector<TT> rightVect, const vector<vector<TT>>& R) {
+	TT c;
+	TT s;
+	vector<TT> resultVect(rightVect.size(), 0.0);
+	vector<TT> add(rightVect);
+	unsigned int coounter = 0;
+	unsigned int mltB = 0;
+
+	for (int i = 0; i < rightVect.size(); ++i) {  // - 1
+		for (int j = i + 1; j < rightVect.size(); ++j) {
+			if (abs(R[i][j]) > COMPARE_RATE) {
+				coounter += 6;
+				TT tempres = sqrt(pow(R[i][i], 2) + pow(R[j][i], 2));
+				c = R[i][i] / tempres;
+				s = R[j][i] / tempres;
+
+				TT tv = add[i];
+				mltB += 4;
+				add[i] = c * add[i] + s * add[j];
+				add[j] = -s * tv + c * add[j];
+			}
+		}
+	}
+
+	for (int i = rightVect.size() - 1; i >= 0; --i) {
+		TT sumJ = 0.0;
+		for (int j = i + 1; j < rightVect.size(); ++j) {
+			++coounter;
+			sumJ += R[i][j] * resultVect[j];
+		}
+		coounter += 2;
+		resultVect[i] = (add[i] - sumJ) / R[i][i];
+	}
+
+	resultVect = CalcGaussMethod(matrix, rightVect);
+	for (int i = 0; i < matrix.size(); ++i) {
+		if (std::abs(R[i][i]) < COMPARE_RATE) {
+			std::cerr << "Matrix is singular";
+			return {};
+		}
+	}
+
+	return resultVect;
+}
+
 
 // Обратная матрица
 vector<vector<TT>> inverseMatrix(vector<vector<TT>>& matrix) {
@@ -307,16 +371,21 @@ vector<vector<TT>> inverseMatrix(vector<vector<TT>>& matrix) {
 	vector<TT> str;
 	vector<vector<TT>> resMatrix;
 
-	vector<vector<TT>> E;
-	vector<vector<TT>> EE;
-	E.reserve(matrix.size());
-	EE = identityMatrix(E, matrix.size());
+	vector<vector<TT>> EE = identityMatrix(matrix.size());
+
+	vector<vector<TT>> R(matrix);
+
+	for (int j = 0; j < matrix.size(); ++j) {
+		str.push_back(EE[j][0]);
+	}
+	CalcR(matrix, EE[0], R);
+	str.clear();
 
 	for (int i = 0; i < matrix.size(); ++i) {
 		for (int j = 0; j < matrix.size(); ++j) {
 			str.push_back(EE[j][i]);
 		}
-		res = CalcGaussMethod(matrix, str);
+		res = CalcPartQR(matrix, str, R);
 		resMatrix.push_back(res);
 		str.clear();
 	}
@@ -345,12 +414,14 @@ TT condMatrix(vector<vector<TT>>& A, TT(*normMatrix)(const vector<vector<TT>>&))
 }
 
 // Вносим возмущение, находим решение с возмущением, сравниваем его с решением без возмущений 
-void disturbAndCond(vector<vector<TT>>& A, vector<TT> b, const vector<TT>& x, TT(*normVector)(const vector<TT>&))
+void disturbAndCond(vector<vector<TT>>& A, vector<TT> b, const vector<TT>& x, TT(*normVector)(const vector<TT>&), const TT diffVal)
 {
-	vector<TT> db;
+	vector<TT> db (A.size(), 0.0);
+	db[0] = diffVal;
+
 	for (int i = 0; i < b.size(); ++i)
 	{
-		db.push_back(0.01);
+		db.push_back(diffVal);
 	}
 
 	vector<TT> b1;

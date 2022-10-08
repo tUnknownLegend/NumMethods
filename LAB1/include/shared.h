@@ -2,9 +2,9 @@
 #define INC_LAB1_SHARED_H
 
 // input file for matrix
-#define IN_FILE_MATRIX "../../../test12_2M.txt"
+#define IN_FILE_MATRIX "../../../test5m.txt"
 // input file for vector
-#define IN_FILE_VECTOR "../../../test12_2V.txt"
+#define IN_FILE_VECTOR "../../../test5v.txt"
 // output file for matrix
 #define OUT_FILE_MATRIX "../../../outputMatrix.txt"
 // output file for vector
@@ -13,8 +13,6 @@
 #define COMPARE_RATE 10e-8
 // zero division error
 #define DIVISTION_ERROR 5
-
-#endif //INC_1_SHARED_H
 
 #include <vector>
 #include <algorithm>
@@ -51,7 +49,7 @@ TT normDiffer(const std::vector<std::vector<TT>>& A, const std::vector<TT>& b, c
 
 std::vector<std::vector<TT>> transpoceMatrix(const std::vector<std::vector<TT>>& matrix);
 
-std::vector<std::vector<TT>> identityMatrix(std::vector<std::vector<TT>>& matrix, int size);
+std::vector<std::vector<TT>> identityMatrix(int size);
 
 std::vector<std::vector<TT>> inverseMatrix(std::vector<std::vector<TT>>& matrix);
 
@@ -63,4 +61,6 @@ void outputOnTheScreenVector(const std::vector<TT>& vector);
 
 std::vector<std::vector<TT>> matrixMultiplication(const std::vector<std::vector<TT>>& firstM, const std::vector<std::vector<TT>>& secondM);
 
-void disturbAndCond(std::vector<std::vector<TT>>& A, std::vector<TT> b, const std::vector<TT>& x, TT(*normVector)(const std::vector<TT>&));
+void disturbAndCond(std::vector<std::vector<TT>>& A, std::vector<TT> b, const std::vector<TT>& x, TT(*normVector)(const std::vector<TT>&), const TT diffVal);
+
+#endif //INC_1_SHARED_H

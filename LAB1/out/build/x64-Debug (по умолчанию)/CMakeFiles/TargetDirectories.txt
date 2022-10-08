@@ -1,3 +1,0 @@
-C:/Users/sukho/Documents/GitHub/NumMethods/LAB1/out/build/x64-Debug (по умолчанию)/CMakeFiles/LAB1.dir
-C:/Users/sukho/Documents/GitHub/NumMethods/LAB1/out/build/x64-Debug (по умолчанию)/CMakeFiles/edit_cache.dir
-C:/Users/sukho/Documents/GitHub/NumMethods/LAB1/out/build/x64-Debug (по умолчанию)/CMakeFiles/rebuild_cache.dir
