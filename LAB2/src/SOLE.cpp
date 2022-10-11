@@ -11,17 +11,19 @@ vector<TT> iteration(vector<vector<TT>> &matrix, vector<TT> &rightVect) {
     std::vector<std::vector<TT>> Cmatrix = matrixOperations(identityMatrix(rightVect.size()), matrix, '-');
     vectorDigit(thau, rightVect, '*');
 
+    //double norm = normInfMatrix(Cmatrix);
     double norm = norm1Matrix(Cmatrix);
     vector<TT> prevX = rightVect;
     vector<TT> currX = vectorOperation(matrixVectorMultiplication(Cmatrix, prevX), rightVect, '+');
     if (norm < 1) {
-        while (norm1Vector(vectorOperation(currX, prevX, '-')) <= (1 - norm) / norm * eps) {
+        while (norm1Vector(vectorOperation(currX, prevX, '-')) > (1 - norm) / norm * eps) {
             prevX = currX;
             currX = vectorOperation(matrixVectorMultiplication(Cmatrix, prevX), rightVect, '+');
         }
     } else {
         std::cerr << "norm > 1\n";
     }
+    outputOnTheScreenVector(currX);
     return currX;
 }
 
@@ -33,23 +35,26 @@ vector<TT> jacobi(vector<vector<TT>> &matrix, vector<TT> &rightVect) {
         for (int j = 0; j < rightVect.size(); ++j) {
             if (i == j) {
                 Cmatrix[i][j] = 0;
+            } else {
+                Cmatrix[i][j] = -matrix[i][j] / matrix[i][i];
             }
-            Cmatrix[i][j] = -matrix[i][j] / matrix[i][i];
         }
         Yvect[i] = rightVect[i] / matrix[i][i];
     }
 
+    //double norm = normInfMatrix(Cmatrix);
     double norm = norm1Matrix(Cmatrix);
     vector<TT> prevX = rightVect;
     vector<TT> currX = vectorOperation(matrixVectorMultiplication(Cmatrix, prevX), rightVect, '+');
     if (norm < 1) {
-        while (norm1Vector(vectorOperation(currX, prevX, '-')) <= (1 - norm) / norm * eps) {
+        while (norm1Vector(vectorOperation(currX, prevX, '-')) > (1 - norm) / norm * eps) {
             prevX = currX;
             currX = vectorOperation(matrixVectorMultiplication(Cmatrix, prevX), rightVect, '+');
         }
     } else {
         std::cerr << "norm > 1\n";
     }
+    outputOnTheScreenVector(currX);
     return currX;
 }
 
