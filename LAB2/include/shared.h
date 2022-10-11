@@ -2,9 +2,9 @@
 #define INC_LAB2_SHARED_H
 
 // input file for matrix
-#define IN_FILE_MATRIX "../../../test5m.txt"
+#define IN_FILE_MATRIX "../../../inputMatrix.txt"
 // input file for vector
-#define IN_FILE_VECTOR "../../../test5v.txt"
+#define IN_FILE_VECTOR "../../../inputVector.txt"
 // output file for matrix
 #define OUT_FILE_MATRIX "../../../outputMatrix.txt"
 // output file for vector
@@ -22,39 +22,50 @@
 //  This function generates a random TT in [i, j]
 double GetRandomDouble(double i, double j);
 
-void inputMatrix(std::vector<std::vector<TT>>& matrix);
+void inputMatrix(std::vector<std::vector<TT>> &matrix);
 
-void outputMatrix(const std::vector<std::vector<TT>>& matrix);
+void outputMatrix(const std::vector<std::vector<TT>> &matrix);
 
 void outputMatrix(int amtOfVertices);
 
 void outputVector(int amtOfElements);
 
-void inputVector(std::vector<TT>& vect);
+void inputVector(std::vector<TT> &vect);
 
-void outputVector(const std::vector<TT>& vect);
+void outputVector(const std::vector<TT> &vect);
 
-TT normInfVector(const std::vector<TT>& vect);
+TT normInfVector(const std::vector<TT> &vect);
 
-TT norm1Vector(const std::vector<TT>& vect);
+TT norm1Vector(const std::vector<TT> &vect);
 
-TT normInfMatrix(const std::vector<std::vector<TT>>& matrix);
+TT normInfMatrix(const std::vector<std::vector<TT>> &matrix);
 
-TT norm1Matrix(const std::vector<std::vector<TT>>& matrix);
+TT norm1Matrix(const std::vector<std::vector<TT>> &matrix);
 
-std::vector<TT> MultiplicationMatrixvsVector(const std::vector<std::vector<TT>>& matrix, const std::vector<TT>& vect);
+std::vector<TT> MultiplicationMatrixvsVector(const std::vector<std::vector<TT>> &matrix, const std::vector<TT> &vect);
 
-TT normDiffer(const std::vector<std::vector<TT>>& A, const std::vector<TT>& b, const std::vector<TT>& x,
-	TT(*normVector)(const std::vector<TT>&));
+TT normDiffer(const std::vector<std::vector<TT>> &A, const std::vector<TT> &b, const std::vector<TT> &x,
+              TT(*normVector)(const std::vector<TT> &));
 
-std::vector<std::vector<TT>> transpoceMatrix(const std::vector<std::vector<TT>>& matrix);
+std::vector<std::vector<TT>> transpoceMatrix(const std::vector<std::vector<TT>> &matrix);
 
 std::vector<std::vector<TT>> identityMatrix(int size);
 
-void outputOnTheScreenMatrix(const std::vector<std::vector<TT>>& matrix);
+void outputOnTheScreenMatrix(const std::vector<std::vector<TT>> &matrix);
 
-void outputOnTheScreenVector(const std::vector<TT>& vector);
+void outputOnTheScreenVector(const std::vector<TT> &vector);
 
-std::vector<std::vector<TT>> matrixMultiplication(const std::vector<std::vector<TT>>& firstM, const std::vector<std::vector<TT>>& secondM);
+std::vector<std::vector<TT>>
+matrixOperations(const std::vector<std::vector<TT>> &firstM, const std::vector<std::vector<TT>> &secondM,
+                 const char &operation);
 
-#endif //INC_2_SHARED_H
+void matrixDigit(const TT &digit, std::vector<std::vector<TT>> &secondM, const char &operation);
+
+std::vector<TT> vectorOperation(const std::vector<TT> &firstV, const std::vector<TT> &secondV, const char &operation);
+
+void vectorDigit(const TT &digit, std::vector<TT> &secondV, const char &operation);
+
+std::vector<TT> matrixVectorMultiplication(const std::vector<std::vector<TT>> &firstM,
+                                           const std::vector<TT> &secondV);
+
+#endif //INC_LAB2_SHARED_H

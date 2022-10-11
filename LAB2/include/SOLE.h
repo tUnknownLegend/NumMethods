@@ -5,4 +5,6 @@
 #include "shared.h"
 //#define TT double
 
+void getIterational();
+
 #endif //INC_LAB2_SOLE_H
