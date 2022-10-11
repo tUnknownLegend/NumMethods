@@ -45,11 +45,11 @@ vector<TT> jacobi(vector<vector<TT>> &matrix, vector<TT> &rightVect) {
     //double norm = normInfMatrix(Cmatrix);
     double norm = norm1Matrix(Cmatrix);
     vector<TT> prevX = rightVect;
-    vector<TT> currX = vectorOperation(matrixVectorMultiplication(Cmatrix, prevX), rightVect, '+');
+    vector<TT> currX = vectorOperation(matrixVectorMultiplication(Cmatrix, prevX), Yvect, '+');
     if (norm < 1) {
         while (norm1Vector(vectorOperation(currX, prevX, '-')) > (1 - norm) / norm * eps) {
             prevX = currX;
-            currX = vectorOperation(matrixVectorMultiplication(Cmatrix, prevX), rightVect, '+');
+            currX = vectorOperation(matrixVectorMultiplication(Cmatrix, prevX), Yvect, '+');
         }
     } else {
         std::cerr << "norm > 1\n";
