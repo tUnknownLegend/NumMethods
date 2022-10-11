@@ -24,7 +24,7 @@ vector<TT> iteration(vector<vector<TT>> &matrix, vector<TT> &rightVect) {
     return currX;
 }
 
-vector<TT> jacobi(const vector<vector<TT>> &matrix, const vector<TT> &rightVect) {
+vector<TT> jacobi(vector<vector<TT>> &matrix, vector<TT> rightVect) {
     std::vector<std::vector<TT>> Cmatrix(matrix);
     vector<TT> Yvect(rightVect);
 
@@ -49,19 +49,20 @@ vector<TT> jacobi(const vector<vector<TT>> &matrix, const vector<TT> &rightVect)
     return currX;
 }
 
-void getMethod(const std::function<vector<TT>(vector<vector<TT>>, vector<TT>)> &func) {
+void getMethod(vector<TT>(*func)(vector<vector<TT>> &, vector<TT> &)) {
     vector<vector<TT>> matrix;
     vector<TT> rightVect;
     inputMatrix(matrix);
     inputVector(rightVect);
     outputMatrix(matrix);
+    rightVect = func(matrix, rightVect);
     outputVector(func(matrix, rightVect));
 }
 
 void getIterational() {
-    getMethod(iteration);
+    getMethod(&iteration);
 }
 
 void getJacobi() {
-    getMethod(jacobi);
+    //getMethod(&jacobi);
 }
