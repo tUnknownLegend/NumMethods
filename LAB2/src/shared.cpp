@@ -197,9 +197,9 @@ TT norm1Vector(const vector<TT> &vect) {
 TT normInfMatrix(const vector<vector<TT>> &matrix) {
     TT norm = 0;
 
-    for (int i = 0; i < matrix.size(); ++i) {
+    for (int j = 0; j < matrix.size(); ++j) {
         TT sum = 0;
-        for (int j = 0; j < matrix.size(); ++j) {
+        for (int i = 0; i < matrix.size(); ++i) {
             sum += std::abs(matrix[i][j]);
         }
         if (norm < sum)
@@ -212,10 +212,10 @@ TT normInfMatrix(const vector<vector<TT>> &matrix) {
 TT norm1Matrix(const vector<vector<TT>> &matrix) {
     TT norm = 0;
 
-    for (int j = 0; j < matrix.size(); ++j) {
+    for (const auto &i: matrix) {
         TT sum = 0;
-        for (const auto &i: matrix) {
-            sum += std::abs(i[j]);
+        for (const auto &j: i) {
+            sum += std::abs(j);
         }
         if (norm < sum)
             norm = sum;
@@ -266,38 +266,6 @@ vector<vector<TT>> identityMatrix(int size) {
         resMatrix[i][i] = 1.0;
     }
     return resMatrix;
-}
-
-void CalcR(const vector<vector<TT>> &matrix, const vector<TT> rightVect, vector<vector<TT>> &R) {
-    TT c;
-    TT s;
-    unsigned int coounter = 0;
-    unsigned int mltB = 0;
-
-    for (int i = 0; i < rightVect.size(); ++i) {  // - 1
-        for (int j = i + 1; j < rightVect.size(); ++j) {
-            if (std::abs(R[i][j]) > COMPARE_RATE) {
-                coounter += 6;
-                TT tempres = sqrt(pow(R[i][i], 2) + pow(R[j][i], 2));
-                c = R[i][i] / tempres;
-                s = R[j][i] / tempres;
-                for (int k = 0; k < rightVect.size(); ++k) {
-                    TT tr = R[i][k];
-                    coounter += 6;
-                    R[i][k] = c * R[i][k] + s * R[j][k];
-                    R[j][k] = -s * tr + c * R[j][k];
-
-                }
-            }
-        }
-    }
-
-    for (int i = 0; i < matrix.size(); ++i) {
-        if (std::abs(R[i][i]) < COMPARE_RATE) {
-            std::cerr << "Matrix is singular";
-            return;
-        }
-    }
 }
 
 vector<vector<TT>>

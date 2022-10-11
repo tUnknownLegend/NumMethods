@@ -7,4 +7,6 @@
 
 void getIterational();
 
+void getJacobi();
+
 #endif //INC_LAB2_SOLE_H

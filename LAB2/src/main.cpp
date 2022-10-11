@@ -4,6 +4,7 @@
 //#include "shared.h"
 
 int main() {
-    getIterational();
+    //getIterational();
+    getJacobi();
 	return 0;
 }
