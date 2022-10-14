@@ -16,7 +16,7 @@ vector<TT> iteration(vector<vector<TT>> &matrix, vector<TT> &rightVect) {
     vector<TT> prevX = rightVect;
     vector<TT> currX = vectorOperation(matrixVectorMultiplication(Cmatrix, prevX), rightVect, '+');
     if (norm < 1) {
-        while (norm1Vector(vectorOperation(currX, prevX, '-')) > (1 - norm) / norm * eps) {
+        while (norm1Vector(vectorOperation(currX, prevX, '-')) > ((1 - norm) / norm) * eps) {
             prevX = currX;
             currX = vectorOperation(matrixVectorMultiplication(Cmatrix, prevX), rightVect, '+');
         }
@@ -57,6 +57,20 @@ vector<TT> jacobi(vector<vector<TT>> &matrix, vector<TT> &rightVect) {
     outputOnTheScreenVector(currX);
     return currX;
 }
+
+vector<TT> zeidel(vector<vector<TT>>& matrix, vector<TT>& rightVect) {
+    std::vector<std::vector<TT>> Cmatrix(matrix);
+    vector<TT> Yvect(rightVect);
+    vector<TT> currX;
+
+   
+    return currX;
+}
+
+
+
+
+
 
 void getMethod(vector<TT>(*func)(vector<vector<TT>> &, vector<TT> &)) {
     vector<vector<TT>> matrix;

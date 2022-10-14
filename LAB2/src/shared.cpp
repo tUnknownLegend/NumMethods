@@ -402,3 +402,28 @@ void vectorDigit(const TT &digit, vector<TT> &secondV, const char &operation) {
             std::cerr << "error";
     }
 }
+
+// Разложение матрицы на LDU
+void LDU(const vector<vector<TT>>& A, vector<vector<TT>>& L, vector<vector<TT>>& D, vector<vector<TT>>& U) {
+    for (int i = 0; i < A.size(); i++)
+    {
+        for (int j = 0; j < A.size(); j++)
+        {
+            if (i == j) D[i][j] = A[i][j];
+            if (i > j) L[i][j] = A[i][j];
+            if (i < j) U[i][j] = A[i][j];
+        }
+    }
+}
+
+// Инициализация трёхдиагональной матрицы
+void three_diag_init(vector<TT>& a, vector<TT>& b, vector<TT>& c, vector<TT>& d, TT one, TT two, TT three, TT four) {
+    for (int i = 0; i < a.size(); ++i)
+    {
+        a[i] = one;
+        b[i] = two;
+        c[i] = three;
+        d[i] = four;
+    }
+    a[0] = 0; c[a.size() - 1] = 0;
+}
