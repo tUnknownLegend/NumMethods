@@ -4,7 +4,9 @@
 //#include "shared.h"
 
 int main() {
-    //getIterational();
+    getIterational();
     getJacobi();
+    getRelaxation();
+    getZeidel();
 	return 0;
 }

@@ -9,4 +9,8 @@ void getIterational();
 
 void getJacobi();
 
+void getRelaxation();
+
+void getZeidel();
+
 #endif //INC_LAB2_SOLE_H
