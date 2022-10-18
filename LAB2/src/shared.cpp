@@ -416,14 +416,67 @@ void LDU(const vector<vector<TT>>& A, vector<vector<TT>>& L, vector<vector<TT>>&
     }
 }
 
-// Инициализация трёхдиагональной матрицы
-void three_diag_init(vector<TT>& a, vector<TT>& b, vector<TT>& c, vector<TT>& d, TT one, TT two, TT three, TT four) {
-    for (int i = 0; i < a.size(); ++i)
-    {
-        a[i] = one;
-        b[i] = two;
-        c[i] = three;
-        d[i] = four;
+vector<TT> CalcGaussMethod(vector<vector<TT>> matr, vector<TT> vect) {
+
+    vector<TT> resultVect(vect.size(), 0.0); // инициализация вектора
+
+    for (int k = 0; k < vect.size(); ++k) {
+        //  partial selection
+        TT maxValInd = k;
+        for (int i = k + 1; i <vect.size(); ++i) {
+            maxValInd = matr[i][k] > matr[maxValInd][k] ? i : maxValInd;
+        }
+
+
+        if (abs(matr[maxValInd][k]) > COMPARE_RATE) {
+            std::swap(matr[maxValInd], matr[k]);
+            std::swap(vect[maxValInd], vect[k]);
+
+            //  straight
+            for (int i = k + 1; i < vect.size(); ++i) {
+                TT c = (matr[i][k] / matr[k][k]);
+                for (int j = k; j < vect.size(); ++j) {
+                    matr[i][j] -= c * matr[k][j];
+                }
+
+                vect[i] -= c * vect[k];
+            }
+        }
+        else {
+            std::cerr << "Matrix is singular";
+            return {};
+        }
     }
-    a[0] = 0; c[a.size() - 1] = 0;
+
+    //  reverse
+    for (int i = vect.size() - 1; i >= 0; --i) {
+        TT sumJ = 0.0;
+        for (int j = i + 1; j < vect.size(); ++j) {
+            sumJ += matr[i][j] * resultVect[j];
+        }
+
+        resultVect[i] = (vect[i] - sumJ) / matr[i][i];
+    }
+    outputMatrix(matr);
+    return resultVect;
 }
+
+// Обратная матрица
+vector<vector<TT>> inverseMatrix(vector<vector<TT>>& matrix) {
+    vector<TT> res(matrix.size(), 0.0);
+    vector<TT> str;
+    vector<vector<TT>> resMatrix;
+    vector<vector<TT>> EE;
+    EE = identityMatrix(matrix.size());
+
+    for (int i = 0; i < matrix.size(); ++i) {
+        for (int j = 0; j < matrix.size(); ++j) {
+            str.push_back(EE[j][i]);
+        }
+        res = CalcGaussMethod(matrix, str);
+        resMatrix.push_back(res);
+        str.clear();
+    }
+    return transpoceMatrix(resMatrix);
+}
+

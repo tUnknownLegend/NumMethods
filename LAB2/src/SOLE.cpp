@@ -79,6 +79,35 @@ vector<TT> relaxation(vector<vector<TT>> &matrix, vector<TT> &rightVect, const T
                     -omega * (currSum + prevSum - rightVect[i]) / matrix[i][i] + (1 - omega) * prevX[i];
         }
     }
+    //  geting C matrix
+    vector<vector<TT>> Lmatrix(matrix);
+    vector<vector<TT>> Dmatrix(matrix);
+    vector<vector<TT>> Umatrix(matrix);
+    LDU(matrix, Lmatrix, Dmatrix, Umatrix);
+    vector<vector<TT>> inverseD = inverseMatrix(Dmatrix);
+    std::move(Dmatrix);
+
+    vector<vector<TT>> Cmatrix(matrix);
+    for (int i = 0; i < matrix.size(); ++i) {
+        for (int j = 0; j < i; ++j) {
+            Cmatrix[i][j] = -omega * inverseD[i][i] * Lmatrix[i][j];
+        }
+    }
+
+    vector<vector<TT>> Cu(matrix);
+    vector<vector<TT>> E = identityMatrix(matrix.size());
+    for (int i = 0; i < matrix.size(); ++i) {
+        for (int j = matrix.size() - 1; j > i; --j) {
+            if (i == j) {
+                Cu[i][j] = (1 - omega) - omega * inverseD[i][i] * Umatrix[i][j];
+            } else {
+                Cu[i][j] = -omega * inverseD[i][i] * Umatrix[i][j];
+            }
+        }
+    }
+
+    //outputMatrix(Cmatrix);
+    //outputMatrix(Cu);
     return currX;
 }
 
@@ -111,20 +140,17 @@ threeDiag(vector<TT> &leftDiag, vector<TT> &midDiag, vector<TT> &rightDiag,
                                rightDiag[last] / midDiag[last] * currX[last + 1] + vect[last] / midDiag[last]) +
                       (1 - omega) * prevX[last];
     }
+    //  getting C matrix
+
+    vector<TT> Cmatrix(leftDiag.size(), 0);
+    vector<TT> Cu(leftDiag.size(), 0);
+    for (int i = 0; i < midDiag.size(); ++i) {
+        Cmatrix[i] = -omega / midDiag[i] * leftDiag[i];
+        Cu[i] = -omega / midDiag[i] * rightDiag[i];
+    }
+
     return currX;
 }
-
-/*void genThreeDiag(vector<TT> &leftDiag, vector<TT> &midDiag, vector<TT> &rightDiag,
-                  vector<double> &vect, double l, double m, double r) {
-    for (int i = 0; i < leftDiag.size(); ++i) {
-        leftDiag[i] = l;
-        midDiag[i] = m;
-        rightDiag[i] = r;
-        vect[i] = i;
-    }
-    leftDiag[0] = 0;
-    rightDiag[rightDiag.size() - 1] = 0;
-}*/
 
 void getThreeDiag() {
     const int size = 4;
@@ -141,11 +167,6 @@ void getThreeDiag() {
 
     leftDiag[0] = 0;
     rightDiag[rightDiag.size() - 1] = 0;
-
-//    outputOnTheScreenVector(leftDiag);
-//    outputOnTheScreenVector(midDiag);
-//    outputOnTheScreenVector(rightDiag);
-//    outputOnTheScreenVector(vect);
 
     std::cout << "three diag: ";
     outputOnTheScreenVector(threeDiag(leftDiag, midDiag, rightDiag, vect, 1.0));
