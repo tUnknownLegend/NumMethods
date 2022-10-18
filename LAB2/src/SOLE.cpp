@@ -130,15 +130,13 @@ threeDiag(vector<TT> &leftDiag, vector<TT> &midDiag, vector<TT> &rightDiag,
         prevX = currX;
 
         currX[0] = (1 - omega) * prevX[0] + omega * (-rightDiag[0] / midDiag[0] * currX[1] + vect[0] / midDiag[0]);
-        for (int i = 0; i < vect.size(); ++i) {
+        for (int i = 1; i < vect.size() - 1; ++i) {
             currX[i] = omega * (-leftDiag[i] / midDiag[i] * currX[i - 1] -
                                 rightDiag[i] / midDiag[i] * currX[i + 1] + vect[i] / midDiag[i]) +
                        (1 - omega) * prevX[i];
         }
         int last = vect.size() - 1;
-        currX[last] = omega * (-leftDiag[last] / midDiag[last] * currX[last - 1] -
-                               rightDiag[last] / midDiag[last] * currX[last + 1] + vect[last] / midDiag[last]) +
-                      (1 - omega) * prevX[last];
+        currX[last] = omega * (-leftDiag[last] / midDiag[last] * currX[last - 1] + vect[last] / midDiag[last]) + (1 - omega) * prevX[last];
     }
     //  getting C matrix
 
