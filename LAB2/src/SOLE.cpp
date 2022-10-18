@@ -7,9 +7,10 @@ using std::vector;
 using std::string;
 
 const TT thau = 10e-3;
-const TT eps = 10e-5;
-const TT eps0 = 10e-5;
-const vector<TT> ans{5, -7, 12, 4};
+const TT eps = 10e-4;
+const TT eps0 = 10e-4;
+//const vector<TT> ans{5, -7, 12, 4};
+const vector<TT> ans{10, -10, 12, 4};
 
 vector<TT> iteration(vector<vector<TT>> &matrix, vector<TT> &rightVect) {
     matrixDigit(thau, matrix, '*');

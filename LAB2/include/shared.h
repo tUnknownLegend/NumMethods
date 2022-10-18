@@ -2,9 +2,11 @@
 #define INC_LAB2_SHARED_H
 
 // input file for matrix
-#define IN_FILE_MATRIX "../../../inputMatrix.txt"
+//#define IN_FILE_MATRIX "../../../inputMatrix.txt"
+#define IN_FILE_MATRIX "../../../test2M.txt"
 // input file for vector
-#define IN_FILE_VECTOR "../../../inputVector.txt"
+//#define IN_FILE_VECTOR "../../../inputVector.txt"
+#define IN_FILE_VECTOR "../../../test2V.txt"
 // output file for matrix
 #define OUT_FILE_MATRIX "../../../outputMatrix.txt"
 // output file for vector
