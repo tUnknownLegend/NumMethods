@@ -8,5 +8,6 @@ int main() {
     getJacobi();
     getRelaxation();
     getZeidel();
+    getThreeDiag();
 	return 0;
 }

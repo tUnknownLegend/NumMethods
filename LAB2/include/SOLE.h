@@ -13,4 +13,6 @@ void getRelaxation();
 
 void getZeidel();
 
+void getThreeDiag();
+
 #endif //INC_LAB2_SOLE_H

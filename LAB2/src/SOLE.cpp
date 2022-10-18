@@ -91,7 +91,56 @@ vector<TT> zeidel(vector<vector<TT>> &matrix, vector<TT> &rightVect) {
 }
 
 
-void getMethod(vector<TT>(*func)(vector<vector<TT>> &, vector<TT> &), const string& method) {
+vector<TT>
+threeDiag(vector<TT> &leftDiag, vector<TT> &midDiag, vector<TT> &rightDiag,
+          vector<TT> &vect, const TT &omega) {
+    vector<TT> currX(vect.size(), 0);
+    vector<TT> prevX(vect.size(), 1);
+
+    while (norm1Vector(vectorOperation(currX, prevX, '-')) > norm1Vector(currX) * eps + eps0) {
+        prevX = currX;
+
+        currX[0] = (1 - omega) * prevX[0] + omega * (-rightDiag[0] / midDiag[0] * currX[1] + vect[0] / midDiag[0]);
+        for (int i = 0; i < vect.size(); ++i) {
+            currX[i] = omega * (-leftDiag[i] / midDiag[i] * currX[i - 1] -
+                                rightDiag[i] / midDiag[i] * currX[i + 1] + vect[i] / midDiag[i]) +
+                       (1 - omega) * prevX[i];
+        }
+        int last = vect.size() - 1;
+        currX[last] = omega * (-leftDiag[last] / midDiag[last] * currX[last - 1] -
+                               rightDiag[last] / midDiag[last] * currX[last + 1] + vect[last] / midDiag[last]) +
+                      (1 - omega) * prevX[last];
+    }
+    return currX;
+}
+
+/*void genThreeDiag(vector<TT> &leftDiag, vector<TT> &midDiag, vector<TT> &rightDiag,
+                  vector<double> &vect, double l, double m, double r) {
+    for (int i = 0; i < leftDiag.size(); ++i) {
+        leftDiag[i] = l;
+        midDiag[i] = m;
+        rightDiag[i] = r;
+        vect[i] = i;
+    }
+    leftDiag[0] = 0;
+    rightDiag[rightDiag.size() - 1] = 0;
+}*/
+
+void getThreeDiag() {
+    const int size = 4;
+    vector<TT> leftDiag(size, 1.0);
+    vector<TT> midDiag(size, 2.0);
+    vector<TT> rightDiag(size, 8.0);
+    vector<TT> vect(size, 6.0);
+
+    leftDiag[0] = 0;
+    rightDiag[rightDiag.size() - 1] = 0;
+
+    std::cout << "three diag: ";
+    outputOnTheScreenVector(threeDiag(leftDiag, midDiag, rightDiag, vect, 1.0));
+}
+
+void getMethod(vector<TT>(*func)(vector<vector<TT>> &, vector<TT> &), const string &method) {
     vector<vector<TT>> matrix;
     vector<TT> rightVect;
     inputMatrix(matrix);
