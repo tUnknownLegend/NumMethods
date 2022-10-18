@@ -24,6 +24,9 @@ vector<TT> iteration(vector<vector<TT>> &matrix, vector<TT> &rightVect) {
     vector<TT> initX = currX;
     if (norm < 1) {
         unsigned int amtIt = 0;
+        // 1: norm1Vector(vectorOperation(currX, prevX, '-')) > norm1Vector(currX)
+        // 2: norm1Vector(vectorOperation(currX, prevX, '-')) > norm1Vector(currX) * eps + eps0
+        // 3: norm1Vector(vectorOperation(currX, prevX, '-')) > (1 - norm) / norm * eps
         while (norm1Vector(vectorOperation(currX, prevX, '-')) > ((1 - norm) / norm) * eps) {
             ++amtIt;
             prevX = currX;
@@ -64,6 +67,9 @@ vector<TT> jacobi(vector<vector<TT>> &matrix, vector<TT> &rightVect) {
     vector<TT> initX = currX;
     if (norm < 1) {
         unsigned int amtIt = 0;
+        // 1: norm1Vector(vectorOperation(currX, prevX, '-')) > norm1Vector(currX)
+        // 2: norm1Vector(vectorOperation(currX, prevX, '-')) > norm1Vector(currX) * eps + eps0
+        // 3: norm1Vector(vectorOperation(currX, prevX, '-')) > (1 - norm) / norm * eps
         while (norm1Vector(vectorOperation(currX, prevX, '-')) > (1 - norm) / norm * eps) {
             ++amtIt;
             prevX = currX;
@@ -80,17 +86,65 @@ vector<TT> jacobi(vector<vector<TT>> &matrix, vector<TT> &rightVect) {
     return currX;
 }
 
+vector<TT> getInitX(const vector<vector<TT>> &matrix, const vector<TT> &rightVect, const TT &omega) {
+    vector<TT> currX(rightVect.size(), 0);
+    vector<TT> prevX(rightVect.size(), 1);
+    for (int i = 0; i < rightVect.size(); ++i) {
+        TT prevSum = 0.0;
+        TT currSum = 0.0;
+
+        for (int j = i + 1; j < rightVect.size(); ++j) {
+            prevSum += matrix[i][j] * prevX[j];
+        }
+        for (int j = 0; j < i; ++j) {
+            currSum += matrix[i][j] * currX[j];
+        }
+        currX[i] =
+                -omega * (currSum + prevSum - rightVect[i]) / matrix[i][i] + (1 - omega) * prevX[i];
+    }
+    return currX;
+}
+
 vector<TT> relaxation(vector<vector<TT>> &matrix, vector<TT> &rightVect, const TT &omega) {
     vector<TT> currX(rightVect.size(), 0);
     vector<TT> prevX(rightVect.size(), 1);
-    vector<TT> initX(rightVect.size(), 0);
+
+    //  geting C matrix
+    vector<vector<TT>> Lmatrix(matrix);
+    vector<vector<TT>> Dmatrix(matrix);
+    vector<vector<TT>> Umatrix(matrix);
+    LDU(matrix, Lmatrix, Dmatrix, Umatrix);
+    vector<vector<TT>> inverseD = inverseMatrix(Dmatrix);
+    vector<vector<TT>> E = identityMatrix(matrix.size());
+
+    vector<TT> initX = getInitX(matrix, rightVect, omega);
+
+    Dmatrix = matrixOperations(inverseD, Lmatrix, '*');
+    matrixDigit(omega, Dmatrix, '*');
+    vector<vector<TT>> Cl = matrixOperations(E, Dmatrix, '+');
+
+    Dmatrix = matrixOperations(inverseD, Umatrix, '*');
+    matrixDigit(omega, Dmatrix, '*');
+    if (omega == 1) {
+        matrixDigit((1 - omega), E, '*');
+    }
+    vector<vector<TT>> Cu = matrixOperations(E, Dmatrix, '-');
+
+    TT norm = norm1Matrix(matrixOperations(inverseMatrix(Cl), Cu, '*'));
+    std::cout << "norm of matrix C: " << norm << "\n";
+/*    std::cout << "Cmatrix: ";
+    outputOnTheScreenMatrix(Cmatrix);
+    std::cout << "Cu: ";
+    outputOnTheScreenMatrix(Cu);
+    std::cout << "\n";*/
 
     unsigned int amtIt = 0;
-    while (norm1Vector(vectorOperation(currX, prevX, '-')) > norm1Vector(currX) * eps + eps0) {
+
+    // 1: norm1Vector(vectorOperation(currX, prevX, '-')) > norm1Vector(currX)
+    // 2: norm1Vector(vectorOperation(currX, prevX, '-')) > norm1Vector(currX) * eps + eps0
+    // 3: norm1Vector(vectorOperation(currX, prevX, '-')) > (1 - norm) / norm1Matrix(Cu) * eps
+    while (norm1Vector(vectorOperation(currX, prevX, '-')) > (1 - norm) / norm1Matrix(Cu) * eps) {
         prevX = currX;
-        if (amtIt == 1) {
-            initX = currX;
-        }
         ++amtIt;
         for (int i = 0; i < rightVect.size(); ++i) {
             TT prevSum = 0.0;
@@ -107,46 +161,9 @@ vector<TT> relaxation(vector<vector<TT>> &matrix, vector<TT> &rightVect, const T
         }
     }
     std::cout << "iterations: " << amtIt << "\n";
-    //  geting C matrix
-    vector<vector<TT>> Lmatrix(matrix);
-    vector<vector<TT>> Dmatrix(matrix);
-    vector<vector<TT>> Umatrix(matrix);
-    LDU(matrix, Lmatrix, Dmatrix, Umatrix);
-    vector<vector<TT>> inverseD = inverseMatrix(Dmatrix);
-    std::move(Dmatrix);
-
-    vector<vector<TT>> Cu(matrix);
-    for (int i = 0; i < matrix.size(); ++i) {
-        for (int j = 0; j < i; ++j) {
-            Cu[i][j] = -omega * inverseD[i][i] * Lmatrix[i][j];
-        }
-    }
-
-    vector<vector<TT>> Cmatrix(matrix);
-    vector<vector<TT>> E = identityMatrix(matrix.size());
-    for (int i = 0; i < matrix.size(); ++i) {
-        for (int j = matrix.size() - 1; j > i; --j) {
-//            if (i == j) {
-                Cmatrix[i][j] = (1 - omega) - omega * inverseD[i][i] * Umatrix[i][j];
-//            } else {
-//                Cmatrix[i][j] = -omega * inverseD[i][i] * Umatrix[i][j];
-//            }
-        }
-    }
-
-    std::cout << "norm of matrix Cmatrix: " << norm1Matrix(Cmatrix) << "\n";
-    std::cout << "norm of matrix Cu: " << norm1Matrix(Cu) << "\n";
-
-    TT norm = std::abs(norm1Matrix(Cu) / (1 - norm1Matrix(Cmatrix)));
     std::cout << "kEst: " << log((1 - norm) * eps / norm1Vector(vectorOperation(currX, initX, '-'))) / log(norm)
               << "\n";
     std::cout << "norm of error: " << norm1Vector(vectorOperation(ans, currX, '-')) << "\n";
-
-//    std::cout << "Cmatrix: ";
-//    outputOnTheScreenMatrix(Cmatrix);
-//    std::cout << "Cu: ";
-//    outputOnTheScreenMatrix(Cu);
-//    std::cout << "\n";
     return currX;
 }
 
