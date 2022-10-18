@@ -129,12 +129,23 @@ threeDiag(vector<TT> &leftDiag, vector<TT> &midDiag, vector<TT> &rightDiag,
 void getThreeDiag() {
     const int size = 4;
     vector<TT> leftDiag(size, 1.0);
-    vector<TT> midDiag(size, 2.0);
-    vector<TT> rightDiag(size, 8.0);
+    vector<TT> midDiag(size, 4.0);
+    vector<TT> rightDiag(size, 1.0);
     vector<TT> vect(size, 6.0);
+
+    for (int i = 0; i < vect.size(); ++i) {
+        vect[i] = 10 - 2 * ((i + 1) % 2);
+    }
+    vect[0] = 6;
+    vect[vect.size() - 1] = 9 - 3 * (vect.size() % 2);
 
     leftDiag[0] = 0;
     rightDiag[rightDiag.size() - 1] = 0;
+
+//    outputOnTheScreenVector(leftDiag);
+//    outputOnTheScreenVector(midDiag);
+//    outputOnTheScreenVector(rightDiag);
+//    outputOnTheScreenVector(vect);
 
     std::cout << "three diag: ";
     outputOnTheScreenVector(threeDiag(leftDiag, midDiag, rightDiag, vect, 1.0));
