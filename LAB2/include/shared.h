@@ -67,10 +67,15 @@ void vectorDigit(const TT &digit, std::vector<TT> &secondV, const char &operatio
 
 std::vector<TT> matrixVectorMultiplication(const std::vector<std::vector<TT>> &firstM,
                                            const std::vector<TT> &secondV);
-void LDU(const std::vector<std::vector<TT>>& A, std::vector<std::vector<TT>>& L, std::vector<std::vector<TT>>& D, std::vector<std::vector<TT>>& U);
 
-void three_diag_init(std::vector<TT>& a, std::vector<TT>& b, std::vector<TT>& c, std::vector<TT>& d, TT one, TT two, TT three, TT four);
+void LDU(const std::vector<std::vector<TT>> &A, std::vector<std::vector<TT>> &L, std::vector<std::vector<TT>> &D,
+         std::vector<std::vector<TT>> &U);
 
-std::vector<std::vector<TT>> inverseMatrix(std::vector<std::vector<TT>>& matrix);
+void three_diag_init(std::vector<TT> &a, std::vector<TT> &b, std::vector<TT> &c, std::vector<TT> &d, TT one, TT two,
+                     TT three, TT four);
+
+std::vector<std::vector<TT>> inverseMatrix(std::vector<std::vector<TT>> &matrix);
+
+void outputOnTheScreenMatrix(const std::vector<std::vector<TT>> &matrix);
 
 #endif //INC_LAB2_SHARED_H

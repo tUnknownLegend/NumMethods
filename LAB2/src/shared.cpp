@@ -169,11 +169,12 @@ void outputOnTheScreenMatrix(const vector<vector<TT>> &matrix) {
 
 // вывод вектора на экран
 void outputOnTheScreenVector(const std::vector<TT> &vector) {
-    for (double i: vector) {
+    for (const auto &i: vector) {
         cout << std::setprecision(8) << i << ' ';
     }
     cout << std::endl;
 }
+
 // Кубическая норма вектора
 TT normInfVector(const vector<TT> &vect) {
     TT norm = std::abs(vect[0]);
@@ -404,11 +405,9 @@ void vectorDigit(const TT &digit, vector<TT> &secondV, const char &operation) {
 }
 
 // Разложение матрицы на LDU
-void LDU(const vector<vector<TT>>& A, vector<vector<TT>>& L, vector<vector<TT>>& D, vector<vector<TT>>& U) {
-    for (int i = 0; i < A.size(); i++)
-    {
-        for (int j = 0; j < A.size(); j++)
-        {
+void LDU(const vector<vector<TT>> &A, vector<vector<TT>> &L, vector<vector<TT>> &D, vector<vector<TT>> &U) {
+    for (int i = 0; i < A.size(); i++) {
+        for (int j = 0; j < A.size(); j++) {
             if (i == j) D[i][j] = A[i][j];
             if (i > j) L[i][j] = A[i][j];
             if (i < j) U[i][j] = A[i][j];
@@ -423,7 +422,7 @@ vector<TT> CalcGaussMethod(vector<vector<TT>> matr, vector<TT> vect) {
     for (int k = 0; k < vect.size(); ++k) {
         //  partial selection
         TT maxValInd = k;
-        for (int i = k + 1; i <vect.size(); ++i) {
+        for (int i = k + 1; i < vect.size(); ++i) {
             maxValInd = matr[i][k] > matr[maxValInd][k] ? i : maxValInd;
         }
 
@@ -441,8 +440,7 @@ vector<TT> CalcGaussMethod(vector<vector<TT>> matr, vector<TT> vect) {
 
                 vect[i] -= c * vect[k];
             }
-        }
-        else {
+        } else {
             std::cerr << "Matrix is singular";
             return {};
         }
@@ -462,7 +460,7 @@ vector<TT> CalcGaussMethod(vector<vector<TT>> matr, vector<TT> vect) {
 }
 
 // Обратная матрица
-vector<vector<TT>> inverseMatrix(vector<vector<TT>>& matrix) {
+vector<vector<TT>> inverseMatrix(vector<vector<TT>> &matrix) {
     vector<TT> res(matrix.size(), 0.0);
     vector<TT> str;
     vector<vector<TT>> resMatrix;
