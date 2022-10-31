@@ -7,10 +7,10 @@ using std::vector;
 using std::string;
 
 const TT thau = 10e-3;
-const TT eps = 10e-4;
-const TT eps0 = 10e-4;
-//const vector<TT> ans{5, -7, 12, 4};
-const vector<TT> ans{10, -10, 12, 4};
+const TT eps = 10e-5;
+const TT eps0 = 10e-5;
+const vector<TT> ans{5, -7, 12, 4};
+//const vector<TT> ans{10, -10, 12, 4};
 
 vector<TT> iteration(vector<vector<TT>> &matrix, vector<TT> &rightVect) {
     matrixDigit(thau, matrix, '*');
@@ -28,12 +28,13 @@ vector<TT> iteration(vector<vector<TT>> &matrix, vector<TT> &rightVect) {
         // 1: norm1Vector(vectorOperation(currX, prevX, '-')) > norm1Vector(currX)
         // 2: norm1Vector(vectorOperation(currX, prevX, '-')) > norm1Vector(currX) * eps + eps0
         // 3: norm1Vector(vectorOperation(currX, prevX, '-')) > (1 - norm) / norm * eps
-        while (norm1Vector(vectorOperation(currX, prevX, '-')) > ((1 - norm) / norm) * eps) {
+        // 4: normDiffer(matrix, rightVect, currX, norm1Vector) > eps
+        while (norm1Vector(vectorOperation(ans, currX, '-')) > eps) {
             ++amtIt;
             prevX = currX;
             currX = vectorOperation(matrixVectorMultiplication(Cmatrix, prevX), rightVect, '+');
         }
-        std::cout << "iterations: " << amtIt << "\n";
+        std::cout << "iterations: " << amtIt + 1 << "\n";
     } else {
         std::cerr << "norm > 1\n";
     }
@@ -71,12 +72,13 @@ vector<TT> jacobi(vector<vector<TT>> &matrix, vector<TT> &rightVect) {
         // 1: norm1Vector(vectorOperation(currX, prevX, '-')) > norm1Vector(currX)
         // 2: norm1Vector(vectorOperation(currX, prevX, '-')) > norm1Vector(currX) * eps + eps0
         // 3: norm1Vector(vectorOperation(currX, prevX, '-')) > (1 - norm) / norm * eps
-        while (norm1Vector(vectorOperation(currX, prevX, '-')) > (1 - norm) / norm * eps) {
+        // 4: normDiffer(matrix, rightVect, currX, norm1Vector) > eps
+        while (norm1Vector(vectorOperation(ans, currX, '-')) > eps) {
             ++amtIt;
             prevX = currX;
             currX = vectorOperation(matrixVectorMultiplication(Cmatrix, prevX), Yvect, '+');
         }
-        std::cout << "iterations: " << amtIt << "\n";
+        std::cout << "iterations: " << amtIt + 1 << "\n";
     } else {
         std::cerr << "norm > 1\n";
     }
@@ -119,6 +121,13 @@ vector<TT> relaxation(vector<vector<TT>> &matrix, vector<TT> &rightVect, const T
     vector<vector<TT>> E = identityMatrix(matrix.size());
 
     vector<TT> initX = getInitX(matrix, rightVect, omega);
+    
+    //matrixDigit(omega, Lmatrix, '*');
+    //vector<vector<TT>> Cl = matrixOperations(Dmatrix, Lmatrix, '+');
+    //matrixDigit((1 - omega), Dmatrix, '*');
+    //matrixDigit((omega), Umatrix, '*');
+    //vector<vector<TT>> C = matrixOperations(inverseMatrix(Cl), matrixOperations(Dmatrix, Umatrix, '-'), '*');
+    
 
     Dmatrix = matrixOperations(inverseD, Lmatrix, '*');
     matrixDigit(omega, Dmatrix, '*');
@@ -132,7 +141,10 @@ vector<TT> relaxation(vector<vector<TT>> &matrix, vector<TT> &rightVect, const T
     vector<vector<TT>> Cu = matrixOperations(E, Dmatrix, '-');
 
     TT norm = norm1Matrix(matrixOperations(inverseMatrix(Cl), Cu, '*'));
+    //TT norm = normInfMatrix(matrixOperations(inverseMatrix(Cl), Cu, '*'));
     std::cout << "norm of matrix C: " << norm << "\n";
+    //std::cout << "norm of matrix Cu: " << norm1Matrix(Cu) << "\n";
+    //std::cout << "norm of matrix Cl: " << norm1Matrix(Cl) << "\n";
 /*    std::cout << "Cmatrix: ";
     outputOnTheScreenMatrix(Cmatrix);
     std::cout << "Cu: ";
@@ -144,7 +156,9 @@ vector<TT> relaxation(vector<vector<TT>> &matrix, vector<TT> &rightVect, const T
     // 1: norm1Vector(vectorOperation(currX, prevX, '-')) > norm1Vector(currX)
     // 2: norm1Vector(vectorOperation(currX, prevX, '-')) > norm1Vector(currX) * eps + eps0
     // 3: norm1Vector(vectorOperation(currX, prevX, '-')) > (1 - norm) / norm1Matrix(Cu) * eps
-    while (norm1Vector(vectorOperation(currX, prevX, '-')) > (1 - norm) / norm1Matrix(Cu) * eps) {
+    // 4: normDiffer(matrix, rightVect, currX, norm1Vector) > eps
+    
+    while (norm1Vector(vectorOperation(ans, currX, '-')) > eps) {
         prevX = currX;
         ++amtIt;
         for (int i = 0; i < rightVect.size(); ++i) {
@@ -182,34 +196,86 @@ threeDiag(vector<TT> &leftDiag, vector<TT> &midDiag, vector<TT> &rightDiag,
           vector<TT> &vect, const TT &omega) {
     vector<TT> currX(vect.size(), 0);
     vector<TT> prevX(vect.size(), 1);
+    vector<TT> prevY(vect.size(), 1);
 
     unsigned int amtIt = 0;
     while (norm1Vector(vectorOperation(currX, prevX, '-')) > norm1Vector(currX) * eps + eps0) {
         prevX = currX;
-        ++amtIt;
         currX[0] = (1 - omega) * prevX[0] + omega * (-rightDiag[0] / midDiag[0] * currX[1] + vect[0] / midDiag[0]);
         for (int i = 1; i < vect.size() - 1; ++i) {
             currX[i] = omega * (-leftDiag[i] / midDiag[i] * currX[i - 1] -
-                                rightDiag[i] / midDiag[i] * currX[i + 1] + vect[i] / midDiag[i]) +
-                       (1 - omega) * prevX[i];
+                rightDiag[i] / midDiag[i] * currX[i + 1] + vect[i] / midDiag[i]) +
+                (1 - omega) * prevX[i];
         }
         int last = vect.size() - 1;
         currX[last] = omega * (-leftDiag[last] / midDiag[last] * currX[last - 1] + vect[last] / midDiag[last]) +
-                      (1 - omega) * prevX[last];
+            (1 - omega) * prevX[last];
+        ++amtIt;
     }
+
+    //while ((norm1Vector(vectorOperation(currX, prevX, '-')) > norm1Vector(currX) * eps + eps0) && amtIt < 50) {
+    //   prevX = currX;
+    //   
+    //   int last = vect.size() - 1;
+
+    //   currX[last] = omega * (-leftDiag[last] / midDiag[last] * currX[last - 1] + vect[last] / midDiag[last]) +
+    //       (1 - omega) * prevX[last];
+    //   for (int i = vect.size() - 2; i > amtIt + 1; --i) {
+    //       currX[i] = omega * (-leftDiag[i] / midDiag[i] * currX[i - 1] -
+    //           rightDiag[i] / midDiag[i] * currX[i + 1] + vect[i] / midDiag[i]) +
+    //           (1 - omega) * prevX[i];
+    //   }
+    //   currX[0] = (1 - omega) * prevX[0] + omega * (-rightDiag[0] / midDiag[0] * currX[1] + vect[0] / midDiag[0]);
+    //   ++amtIt;
+    //}
+    
+
+    //while ((norm1Vector(vectorOperation(currX, prevX, '-')) > norm1Vector(currX) * eps + eps0) && amtIt < 50) {
+    //    prevX = currX;
+    //    int last = vect.size() - 1;
+
+    //   if (amtIt % 2 == 0) {
+    //       currX[last] = omega * (-leftDiag[last] / midDiag[last] * currX[last - 1] + vect[last] / midDiag[last]) +
+    //           (1 - omega) * prevX[last];
+    //       for (int i = vect.size() - 2; i > amtIt + 1; --i) {
+
+    //           currX[i] = omega * (-leftDiag[i] / midDiag[i] * currX[i - 1] -
+    //               rightDiag[i] / midDiag[i] * currX[i + 1] + vect[i] / midDiag[i]) +
+    //               (1 - omega) * prevX[i];
+    //       }
+    //       currX[0] = (1 - omega) * prevX[0] + omega * (-rightDiag[0] / midDiag[0] * currX[1] + vect[0] / midDiag[0]);
+    //   }
+    //   else {
+    //       currX[0] = (1 - omega) * prevX[0] + omega * (-rightDiag[0] / midDiag[0] * currX[1] + vect[0] / midDiag[0]);
+    //       for (int i = 1; i < vect.size() - 1; ++i) {
+    //           currX[i] = omega * (-leftDiag[i] / midDiag[i] * currX[i - 1] -
+    //               rightDiag[i] / midDiag[i] * currX[i + 1] + vect[i] / midDiag[i]) +
+    //               (1 - omega) * prevX[i];
+    //       }
+    //       int last = vect.size() - 1;
+    //       currX[last] = omega * (-leftDiag[last] / midDiag[last] * currX[last - 1] + vect[last] / midDiag[last]) +
+    //           (1 - omega) * prevX[last];
+    //   }
+
+
+
+    //    ++amtIt;
+    //}
+    
+
     std::cout << "iterations: " << amtIt << "\n";
     //  getting C matrix
 
-    vector<TT> Cmatrix(leftDiag.size(), 0);
-    vector<TT> Cu(leftDiag.size(), 0);
-    for (int i = 0; i < midDiag.size(); ++i) {
-        Cmatrix[i] = -omega / midDiag[i] * leftDiag[i];
-        Cu[i] = -omega / midDiag[i] * rightDiag[i];
-    }
+    //vector<TT> Cmatrix(leftDiag.size(), 0);
+    //vector<TT> Cu(leftDiag.size(), 0);
+    //for (int i = 0; i < midDiag.size(); ++i) {
+    //    Cmatrix[i] = -omega / midDiag[i] * leftDiag[i];
+    //    Cu[i] = -omega / midDiag[i] * rightDiag[i];
+    //}
 
 
-    std::cout << "norm of matrix Cmatrix: " << norm1Vector(Cmatrix) << "\n";
-    std::cout << "norm of matrix Cu: " << norm1Vector(Cu) << "\n";
+    //std::cout << "norm of matrix Cmatrix: " << norm1Vector(Cmatrix) << "\n";
+    //std::cout << "norm of matrix Cu: " << norm1Vector(Cu) << "\n";
 //    std::cout << "Cmatrix: ";
 //    outputOnTheScreenVector(Cmatrix);
 //    std::cout << "Cu: ";
@@ -220,17 +286,26 @@ threeDiag(vector<TT> &leftDiag, vector<TT> &midDiag, vector<TT> &rightDiag,
 }
 
 void getThreeDiag() {
-    const int size = 4;
-    vector<TT> leftDiag(size, 1.0);
-    vector<TT> midDiag(size, 4.0);
+    const int size = 200;
+    //vector<TT> leftDiag(size, 1.0);
+    //vector<TT> midDiag(size, 4.0);
+    //vector<TT> rightDiag(size, 1.0);
+    //vector<TT> vect(size, 6.0);
+/*    vector<TT> leftDiag(size, 6.0);
+    vector<TT> midDiag(size, 8.0);
     vector<TT> rightDiag(size, 1.0);
-    vector<TT> vect(size, 6.0);
+    vector<TT> vect(size, 1.0);*/
 
-    for (int i = 0; i < vect.size(); ++i) {
-        vect[i] = 10 - 2 * ((i + 1) % 2);
-    }
-    vect[0] = 6;
-    vect[vect.size() - 1] = 9 - 3 * (vect.size() % 2);
+    vector<TT> leftDiag(size, 1.0);
+    vector<TT> midDiag(size, 8.0);
+    vector<TT> rightDiag(size, 6.0);
+    vector<TT> vect(size, 1.0);
+
+    //for (int i = 0; i < vect.size(); ++i) {
+    //    vect[i] = 10 - 2 * ((i + 1) % 2);
+    //}
+    //vect[0] = 6;
+    //vect[vect.size() - 1] = 9 - 3 * (vect.size() % 2);
 
     leftDiag[0] = 0;
     rightDiag[rightDiag.size() - 1] = 0;

@@ -366,30 +366,22 @@ vector<TT> CalcPartQR(vector<vector<TT>>& matrix, vector<TT> rightVect, const ve
 
 
 // Обратная матрица
-vector<vector<TT>> inverseMatrix(vector<vector<TT>>& matrix) {
-	vector<TT> res(matrix.size(), 0.0);
-	vector<TT> str;
-	vector<vector<TT>> resMatrix;
+vector<vector<TT>> inverseMatrix(vector<vector<TT>> &matrix) {
+    vector<TT> res(matrix.size(), 0.0);
+    vector<TT> str;
+    vector<vector<TT>> resMatrix;
+    vector<vector<TT>> EE;
+    EE = identityMatrix(matrix.size());
 
-	vector<vector<TT>> EE = identityMatrix(matrix.size());
-
-	vector<vector<TT>> R(matrix);
-
-	for (int j = 0; j < matrix.size(); ++j) {
-		str.push_back(EE[j][0]);
-	}
-	CalcR(matrix, EE[0], R);
-	str.clear();
-
-	for (int i = 0; i < matrix.size(); ++i) {
-		for (int j = 0; j < matrix.size(); ++j) {
-			str.push_back(EE[j][i]);
-		}
-		res = CalcPartQR(matrix, str, R);
-		resMatrix.push_back(res);
-		str.clear();
-	}
-	return transpoceMatrix(resMatrix);
+    for (int i = 0; i < matrix.size(); ++i) {
+        for (int j = 0; j < matrix.size(); ++j) {
+            str.push_back(EE[j][i]);
+        }
+        res = CalcGaussMethod(matrix, str);
+        resMatrix.push_back(res);
+        str.clear();
+    }
+    return transpoceMatrix(resMatrix);
 }
 
 //Умножение матриц
