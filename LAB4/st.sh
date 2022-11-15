@@ -5,8 +5,8 @@ scan-build cmake ..
 scan-build make
 #clear
 mkdir ./CMakeFiles/exec
-mv LAB2 ./CMakeFiles/exec
+mv LAB4 ./CMakeFiles/exec
 cd ./CMakeFiles/exec
-./LAB2
+./LAB4
 cd ../../../
 rm -r ./build

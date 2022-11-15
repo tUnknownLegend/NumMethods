@@ -4,6 +4,6 @@
 //#include "shared.h"
 
 int main() {
-
+    getEigenvalues();
 	return 0;
 }
