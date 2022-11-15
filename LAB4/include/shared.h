@@ -14,7 +14,7 @@
 // compare for double
 #define COMPARE_RATE 10e-8
 // zero division error
-#define DIVISTION_ERROR 5
+#define DIVISTION_ERROR 10e-7
 
 #include <vector>
 #include <algorithm>
@@ -51,7 +51,7 @@ TT normDiffer(const std::vector<std::vector<TT>> &A, const std::vector<TT> &b, c
 
 std::vector<std::vector<TT>> transpoceMatrix(const std::vector<std::vector<TT>> &matrix);
 
-std::vector<std::vector<TT>> identityMatrix(int size);
+std::vector<std::vector<TT>> identityMatrix(int size, TT digit = 1.0);
 
 void outputOnTheScreenMatrix(const std::vector<std::vector<TT>> &matrix);
 

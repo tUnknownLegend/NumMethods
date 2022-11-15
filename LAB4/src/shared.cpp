@@ -261,10 +261,10 @@ vector<vector<TT>> transpoceMatrix(const vector<vector<TT>> &matrix) {
 }
 
 // Единичная матрица
-vector<vector<TT>> identityMatrix(int size) {
+vector<vector<TT>> identityMatrix(int size, TT digit) {
     vector<vector<TT>> resMatrix(size, vector<TT>(size, 0.0));
     for (int i = 0; i < size; ++i) {
-        resMatrix[i][i] = 1.0;
+        resMatrix[i][i] = digit;
     }
     return resMatrix;
 }

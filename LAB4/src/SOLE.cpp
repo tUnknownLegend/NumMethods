@@ -7,7 +7,9 @@
 using std::vector;
 using std::string;
 
-void getNextMatrix(vector<vector<TT>>& matrix, const bool& last = false) {
+const TT theta = 5.0;
+
+std::pair<vector<vector<TT>>, vector<vector<TT>>>QR(const vector<vector<TT>>& matrix) {
     vector<vector<TT>> R(matrix);
     vector<vector<TT>> T = identityMatrix(matrix.size());
     vector<TT> rightVect(matrix.size(), 0);
@@ -16,13 +18,13 @@ void getNextMatrix(vector<vector<TT>>& matrix, const bool& last = false) {
     vector<TT> resultVect(rightVect.size(), 0.0);
     vector<TT> add(rightVect);
 
-    for (int i = 0; i < rightVect.size(); ++i) {  // - 1
-        for (int j = i + 1; j < rightVect.size(); ++j) {
+    for (int i = 0; i < matrix.size(); ++i) {  // - 1
+        for (int j = i + 1; j < matrix.size(); ++j) {
             if (std::abs(R[i][j]) > COMPARE_RATE) {
                 TT tempres = sqrt(pow(R[i][i], 2) + pow(R[j][i], 2));
                 c = R[i][i] / tempres;
                 s = R[j][i] / tempres;
-                for (int k = 0; k < rightVect.size(); ++k) {
+                for (int k = 0; k < matrix.size(); ++k) {
                     TT tr = R[i][k];
                     R[i][k] = c * R[i][k] + s * R[j][k];
                     R[j][k] = -s * tr + c * R[j][k];
@@ -38,9 +40,9 @@ void getNextMatrix(vector<vector<TT>>& matrix, const bool& last = false) {
         }
     }
 
-    for (int i = rightVect.size() - 1; i >= 0; --i) {
+    for (int i = matrix.size() - 1; i >= 0; --i) {
         TT sumJ = 0.0;
-        for (int j = i + 1; j < rightVect.size(); ++j) {
+        for (int j = i + 1; j < matrix.size(); ++j) {
             sumJ += R[i][j] * resultVect[j];
         }
         resultVect[i] = (add[i] - sumJ) / R[i][i];
@@ -49,20 +51,24 @@ void getNextMatrix(vector<vector<TT>>& matrix, const bool& last = false) {
     for (int i = 0; i < matrix.size(); ++i) {
         if (std::abs(R[i][i]) < COMPARE_RATE) {
             std::cerr << "Matrix is singular";
-            return;
+            return {};
         }
     }
     vector<vector<TT>> Q = transpoceMatrix(T);
 
-//    std::cout << "Q:" << std::endl;
-//    outputOnTheScreenMatrix(Q);
-//    std::cout << "R:" << std::endl;
-//    outputOnTheScreenMatrix(R);
+    return {Q, R};
+}
 
-    //std::cout << "\nAmount of mult: " << coounter << "\n";
-    //std::cout << "\nAmount of mltB: " << mltB << "\n";
+void getNextMatrix(vector<vector<TT>>& matrix, const bool& last = false) {
+    vector<vector<TT>>tempMatrix(matrix);
+    vector<vector<TT>> thetaMatrix = identityMatrix(
+            matrix.size(), theta);
+    matrix = matrixOperations(tempMatrix, thetaMatrix, '-');
 
-    matrix = (last ? R : matrixOperations(R, Q, '*'));
+    std::pair<vector<vector<TT>>, vector<vector<TT>>> qr = QR(matrix);
+
+    tempMatrix = (last ? qr.second : matrixOperations(qr.second, qr.first, '*'));
+    matrix = (last ? tempMatrix : matrixOperations(tempMatrix, thetaMatrix, '+'));
 }
 
 void genHessenberg(vector<vector<TT>> &matrix, const unsigned int& k, const unsigned int& l){
@@ -90,16 +96,48 @@ vector<TT> Hessenberg(vector<vector<TT>> &matrix, vector<TT> &rightVect) {
     return {};
 }
 
+enum qrAlgs { ORDINARY, THETHA, HESS, HESS_THETHA };
+
+
+void universeQrEigenvalues(char option, vector<vector<TT>>& matrix) {
+   switch (option) {
+       case ORDINARY:
+           for (int i = 0; i < matrix.size() - 1; ++i) {
+               getNextMatrix(matrix);
+           }
+           getNextMatrix(matrix, true);
+           break;
+       case THETHA:
+           for (int i = 0; i < matrix.size() - 1; ++i) {
+               TT lastRow = 5.0;
+               while (std::abs(lastRow) > DIVISTION_ERROR) {
+                   lastRow = 0.0;
+                   for(int j = matrix.size() - 1 - i; j >= 0; --j) {
+                       if (matrix.size() - 1 - i != j) {
+                           lastRow += matrix[matrix.size() - 1 - i][j];
+                       }
+                   }
+                   getNextMatrix(matrix);
+               }
+           }
+           break;
+       case HESS:
+           break;
+       case HESS_THETHA:
+           break;
+       default:
+           std::cerr << "wrong option // universeQrEigenvalues";
+   }
+}
+
 vector<TT> qrEigenvalues(vector<vector<TT>>& matrix, vector<TT> & vec) {
-    for (int i = 0; i < matrix.size(); ++i) {
-        getNextMatrix(matrix);
-    }
-    // outputOnTheScreenMatrix(matrix);
+    // ORDINARY, THETHA, HESS, HESS_THETHA
+    universeQrEigenvalues(THETHA, matrix);
 
     vector<TT> resVec(matrix.size(), 0);
 
     for (int i = 0; i < matrix.size(); ++i){
-            resVec [i] = matrix[i][i];
+        resVec [i] = matrix[i][i];
     }
 
     return resVec;
