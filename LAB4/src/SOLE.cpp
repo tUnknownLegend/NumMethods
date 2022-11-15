@@ -72,28 +72,30 @@ void getNextMatrix(vector<vector<TT>>& matrix, const bool& last = false) {
 }
 
 void genHessenberg(vector<vector<TT>> &matrix, const unsigned int& k, const unsigned int& l){
-    matrix = identityMatrix(matrix.size());
-    TT alpha = matrix[k][k-1] / sqrt(pow(matrix[k][k-1], 2) + pow(matrix[l][k-1], 2));
-    TT betha = matrix[l][k-1] / sqrt(pow(matrix[k][k-1], 2) + pow(matrix[l][k-1], 2));
-    assert(k < l);
-    assert(l < matrix.size());
-    assert(std::abs(pow(alpha, 2) + pow(betha, 2)) <= COMPARE_RATE);
-    matrix[k][k] = alpha;
-    matrix[k][l] = betha;
-    matrix[l][k] = -betha;
-    matrix[l][l] = alpha;
+    TT temp = sqrt(pow(matrix[k][k-1], 2) + pow(matrix[l][k-1], 2));
+    TT alpha = matrix[k][k-1] / temp;
+    TT betha = matrix[l][k-1] / temp;
+//    assert(std::abs(pow(alpha, 2) + pow(betha, 2) - 1) <= DIVISTION_ERROR);
+
+    for (int i = k - 1; i < matrix.size(); ++i) {
+        TT Mki = matrix[k][i];
+        matrix[k][i] = alpha * matrix[k][i] + betha * matrix[l][i];
+        matrix[l][i] = alpha * matrix[l][i] - betha * Mki;
+    }
+    for (int i = k - 1; i < matrix.size(); ++i) {
+        TT Mik = matrix[i][k];
+        matrix[i][k] = alpha * matrix[i][k] + betha * matrix[i][l];
+        matrix[i][l] = alpha * matrix[i][l] - betha * Mik;
+    }
 }
 
-vector<TT> Hessenberg(vector<vector<TT>> &matrix, vector<TT> &rightVect) {
-    vector<vector<TT>> Tmatrix;
-    for (int i = 0; i < matrix.size(); ++i) {
-        for (int j = 0; j < i; ++j) {
-            genHessenberg(Tmatrix, i, j);
-            vector<vector<TT>> m = matrixOperations(Tmatrix, matrix, '*');
-            matrix = matrixOperations(Tmatrix, transpoceMatrix(m), '*');
+void Hessenberg(vector<vector<TT>> &matrix) {
+    for (int i = 1; i < matrix.size(); ++i) {
+        for (int j = i + 1; j < matrix.size(); ++j) {
+            genHessenberg(matrix, i, j);
         }
     }
-    return {};
+    //outputMatrix(matrix);
 }
 
 enum qrAlgs { ORDINARY, THETHA, HESS, HESS_THETHA };
@@ -122,8 +124,12 @@ void universeQrEigenvalues(char option, vector<vector<TT>>& matrix) {
            }
            break;
        case HESS:
+           Hessenberg(matrix);
+           universeQrEigenvalues(ORDINARY, matrix);
            break;
        case HESS_THETHA:
+           Hessenberg(matrix);
+           universeQrEigenvalues(THETHA, matrix);
            break;
        default:
            std::cerr << "wrong option // universeQrEigenvalues";
@@ -132,18 +138,16 @@ void universeQrEigenvalues(char option, vector<vector<TT>>& matrix) {
 
 vector<TT> qrEigenvalues(vector<vector<TT>>& matrix, vector<TT> & vec) {
     // ORDINARY, THETHA, HESS, HESS_THETHA
-    universeQrEigenvalues(THETHA, matrix);
+    universeQrEigenvalues(HESS_THETHA, matrix);
+
+    outputOnTheScreenMatrix(matrix);
 
     vector<TT> resVec(matrix.size(), 0);
-
     for (int i = 0; i < matrix.size(); ++i){
         resVec [i] = matrix[i][i];
     }
-
     return resVec;
 }
-
-
 
 void getMethod(vector<TT>(*func)(vector<vector<TT>> &, vector<TT> &), const string &method) {
     vector<vector<TT>> matrix;
@@ -156,10 +160,6 @@ void getMethod(vector<TT>(*func)(vector<vector<TT>> &, vector<TT> &), const stri
     outputOnTheScreenVector(res);
     outputVector(res);
     std::cout << "----------------------\n";
-}
-
-void getHessenberg() {
-    // getMethod(&Hessenberg, "Hessenberg");
 }
 
 void getEigenvalues() {
