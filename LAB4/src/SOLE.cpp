@@ -138,7 +138,7 @@ TT Relay(const vector<vector<TT>> &matrix, const vector<TT> &leftVec) {
 }
 
 vector<TT> iterational(vector<vector<TT>> matrix, TT eigen, const bool isRelay) {
-    vector<TT> rightVect = {123, 3, 2, -5};
+    vector<TT> rightVect = {123, 324, 222, -5345};
     vectorDigit(l2NormVec(rightVect), rightVect, '/');
     vector<TT> leftVect(matrix.size(), 0.0);
 
@@ -146,7 +146,6 @@ vector<TT> iterational(vector<vector<TT>> matrix, TT eigen, const bool isRelay) 
         eigen = Relay(matrix, rightVect);
         std::cout << "eigen val: " << eigen << "\n";
     }
-
     vector<vector<TT>> temp = matrixOperations(matrix, identityMatrix(matrix.size(), eigen), '-');
     std::swap(temp, matrix);
     leftVect = CalcGaussMethod(matrix, rightVect);

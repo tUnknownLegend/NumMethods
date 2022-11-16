@@ -224,21 +224,19 @@ TT norm1Matrix(const vector<vector<TT>> &matrix) {
     return norm;
 }
 
-TT l2NormMatr(const vector<vector<TT>>& matrix)
-{
+TT l2NormMatr(const vector<vector<TT>> &matrix) {
     TT sum = 0;
-    for (auto &i : matrix) {
-        for (auto j : i) {
+    for (auto &i: matrix) {
+        for (auto j: i) {
             sum += pow(j, 2);
         }
     }
     return sqrt(sum);
 }
 
-TT l2NormVec(const vector<TT>& vec)
-{
+TT l2NormVec(const vector<TT> &vec) {
     TT sum = 0;
-    for (double i : vec) {
+    for (double i: vec) {
         sum += pow(i, 2);
     }
     return sqrt(sum);
@@ -436,43 +434,37 @@ void LDU(const vector<vector<TT>> &A, vector<vector<TT>> &L, vector<vector<TT>> 
 }
 
 vector<TT> CalcGaussMethod(vector<vector<TT>> matr, vector<TT> vect) {
+    vector<TT> resultVect(vect.size(), 1.0);
 
-    vector<TT> resultVect(vect.size(), 0.0); // инициализация вектора
-    for (int k = 0; k < vect.size(); ++k) {
-        //  partial selection
-        TT maxValInd = k;
-        for (int i = k + 1; i < vect.size(); ++i) {
-            maxValInd = matr[i][k] > matr[maxValInd][k] ? i : maxValInd;
+    for (int k = 0; k < matr[1].size(); ++k) {
+        int maxValInd = k;
+        for (int i = k; i < matr.size(); ++i)
+        {
+            if (std::abs(matr[i][k]) > std::abs(matr[maxValInd][k]))
+                maxValInd = i;
         }
-        if (std::abs(matr[maxValInd][k]) > COMPARE_RATE || true) {
+
+        if (maxValInd != k) {
             std::swap(matr[maxValInd], matr[k]);
             std::swap(vect[maxValInd], vect[k]);
+        }
+        for (int i = k + 1; i < matr.size(); ++i) {
+            TT coeffProp = matr[i][k] / matr[k][k];
 
-            //  straight
-            for (int i = k + 1; i < vect.size(); ++i) {
-                TT c = (matr[i][k] / matr[k][k]);
-                for (int j = k; j < vect.size(); ++j) {
-                    matr[i][j] -= c * matr[k][j];
-                }
-
-                vect[i] -= c * vect[k];
+            for (int j = k; j < matr[1].size(); ++j) {
+                matr[i][j] -= matr[k][j] * coeffProp;
             }
-        } else {
-            std::cerr << "Matrix is singular";
-            return {};
+
+            vect[i] -= vect[k] * coeffProp;
         }
     }
-
-    //  reverse
-    for (int i = vect.size() - 1; i >= 0; --i) {
-        TT sumJ = 0.0;
-        for (int j = i + 1; j < vect.size(); ++j) {
-            sumJ += matr[i][j] * resultVect[j];
+    for (int i = matr.size() - 1; i >= 0; --i) {
+        TT sum = 0.0;
+        for (int j = i + 1; j < matr.size(); ++j) {
+            sum = sum + matr[i][j] * resultVect[j];
         }
-
-        resultVect[i] = (vect[i] - sumJ) / matr[i][i];
+        resultVect[i] = (resultVect[i] - sum) / matr[i][i];
     }
-    outputMatrix(matr);
     return resultVect;
 }
 
