@@ -224,6 +224,26 @@ TT norm1Matrix(const vector<vector<TT>> &matrix) {
     return norm;
 }
 
+TT l2NormMatr(const vector<vector<TT>>& matrix)
+{
+    TT sum = 0;
+    for (auto &i : matrix) {
+        for (auto j : i) {
+            sum += pow(j, 2);
+        }
+    }
+    return sqrt(sum);
+}
+
+TT l2NormVec(const vector<TT>& vec)
+{
+    TT sum = 0;
+    for (double i : vec) {
+        sum += pow(i, 2);
+    }
+    return sqrt(sum);
+}
+
 vector<TT> MultiplicationMatrixvsVector(const vector<vector<TT>> &matrix, const vector<TT> &vect) {
     vector<TT> resVector;
     TT s;
@@ -418,16 +438,13 @@ void LDU(const vector<vector<TT>> &A, vector<vector<TT>> &L, vector<vector<TT>> 
 vector<TT> CalcGaussMethod(vector<vector<TT>> matr, vector<TT> vect) {
 
     vector<TT> resultVect(vect.size(), 0.0); // инициализация вектора
-
     for (int k = 0; k < vect.size(); ++k) {
         //  partial selection
         TT maxValInd = k;
         for (int i = k + 1; i < vect.size(); ++i) {
             maxValInd = matr[i][k] > matr[maxValInd][k] ? i : maxValInd;
         }
-
-
-        if (abs(matr[maxValInd][k]) > COMPARE_RATE) {
+        if (std::abs(matr[maxValInd][k]) > COMPARE_RATE || true) {
             std::swap(matr[maxValInd], matr[k]);
             std::swap(vect[maxValInd], vect[k]);
 

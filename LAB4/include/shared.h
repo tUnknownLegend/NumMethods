@@ -80,4 +80,10 @@ std::vector<std::vector<TT>> inverseMatrix(std::vector<std::vector<TT>> &matrix)
 
 void outputOnTheScreenMatrix(const std::vector<std::vector<TT>> &matrix);
 
+std::vector<TT> CalcGaussMethod(std::vector<std::vector<TT>> matr, std::vector<TT> vect);
+
+TT l2NormVec(const std::vector<TT>& vec);
+
+TT l2NormMatr(const std::vector<std::vector<TT>>& matrix);
+
 #endif //INC_LAB2_SHARED_H
