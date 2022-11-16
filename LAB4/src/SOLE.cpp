@@ -139,6 +139,7 @@ TT Relay(const vector<vector<TT>> &matrix, const vector<TT> &leftVec) {
 
 vector<TT> iterational(vector<vector<TT>> matrix, TT eigen, const bool isRelay) {
     vector<TT> rightVect = {123, 324, 222, -5345};
+    //vector<TT> rightVect = {-0.86446047, 0.00339321, -0.24459138, -0.43917153};
     vectorDigit(l2NormVec(rightVect), rightVect, '/');
     vector<TT> leftVect(matrix.size(), 0.0);
 
