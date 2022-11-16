@@ -9,6 +9,9 @@ using std::string;
 
 const TT theta = 5.0;
 
+unsigned int iterations = 0;
+unsigned int operations = 0;
+
 std::pair<vector<vector<TT>>, vector<vector<TT>>> QR(const vector<vector<TT>> &matrix) {
     vector<vector<TT>> R(matrix);
     vector<vector<TT>> T = identityMatrix(matrix.size());
@@ -21,6 +24,7 @@ std::pair<vector<vector<TT>>, vector<vector<TT>>> QR(const vector<vector<TT>> &m
                 TT tempres = sqrt(pow(R[i][i], 2) + pow(R[j][i], 2));
                 c = R[i][i] / tempres;
                 s = R[j][i] / tempres;
+                operations += 4;
                 for (int k = 0; k < matrix.size(); ++k) {
                     TT tr = R[i][k];
                     R[i][k] = c * R[i][k] + s * R[j][k];
@@ -29,6 +33,8 @@ std::pair<vector<vector<TT>>, vector<vector<TT>>> QR(const vector<vector<TT>> &m
                     TT tq = T[i][k];
                     T[i][k] = c * T[i][k] + s * T[j][k];
                     T[j][k] = -s * tq + c * T[j][k];
+
+                    operations += 8;
                 }
             }
         }
@@ -39,6 +45,7 @@ std::pair<vector<vector<TT>>, vector<vector<TT>>> QR(const vector<vector<TT>> &m
 }
 
 void getNextMatrix(vector<vector<TT>> &matrix, const bool &last = false) {
+    ++iterations;
     vector<vector<TT>> tempMatrix(matrix);
     vector<vector<TT>> thetaMatrix = identityMatrix(
             matrix.size(), theta);
@@ -54,17 +61,21 @@ void genHessenberg(vector<vector<TT>> &matrix, const unsigned int &k, const unsi
     TT temp = sqrt(pow(matrix[k][k - 1], 2) + pow(matrix[l][k - 1], 2));
     TT alpha = matrix[k][k - 1] / temp;
     TT betha = matrix[l][k - 1] / temp;
+    operations += 4;
 //    assert(std::abs(pow(alpha, 2) + pow(betha, 2) - 1) <= DIVISTION_ERROR);
 
     for (int i = k - 1; i < matrix.size(); ++i) {
         TT Mki = matrix[k][i];
         matrix[k][i] = alpha * matrix[k][i] + betha * matrix[l][i];
         matrix[l][i] = alpha * matrix[l][i] - betha * Mki;
+        operations += 4;
     }
     for (int i = k - 1; i < matrix.size(); ++i) {
         TT Mik = matrix[i][k];
         matrix[i][k] = alpha * matrix[i][k] + betha * matrix[i][l];
         matrix[i][l] = alpha * matrix[i][l] - betha * Mik;
+
+        operations += 4;
     }
 }
 
@@ -118,7 +129,7 @@ void universeQrEigenvalues(char option, vector<vector<TT>> &matrix) {
 
 vector<TT> qrEigenvalues(vector<vector<TT>> &matrix, vector<TT> &vec) {
     // ORDINARY, THETHA, HESS, HESS_THETHA
-    universeQrEigenvalues(HESS_THETHA, matrix);
+    universeQrEigenvalues(ORDINARY, matrix);
     // outputOnTheScreenMatrix(matrix);
 
     vector<TT> resVec(matrix.size(), 0);
@@ -133,6 +144,7 @@ TT Relay(const vector<vector<TT>> &matrix, const vector<TT> &leftVec) {
     TT sum = 0.0;
     for (int i = 0; i < matrix.size(); ++i) {
         sum += prom[i] * leftVec[i];
+        ++operations;
     }
     return sum;
 }
@@ -156,25 +168,32 @@ vector<TT> iterational(vector<vector<TT>> matrix, TT eigen, const bool isRelay) 
     return rightVect;
 }
 
-void getMethod(vector<TT>(*func)(vector<vector<TT>> &, vector<TT> &), const string &method) {
+void outEigenVectors(const vector<TT>& res){
     vector<vector<TT>> matrix;
-    vector<TT> rightVect;
     inputMatrix(matrix);
-    inputVector(rightVect);
-    outputMatrix(matrix);
-    vector<TT> res = func(matrix, rightVect);
-    std::cout << method << ": ";
-    outputOnTheScreenVector(res);
-    outputVector(res);
     std::cout << "--------vec-----------\n";
-    matrix.clear();
-    inputMatrix(matrix);
-
     for (auto eigen: res) {
         std::cout << "\n";
         outputOnTheScreenVector(iterational(matrix, eigen, false));
     }
     std::cout << "----------------------\n";
+}
+
+void getMethod(vector<TT>(*func)(vector<vector<TT>> &, vector<TT> &), const string &method) {
+    vector<vector<TT>> matrix;
+    vector<TT> rightVect;
+    inputMatrix(matrix);
+    vector<vector<TT>> temp (matrix);
+    //matrix = transpoceMatrix(temp);
+    vector<TT> res = func(matrix, rightVect);
+    outputMatrix(matrix);
+    std::cout << method << ": ";
+    outputOnTheScreenVector(res);
+    outputVector(res);
+    std::cout << "operations: " << operations << "\n";
+    std::cout << "iterations: " << iterations << "\n";
+
+    //outEigenVectors(res);
 }
 
 void getEigenvalues() {
