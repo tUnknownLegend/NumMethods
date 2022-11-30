@@ -175,6 +175,15 @@ void outputOnTheScreenVector(const std::vector<TT> &vector) {
     cout << std::endl;
 }
 
+// вывод вектора на экран
+void outputOnTheScreenPairVector(const std::vector<std::pair<TT, TT>> &pair) {
+    for (const auto &i: pair) {
+        cout << std::setprecision(8) << i.second << '[';
+        cout << std::setprecision(8) << i.first << "], ";
+    }
+    cout << std::endl;
+}
+
 // Кубическая норма вектора
 TT normInfVector(const vector<TT> &vect) {
     TT norm = std::abs(vect[0]);

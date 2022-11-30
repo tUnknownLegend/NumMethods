@@ -81,6 +81,8 @@ std::vector<std::vector<TT>> inverseMatrix(std::vector<std::vector<TT>> &matrix)
 
 void outputOnTheScreenMatrix(const std::vector<std::vector<TT>> &matrix);
 
+void outputOnTheScreenPairVector(const std::vector<std::pair<TT, TT>> &pair);
+
 std::vector<TT> CalcGaussMethod(std::vector<std::vector<TT>> matr, std::vector<TT> vect);
 
 TT l2NormVec(const std::vector<TT>& vec);

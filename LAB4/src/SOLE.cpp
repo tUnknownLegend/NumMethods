@@ -7,7 +7,7 @@
 using std::vector;
 using std::string;
 
-const TT theta = 5.0;
+//const TT theta = 5.0;
 
 unsigned int iterations = 0;
 unsigned int operations = 0;
@@ -44,11 +44,12 @@ std::pair<vector<vector<TT>>, vector<vector<TT>>> QR(const vector<vector<TT>> &m
     return {Q, R};
 }
 
-void getNextMatrix(vector<vector<TT>> &matrix, const bool &last = false) {
+void getNextMatrix(vector<vector<TT>> &matrix, const int lastEl, const bool &last = false) {
     ++iterations;
     vector<vector<TT>> tempMatrix(matrix);
-    vector<vector<TT>> thetaMatrix = identityMatrix(
-            matrix.size(), theta);
+    vector<vector<TT>> thetaMatrix;
+    thetaMatrix = identityMatrix(
+            matrix.size(), lastEl);
     matrix = matrixOperations(tempMatrix, thetaMatrix, '-');
 
     std::pair<vector<vector<TT>>, vector<vector<TT>>> qr = QR(matrix);
@@ -95,10 +96,10 @@ enum qrAlgs {
 void universeQrEigenvalues(char option, vector<vector<TT>> &matrix) {
     switch (option) {
         case ORDINARY:
-            for (int i = 0; i < matrix.size() - 1; ++i) {
-                getNextMatrix(matrix);
+            for (int i = 0; i < 2 * matrix.size() - 1; ++i) {
+                getNextMatrix(matrix, 0.0);
             }
-            getNextMatrix(matrix, true);
+            getNextMatrix(matrix, 0.0, true);
             break;
         case THETHA:
             for (int i = 0; i < matrix.size() - 1; ++i) {
@@ -110,7 +111,7 @@ void universeQrEigenvalues(char option, vector<vector<TT>> &matrix) {
                             lastRow += matrix[matrix.size() - 1 - i][j];
                         }
                     }
-                    getNextMatrix(matrix);
+                    getNextMatrix(matrix, matrix.size() - 1 - i);
                 }
             }
             break;
@@ -129,7 +130,7 @@ void universeQrEigenvalues(char option, vector<vector<TT>> &matrix) {
 
 vector<TT> qrEigenvalues(vector<vector<TT>> &matrix, vector<TT> &vec) {
     // ORDINARY, THETHA, HESS, HESS_THETHA
-    universeQrEigenvalues(ORDINARY, matrix);
+    universeQrEigenvalues(HESS_THETHA, matrix);
     // outputOnTheScreenMatrix(matrix);
 
     vector<TT> resVec(matrix.size(), 0);
@@ -150,6 +151,8 @@ TT Relay(const vector<vector<TT>> &matrix, const vector<TT> &leftVec) {
 }
 
 vector<TT> iterational(vector<vector<TT>> matrix, TT eigen, const bool isRelay) {
+    vector<vector<TT>> tempM(matrix);
+
     vector<TT> rightVect = {123, 324, 222, -5345};
     //vector<TT> rightVect = {-0.86446047, 0.00339321, -0.24459138, -0.43917153};
     vectorDigit(l2NormVec(rightVect), rightVect, '/');
@@ -165,6 +168,12 @@ vector<TT> iterational(vector<vector<TT>> matrix, TT eigen, const bool isRelay) 
     vectorDigit(l2NormVec(leftVect), leftVect, '/');
     std::swap(leftVect, rightVect);
 
+//    leftVect = vectorMatrixMultiplication(tempM, rightVect);
+//    vectorDigit(eigen, rightVect, '*');
+//    std::cout << "zero\n";
+//    outputOnTheScreenVector(vectorOperation(leftVect, rightVect, '-'));
+//    std::cout << "\n";
+
     return rightVect;
 }
 
@@ -172,6 +181,8 @@ void outEigenVectors(const vector<TT>& res){
     vector<vector<TT>> matrix;
     inputMatrix(matrix);
     std::cout << "--------vec-----------\n";
+    vector<vector<TT>> temp (matrix);
+    //matrix = transpoceMatrix(temp);
     for (auto eigen: res) {
         std::cout << "\n";
         outputOnTheScreenVector(iterational(matrix, eigen, false));
@@ -193,7 +204,7 @@ void getMethod(vector<TT>(*func)(vector<vector<TT>> &, vector<TT> &), const stri
     std::cout << "operations: " << operations << "\n";
     std::cout << "iterations: " << iterations << "\n";
 
-    //outEigenVectors(res);
+    outEigenVectors(res);
 }
 
 void getEigenvalues() {
