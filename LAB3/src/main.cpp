@@ -1,9 +1,7 @@
-﻿#include <iostream>
-#include "SOLE.h"
-#include "threeToNine.h"
-//#include "shared.h"
+﻿#include "SOLE.h"
 
 int main() {
     getLagrange();
+    getSpline();
 	return 0;
 }

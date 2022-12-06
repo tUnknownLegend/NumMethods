@@ -6,4 +6,6 @@
 
 void getLagrange();
 
+void getSpline();
+
 #endif //INC_LAB2_SOLE_H
