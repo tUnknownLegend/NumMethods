@@ -19,6 +19,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <string>
 
 #define TT double
 
@@ -33,9 +34,9 @@ void outputMatrix(int amtOfVertices);
 
 void outputVector(int amtOfElements);
 
-void inputVector(std::vector<TT> &vect);
+void inputVector(std::vector<TT>& vect, const std::string& out = IN_FILE_VECTOR);
 
-void outputVector(const std::vector<TT> &vect);
+void outputVector(const std::vector<TT> &vect, const std::string& out = OUT_FILE_VECTOR);
 
 TT normInfVector(const std::vector<TT> &vect);
 

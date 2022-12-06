@@ -9,6 +9,7 @@ using std::vector;
 using std::cerr;
 using std::ofstream;
 using std::cout;
+using std::string;
 
 //#define TT double
 
@@ -47,8 +48,8 @@ void inputMatrix(vector<vector<TT>> &matrix) {
     inFile.close();
 }
 
-void inputVector(vector<TT> &vect) {
-    ifstream inFile(IN_FILE_VECTOR);
+void inputVector(vector<TT> &vect, const string& out) {
+    ifstream inFile(out);
     if (!inFile.is_open()) {
         cerr << "error // input.txt open\n";
         return;
@@ -91,8 +92,8 @@ void outputVector(int amtOfElements) {
     outFile.close();
 }
 
-void outputVector(const vector<TT> &vect) {
-    ofstream outFile(OUT_FILE_VECTOR);
+void outputVector(const vector<TT> &vect, const string& out) {
+    ofstream outFile(out);
     if (!outFile.is_open()) {
         cerr << "error // output.txt open\n";
         return;

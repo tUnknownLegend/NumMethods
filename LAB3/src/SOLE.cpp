@@ -8,6 +8,8 @@ using std::vector;
 using std::string;
 using std::pair;
 
+#define M_PI 3.14159265359
+
 TT function1(const TT x) {
     return pow(x, 2);
 }
@@ -118,23 +120,43 @@ splineInterpolation(const TT leftBorder, const TT rightBorder, const int countCe
     vector<TT> b;
     vector<TT> d;
 
-    for (int i = 0; i < c.size(); ++i) {
+    for (int i = 0; i < c.size() - 1; ++i) {
         b.emplace_back(g[i] - ((c[i + 1] + 2 * c[i]) * h[i]) / 3);
         d.emplace_back((c[i + 1] - c[i]) / (3 * h[i]));
         //std::cout << c[i] << " " << d.back() << " " << b.back() << " " << h[i] << std::endl;
     }
+    b.emplace_back(g.back() - ((2 * c.back()) * h.back()) / 3);
+    d.emplace_back((- c.back()) / (3 * h.back()));
 
     vector<TT> y;
+    vector<TT> outX;
+    vector<TT> outY;
+    outX.emplace_back(leftBorder);
+    outY.emplace_back(function(leftBorder));
+    outX.emplace_back(cells[0].first);
+    outY.emplace_back(cells[0].second);
     y.emplace_back(cells[0].second);
     for (int i = 0; i < c.size(); ++i) {
+        outX.emplace_back(y.back() + b[i] * h[i] + c[i] * pow(h[i], 2) + d[i] * pow(h[i], 3));
         y.emplace_back(y.back() + b[i] * h[i] + c[i] * pow(h[i], 2) + d[i] * pow(h[i], 3));
+        outY.emplace_back(y.back());
     }
 
-    for (double i: y) {
-        std::cout << i << "; ";
-    }
+    outputVector(outX, "../../../outX.txt");
+    outputVector(outY, "../../../outY.txt");
+//
+//    for (double i: y) {
+//        std::cout << i << "; ";
+//    }
+//
+//    std::cout << "\n";
 
-    std::cout << "\n";
+    vector<vector<TT>> outMatrix;
+    for (int i = 0; i < cells.size(); ++i) {
+        for (int j = 0; j < cells.size(); ++j) {
+
+        }
+    }
 
     for (int i = 1; i < cells.size(); ++i) {
 //        std::cout << y[i] << "; x = [" << cells[i - 1].first << "; " << cells[i].first << "]; y = ["
@@ -189,6 +211,6 @@ void getLagrange() {
 
 void getSpline() {
     std::cout << "Spline, even cells: " << splineInterpolation(-1.0, 1.0, 3, function1, 1, true);
-    std::cout << "\nSpline, Chebyshov: " << splineInterpolation(-1.0, 1.0, 3, function1, -1, false);
+    //std::cout << "\nSpline, Chebyshov: " << splineInterpolation(-1.0, 1.0, 3, function1, -1, false);
     //std::cout << "\nSpline DIFF: " << getDiff(-1.0, 1.0, 512, 100, function1, false, splineInterpolation);
 }
