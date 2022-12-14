@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <iostream>
 #include <vector>
 
@@ -7,7 +7,7 @@ template<typename T>
 using matrix = vector<vector<T>>;
 
 
-//????? ???????
+
 template<typename T>
 void print_vec(const vector<T>& vec)
 {
@@ -16,7 +16,7 @@ void print_vec(const vector<T>& vec)
 	cout << endl << endl;
 }
 
-//????? ??????? ??? ???????????
+
 template<typename T>
 void print_vec(const vector<pair<T, T>>& vec)
 {
@@ -27,7 +27,6 @@ void print_vec(const vector<pair<T, T>>& vec)
 
 
 
-// ????????? ??????? ? ???????
 template<typename T>
 vector<T> mult(const matrix<T>& A1, const vector<T>& A2) {
 	size_t n = A2.size();
@@ -44,7 +43,6 @@ vector<T> mult(const matrix<T>& A1, const vector<T>& A2) {
 	return res;
 }
 
-// ????? (?????????) ???????
 template<typename T>
 T norm(const vector<T>& x) {
 	T res = 0;
@@ -55,7 +53,7 @@ T norm(const vector<T>& x) {
 }
 
 
-// ????????? ??????? 2x2 (?????? ???? ??????? ?? Wolfram Mathematica)
+
 template<typename T>
 matrix<T> inv(const matrix<T>& m) {
 	T det = m[0][0] * m[1][1] - m[1][0] * m[0][1];
@@ -67,16 +65,16 @@ matrix<T> inv(const matrix<T>& m) {
 
 
 
-// ??????
+// ошибка
 template<typename T>
 void degreeX(vector<T> X, T x)
 {
 	for (size_t i = 0; i < X.size() - 2; i++) {
-		//cout << "p = " << log(abs((X[i + 2] - x) / (X[i + 1] - x))) / log(abs((X[i + 1] - x) / (X[i] - x))) << endl;
+		cout << "p = " << log(abs((X[i + 2] - x) / (X[i + 1] - x))) / log(abs((X[i + 1] - x) / (X[i] - x))) << endl;
 	}
 }
 
-// ????????? ??????????? ???????
+// вычисление производной численно
 template<typename T, typename F>
 auto numDeriv(F& fun, T eps) {
 	return [&fun, eps](T x) {
@@ -84,7 +82,6 @@ auto numDeriv(F& fun, T eps) {
 	};
 }
 
-// ????? ???????? ???????????
 template<typename T>
 ostream& operator<<(ostream& out, vector<pair<T, T>> intervals) {
 	if (intervals.size() > 0) {
