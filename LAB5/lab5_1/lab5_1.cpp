@@ -1,6 +1,7 @@
 ﻿#include <algorithm>
 #include "Source.cpp"
 #include "Source1.cpp"
+#include <fstream>
 
 // локализация корней
 template <typename T, typename F>
@@ -195,12 +196,12 @@ vector<T> Newton(F fun, Diff diff, vector<pair<T, T>> intervals, T eps, int meth
 
 // Классический метод Ньютона для системы уравенений
 template<typename T, typename Fun, typename J>
-vector<T> NewtonSystem(Fun f1, Fun f2, J jacobi, T eps, const vector<T>& x0)
+vector<T> NewtonSystem(Fun f1, Fun f2, J jacobi, T eps, const vector<T>& x0, size_t& iterCount)
 {
 	vector<T> xk = x0;
 	T coef;
 
-	size_t iterCount = 0;
+	iterCount = 0;
 
 	do {
 	
@@ -221,7 +222,7 @@ vector<T> NewtonSystem(Fun f1, Fun f2, J jacobi, T eps, const vector<T>& x0)
 
 	} while (coef > eps);
 
-	cout << "iterations: " << iterCount << endl;
+	//cout << "iterations: " << iterCount << endl;
 
 	return xk;
 }
@@ -266,9 +267,12 @@ T chord(F f, T a, T b, T eps, size_t& iterCount)
 }
 
 
+
+
 int main()
 {
 	typedef double Type;
+
 
 	//vector<Type> x0test4{ -1,-1 };
      vector<Type> x0test4{ 1,1 };
@@ -312,7 +316,7 @@ int main()
 
 	// второй тест 
 	cout << "Method Newton:" << endl;
-	vector<Type> rootsNew = Newton(test2<Type>, numDeriv(test2<Type>, 1e-3), intervals, 1e-6, 0);
+    vector<Type> rootsNew = Newton(test2<Type>, numDeriv(test2<Type>, 1e-6), intervals, 1e-6, 0);
 	//vector<Type> rootsNew = Newton(test2<Type>, test2Df<Type>, intervals, 1e-6, 0);
 	for (Type& root : rootsNew)
 		cout << "x = " << root << "\n";
@@ -348,25 +352,59 @@ int main()
 	cout << "iterations: " << iterCount << endl;
 	cout << "x=: " << t0NewAn << endl;
 	
-
+	iterCount = 0;
 	cout << "Method Newton test 4" << endl;
 	vector<Type> rootNewSys4 = NewtonSystem(test4f1<Type>, test4f2<Type>,
 		//numJacobi<Type>(test4f1<Type>, test4f2<Type>, 1e-6),
 		test4Jacobi<Type>,
 		1e-6,
-		x0test4);
+		x0test4, iterCount);
 	print_vec(rootNewSys4);
 
 	cout << endl;
 
+	iterCount = 0;
 	cout << "Method Newton test 5" << endl;
 	vector<Type> rootNewSys5 = NewtonSystem(test5f1<Type>, test5f2<Type>,
 		numJacobi<Type>(test5f1<Type>, test5f2<Type>, 1e-6),
 		//test5Jacobi<Type>,
 		1e-6,
-		x0test5);
+		x0test5, iterCount);
 	print_vec(rootNewSys5);
 
 
+
+
+	vector<Type> L = { 10,10 };
+	//для диаграммы сходимости
+	int N = 100; //число узлов сетки
+	Type x = -L[0], y = -L[1]; //координаты сетки
+	Type h1 = 2 * L[0] / N; //шаги сетки
+	Type h2 = 2 * L[1] / N;
+	vector<pair<Type, Type>> setka;//координаты узлов сетки
+	vector<Type> x_setka;
+	vector<Type> y_setka;
+	ofstream file1;
+	iterCount = 0;
+
+	for (int i = 0; i < N + 1; i++) {
+		x_setka.push_back(x);
+		y_setka.push_back(y);
+		x = x + h1;
+		y = y + h2;
+	}
+
+	file1.open(File + "Diagramma5Test" + ".txt");
+	for (int i = 0; i < x_setka.size(); i++) {
+		for (int j = 0; j < y_setka.size(); j++) {
+			setka.push_back(make_pair(x_setka[i], y_setka[j]));
+			NewtonSystem(test5f1<Type>, test5f2<Type>, //numJacobi<Type>(test5f1<Type>, test5f2<Type>, 1e-3),
+			test5Jacobi<Type>,
+			1e-6, { x_setka[i],y_setka[j] }, iterCount);
+			file1 << x_setka[i] << " " << y_setka[j] << " "  << iterCount << endl;
+		}
+	}
+
+	file1.close();
 }
 

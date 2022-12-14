@@ -5,7 +5,7 @@
 using namespace std;
 template<typename T>
 using matrix = vector<vector<T>>;
-
+const string File = "C:\\Users\\kate\\Desktop\\LAB5\\lab5_1\\Files\\";
 
 
 template<typename T>
@@ -70,7 +70,7 @@ template<typename T>
 void degreeX(vector<T> X, T x)
 {
 	for (size_t i = 0; i < X.size() - 2; i++) {
-		cout << "p = " << log(abs((X[i + 2] - x) / (X[i + 1] - x))) / log(abs((X[i + 1] - x) / (X[i] - x))) << endl;
+		//cout << "p = " << log(abs((X[i + 2] - x) / (X[i + 1] - x))) / log(abs((X[i + 1] - x) / (X[i] - x))) << endl;
 	}
 }
 
