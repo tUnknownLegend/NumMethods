@@ -30,7 +30,7 @@ vector<TT> calcSingleCellExplicit(const vector<TT>& prevPoints) {
     vector<TT> currPoints;
     currPoints.reserve(prevPoints.size());
 
-    
+
 
     currPoints.push_back(prevPoints.at(0) + step);
     for (size_t i = 1; i < prevPoints.size() - 1; ++i) {

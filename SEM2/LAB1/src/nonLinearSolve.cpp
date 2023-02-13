@@ -7,22 +7,26 @@ using namespace std;
 template<typename T>
 using matrix = vector<vector<T>>;
 
-template<typename T, typename F>
-auto derivative(F& fun, T eps) {
-    return [&fun, eps](veT x) {
-        return (fun(x + eps) - fun(x)) / eps;
+auto derivative(function<TT(vector<TT> &)> &fun, TT eps) {
+    return [&fun, eps](vector<TT> &x) {
+        vector<TT> xDiff(x);
+        vectorDigit(eps, xDiff, '+');
+        return ((fun(xDiff) - fun(x)) / eps);
     };
 }
 
-vector<TT> Newton(function<TT(vector<TT> &)> &fun, TT diff, pair<TT, TT> range,
-          const vector<TT> &initPoints, TT eps, size_t &iterCount) {
-    vector<TT> xk = initPoints;
+vector<TT> Newton(function<TT(vector<TT> &)> &fun,
+                  const vector<TT> &initPoints, TT eps, size_t &iterCount) {
+    vector<TT> currPoints = initPoints;
+    auto diff = derivative(fun, COMPARE_RATE);
     TT diffVal;
     do {
-        vector<TT> newXk = xk - fun(xk) / diff(xk);
-        diffVal = normInfVector(vectorOperation(newXk, xk, '-'));
-        xk = newXk;
+        TT der = diff(currPoints);
+        vectorDigit(, der, '/');
+        vector<TT> newXk = vectorOperation(fun(currPoints) / der - der, der, '-');
+        diffVal = normInfVector(vectorOperation(newXk, currPoints, '-'));
+        currPoints = newXk;
         ++iterCount;
     } while (diffVal > eps);
-    return xk;
+    return currPoints;
 }
