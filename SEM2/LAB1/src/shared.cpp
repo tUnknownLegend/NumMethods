@@ -83,7 +83,6 @@ void outputVector(int amtOfElements) {
     {
         const int leftBound = 1;
         const int rightBound = 10;
-        TT node = 0.0;
         for (int j = 0; j < amtOfElements; ++j) {
             outFile << std::setprecision(8) << GetRandomDouble(leftBound, rightBound) << " ";
         }
@@ -102,7 +101,6 @@ void outputVector(const vector<TT> &vect, const string& out) {
     outFile << vect.size() << std::endl;
 
     {
-        TT node = 0.0;
         for (auto &el: vect) {
             outFile << std::setprecision(8) << el << " ";
         }
@@ -121,9 +119,6 @@ void outputMatrix(const vector<vector<TT>> &matrix) {
     outFile << matrix.size() << std::endl;
 
     {
-        const int leftBound = 0;
-        const int rightBound = 10;
-        TT node = 0.0;
         for (auto &raw: matrix) {
             for (auto &el: raw) {
                 outFile << std::setprecision(8) << el << " ";
@@ -146,7 +141,6 @@ void outputMatrix(int amtOfVertices) {
     {
         const int leftBound = 0;
         const int rightBound = 10;
-        TT node = 0.0;
         for (int i = 0; i < amtOfVertices; ++i) {
 
             for (int j = 0; j < amtOfVertices; ++j) {
@@ -160,9 +154,9 @@ void outputMatrix(int amtOfVertices) {
 
 // вывод матрицы на экран
 void outputOnTheScreenMatrix(const vector<vector<TT>> &matrix) {
-    for (int i = 0; i < matrix.size(); ++i) {
-        for (int j = 0; j < matrix.size(); ++j) {
-            cout << std::setprecision(8) << matrix[i][j] << ' ';
+    for (const auto& i : matrix) {
+        for (const auto& j : i) {
+            cout << std::setprecision(8) << std::setw(i.size() * 8) << j << ' ';
         }
         cout << std::endl;
     }
@@ -188,7 +182,7 @@ void outputOnTheScreenPairVector(const std::vector<std::pair<TT, TT>> &pair) {
 // Кубическая норма вектора
 TT normInfVector(const vector<TT> &vect) {
     TT norm = std::abs(vect[0]);
-    for (int i = 1; i < vect.size(); ++i) {
+    for (size_t i = 1; i < vect.size(); ++i) {
         if (norm < std::abs(vect[i]))
             norm = std::abs(vect[i]);
     }
@@ -208,10 +202,10 @@ TT norm1Vector(const vector<TT> &vect) {
 TT normInfMatrix(const vector<vector<TT>> &matrix) {
     TT norm = 0;
 
-    for (int j = 0; j < matrix.size(); ++j) {
+    for (size_t j = 0; j < matrix.size(); ++j) {
         TT sum = 0;
-        for (int i = 0; i < matrix.size(); ++i) {
-            sum += std::abs(matrix[i][j]);
+        for (const auto & i : matrix) {
+            sum += std::abs(i[j]);
         }
         if (norm < sum)
             norm = sum;
@@ -255,9 +249,9 @@ TT l2NormVec(const vector<TT> &vec) {
 vector<TT> MultiplicationMatrixvsVector(const vector<vector<TT>> &matrix, const vector<TT> &vect) {
     vector<TT> resVector;
     TT s;
-    for (int i = 0; i < matrix.size(); ++i) {
+    for (size_t i = 0; i < matrix.size(); ++i) {
         s = 0;
-        for (int j = 0; j < matrix.size(); ++j) {
+        for (size_t j = 0; j < matrix.size(); ++j) {
             s += matrix[i][j] * vect[j];
         }
         resVector.push_back(s);
@@ -272,7 +266,7 @@ TT normDiffer(const vector<vector<TT>> &A, const vector<TT> &b, const vector<TT>
     vector<TT> differ;
     vector<TT> b1 = MultiplicationMatrixvsVector(A, x);
 
-    for (int i = 0; i < b.size(); ++i) {
+    for (size_t i = 0; i < b.size(); ++i) {
         differ.push_back(b[i] - b1[i]);
     }
     return normVector(differ);
@@ -280,8 +274,8 @@ TT normDiffer(const vector<vector<TT>> &A, const vector<TT> &b, const vector<TT>
 
 vector<vector<TT>> transpoceMatrix(const vector<vector<TT>> &matrix) {
     vector<vector<TT>> resMatrix(matrix);
-    for (int j = 0; j < matrix.size(); ++j) {
-        for (int i = 0; i < matrix.size(); ++i) {
+    for (size_t j = 0; j < matrix.size(); ++j) {
+        for (size_t i = 0; i < matrix.size(); ++i) {
             resMatrix[j][i] = matrix[i][j];
         }
     }
@@ -302,24 +296,24 @@ matrixOperations(const vector<vector<TT>> &firstM, const vector<vector<TT>> &sec
     vector<vector<TT>> resMatrix(firstM.size(), vector<TT>(firstM.size(), 0));
     switch (operation) {
         case '*':
-            for (int i = 0; i < firstM.size(); ++i) {
-                for (int j = 0; j < secondM.size(); ++j) {
-                    for (int k = 0; k < firstM.size(); ++k) {
+            for (size_t i = 0; i < firstM.size(); ++i) {
+                for (size_t j = 0; j < secondM.size(); ++j) {
+                    for (size_t k = 0; k < firstM.size(); ++k) {
                         resMatrix[i][j] += firstM[i][k] * secondM[k][j];
                     }
                 }
             }
             break;
         case '+':
-            for (int i = 0; i < firstM.size(); ++i) {
-                for (int j = 0; j < secondM.size(); ++j) {
+            for (size_t i = 0; i < firstM.size(); ++i) {
+                for (size_t j = 0; j < secondM.size(); ++j) {
                     resMatrix[i][j] = firstM[i][j] + secondM[i][j];
                 }
             }
             break;
         case '-':
-            for (int i = 0; i < firstM.size(); ++i) {
-                for (int j = 0; j < secondM.size(); ++j) {
+            for (size_t i = 0; i < firstM.size(); ++i) {
+                for (size_t j = 0; j < secondM.size(); ++j) {
                     resMatrix[i][j] = firstM[i][j] - secondM[i][j];
                 }
             }
@@ -368,8 +362,8 @@ void matrixDigit(const TT &digit, vector<vector<TT>> &secondM, const char &opera
 vector<TT> matrixVectorMultiplication(const vector<vector<TT>> &firstM, const vector<TT> &secondV) {
     vector<TT> result(secondV.size(), 0);
 
-    for (int i = 0; i < secondV.size(); ++i) {
-        for (int j = 0; j < secondV.size(); ++j) {
+    for (size_t i = 0; i < secondV.size(); ++i) {
+        for (size_t j = 0; j < secondV.size(); ++j) {
             result[i] += firstM[i][j] * secondV[j];
         }
     }
@@ -379,8 +373,8 @@ vector<TT> matrixVectorMultiplication(const vector<vector<TT>> &firstM, const ve
 vector<TT> vectorMatrixMultiplication(const vector<vector<TT>> &firstM, const vector<TT> &secondV) {
     vector<TT> result(secondV.size(), 0);
 
-    for (int i = 0; i < secondV.size(); ++i) {
-        for (int j = 0; j < secondV.size(); ++j) {
+    for (size_t i = 0; i < secondV.size(); ++i) {
+        for (size_t j = 0; j < secondV.size(); ++j) {
             result[j] += firstM[j][i] * secondV[i];
         }
     }
@@ -391,22 +385,22 @@ vector<TT> vectorOperation(const vector<TT> &firstV, const vector<TT> &secondV, 
     vector<TT> result(firstV);
     switch (operation) {
         case '*':
-            for (int i = 0; i < secondV.size(); ++i) {
+            for (size_t i = 0; i < secondV.size(); ++i) {
                 result[i] *= secondV[i];
             }
             break;
         case '/':
-            for (int i = 0; i < secondV.size(); ++i) {
+            for (size_t i = 0; i < secondV.size(); ++i) {
                 result[i] /= secondV[i];
             }
             break;
         case '+':
-            for (int i = 0; i < secondV.size(); ++i) {
+            for (size_t i = 0; i < secondV.size(); ++i) {
                 result[i] += secondV[i];
             }
             break;
         case '-':
-            for (int i = 0; i < secondV.size(); ++i) {
+            for (size_t i = 0; i < secondV.size(); ++i) {
                 result[i] -= secondV[i];
             }
             break;
@@ -445,8 +439,8 @@ void vectorDigit(const TT &digit, vector<TT> &secondV, const char &operation) {
 
 // Разложение матрицы на LDU
 void LDU(const vector<vector<TT>> &A, vector<vector<TT>> &L, vector<vector<TT>> &D, vector<vector<TT>> &U) {
-    for (int i = 0; i < A.size(); i++) {
-        for (int j = 0; j < A.size(); j++) {
+    for (size_t i = 0; i < A.size(); i++) {
+        for (size_t j = 0; j < A.size(); j++) {
             if (i == j) D[i][j] = A[i][j];
             if (i > j) L[i][j] = A[i][j];
             if (i < j) U[i][j] = A[i][j];
@@ -457,9 +451,9 @@ void LDU(const vector<vector<TT>> &A, vector<vector<TT>> &L, vector<vector<TT>> 
 vector<TT> CalcGaussMethod(vector<vector<TT>> matr, vector<TT> vect) {
     vector<TT> resultVect(vect.size(), 1.0);
 
-    for (int k = 0; k < matr[1].size(); ++k) {
-        int maxValInd = k;
-        for (int i = k; i < matr.size(); ++i)
+    for (size_t k = 0; k < matr[1].size(); ++k) {
+        size_t maxValInd = k;
+        for (size_t i = k; i < matr.size(); ++i)
         {
             if (std::abs(matr[i][k]) > std::abs(matr[maxValInd][k]))
                 maxValInd = i;
@@ -469,10 +463,10 @@ vector<TT> CalcGaussMethod(vector<vector<TT>> matr, vector<TT> vect) {
             std::swap(matr[maxValInd], matr[k]);
             std::swap(vect[maxValInd], vect[k]);
         }
-        for (int i = k + 1; i < matr.size(); ++i) {
+        for (size_t i = k + 1; i < matr.size(); ++i) {
             TT coeffProp = matr[i][k] / matr[k][k];
 
-            for (int j = k; j < matr[1].size(); ++j) {
+            for (size_t j = k; j < matr[1].size(); ++j) {
                 matr[i][j] -= matr[k][j] * coeffProp;
             }
 
@@ -481,7 +475,7 @@ vector<TT> CalcGaussMethod(vector<vector<TT>> matr, vector<TT> vect) {
     }
     for (int i = matr.size() - 1; i >= 0; --i) {
         TT sum = 0.0;
-        for (int j = i + 1; j < matr.size(); ++j) {
+        for (size_t j = i + 1; j < matr.size(); ++j) {
             sum = sum + matr[i][j] * resultVect[j];
         }
         resultVect[i] = (resultVect[i] - sum) / matr[i][i];
@@ -497,8 +491,8 @@ vector<vector<TT>> inverseMatrix(vector<vector<TT>> &matrix) {
     vector<vector<TT>> EE;
     EE = identityMatrix(matrix.size());
 
-    for (int i = 0; i < matrix.size(); ++i) {
-        for (int j = 0; j < matrix.size(); ++j) {
+    for (size_t i = 0; i < matrix.size(); ++i) {
+        for (size_t j = 0; j < matrix.size(); ++j) {
             str.push_back(EE[j][i]);
         }
         res = CalcGaussMethod(matrix, str);

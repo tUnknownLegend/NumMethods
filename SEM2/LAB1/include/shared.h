@@ -34,9 +34,9 @@ void outputMatrix(int amtOfVertices);
 
 void outputVector(int amtOfElements);
 
-void inputVector(std::vector<TT>& vect, const std::string& out = IN_FILE_VECTOR);
+void inputVector(std::vector<TT> &vect, const std::string &out = IN_FILE_VECTOR);
 
-void outputVector(const std::vector<TT> &vect, const std::string& out = OUT_FILE_VECTOR);
+void outputVector(const std::vector<TT> &vect, const std::string &out = OUT_FILE_VECTOR);
 
 TT normInfVector(const std::vector<TT> &vect);
 
@@ -86,9 +86,9 @@ void outputOnTheScreenPairVector(const std::vector<std::pair<TT, TT>> &pair);
 
 std::vector<TT> CalcGaussMethod(std::vector<std::vector<TT>> matr, std::vector<TT> vect);
 
-TT l2NormVec(const std::vector<TT>& vec);
+TT l2NormVec(const std::vector<TT> &vec);
 
-TT l2NormMatr(const std::vector<std::vector<TT>>& matrix);
+TT l2NormMatr(const std::vector<std::vector<TT>> &matrix);
 
 std::vector<TT> vectorMatrixMultiplication(const std::vector<std::vector<TT>> &firstM, const std::vector<TT> &secondV);
 

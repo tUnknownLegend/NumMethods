@@ -4,6 +4,5 @@
 #include <algorithm>
 #include "shared.h"
 
-using std::vector;
-using std::string;
-using std::pair;
+using namespace  std;
+
