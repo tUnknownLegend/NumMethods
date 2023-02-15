@@ -410,6 +410,34 @@ vector<TT> vectorOperation(const vector<TT> &firstV, const vector<TT> &secondV, 
     return result;
 }
 
+vector<TT> vectorDigit(const TT &digit, vector<TT> secondV, const char &operation) {
+    switch (operation) {
+        case '*':
+            for (auto &i: secondV) {
+                i *= digit;
+            }
+            return secondV;
+        case '/':
+            for (auto &i: secondV) {
+                i /= digit;
+            }
+            return secondV;
+        case '+':
+            for (auto &i: secondV) {
+                i += digit;
+            }
+            return secondV;
+        case '-':
+            for (auto &i: secondV) {
+                i -= digit;
+            }
+            return secondV;
+        default:
+            std::cerr << "error";
+            return {};
+    }
+}
+
 void vectorDigit(const TT &digit, vector<TT> &secondV, const char &operation) {
     switch (operation) {
         case '*':

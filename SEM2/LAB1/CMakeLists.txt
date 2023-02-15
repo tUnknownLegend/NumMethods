@@ -10,8 +10,8 @@ include_directories(./src ./include)
 
 file(GLOB SOURCES *.cpp *.h)
 
-set(SOURCES ./src/main.cpp ./src/shared.cpp  ./src/SOLE.cpp ./src/Euler.cpp ./src/nonLinearSolve.cpp)
-set(HEADERS ./include/shared.h  ./include/SOLE.h ./include/Euler.h ./include/nonLinearSolve.h)
+set(SOURCES ./src/main.cpp ./src/shared.cpp ./src/Euler.cpp ./src/nonLinearSolve.cpp)
+set(HEADERS ./include/SOLE.h ./include/shared.h ./include/Euler.h ./include/nonLinearSolve.h ./include/SOLE.h)
 
 #find_package(GTest REQUIRED)
 #include_directories(${GTEST_INCLUDE_DIRS})
