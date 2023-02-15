@@ -11,8 +11,6 @@ using std::ofstream;
 using std::cout;
 using std::string;
 
-//#define TT double
-
 //  This function generates a random double in [i, j]
 double GetRandomDouble(double i, double j) {
     std::random_device rd;  // Will be used to obtain a seed for the random number engine

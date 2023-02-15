@@ -8,8 +8,8 @@ using namespace std;
 vector<TT> f(const vector<TT> &x) {
     vector<TT> u(x.size());
 
-    u[0] = x[1];
-    u[1] = -20 / 0.3 * x[0];
+    u[0] = 2 * x[1];
+    u[1] = -2 / 0.3 * x[0];
     return u;
 }
 

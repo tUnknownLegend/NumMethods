@@ -6,14 +6,14 @@
 using namespace std;
 
 vector<vector<TT>> explicitEuler(const vector<TT> &cond, int n) {
-    vector<vector<TT>> res(n, vector<TT>(cond.size()));
-    res[0] = cond;
+    vector<vector<TT>> y(n, vector<TT>(cond.size()));
+    y[0] = cond;
 
     for (int i = 0; i < n - 1; ++i) {
-        res[i + 1] = vectorOperation(res[i],
-                                     vectorRDigit(step, f(res[i]), '*'), '+');
+        y[i + 1] = vectorOperation(y[i],
+                                     vectorRDigit(step, f(y[i]), '*'), '+');
     }
-    return res;
+    return y;
 }
 
 vector<vector<TT>> implicitEuler(const vector<TT> &cond, const int n) {
