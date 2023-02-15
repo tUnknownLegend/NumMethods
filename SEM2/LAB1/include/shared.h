@@ -92,6 +92,6 @@ TT l2NormMatr(const std::vector<std::vector<TT>> &matrix);
 
 std::vector<TT> vectorMatrixMultiplication(const std::vector<std::vector<TT>> &firstM, const std::vector<TT> &secondV);
 
-std::vector<TT> vectorDigit(const TT &digit, std::vector<TT> secondV, const char &operation);
+std::vector<TT> vectorRDigit(const TT &digit, std::vector<TT> secondV, const char &operation);
 
 #endif //INC_LAB2_SHARED_H

@@ -7,7 +7,7 @@
 const std::vector<TT> initPoints = {0.0, 1.0};
 const TT step = 0.1;
 const std::pair<TT, TT> range = {0, 1};
-const int sizeN = 2;
+const int sizeN = 1;
 
 //std::vector<TT> f(const std::vector<TT>& x);
 

@@ -5,7 +5,7 @@
 
 using namespace std;
 
-vector<TT> f(const vector<TT>& x) {
+vector<TT> f(const vector<TT> &x) {
     vector<TT> u(x.size());
 
     u[0] = x[1];
@@ -13,33 +13,7 @@ vector<TT> f(const vector<TT>& x) {
     return u;
 }
 
-//template<typename T>
-//using matrix = vector<vector<T>>;
-
-/*auto derivative(function<TT(const vector<TT> &)> &fun, TT eps) {
-    return [&fun, eps](vector<TT> &x) {
-        vector<TT> xDiff(x);
-        vectorDigit(eps, xDiff, '+');
-        return ((fun(xDiff) - fun(x)) / eps);
-    };
-}
-
-vector<TT> nonLinearSolve(function<TT(const vector<TT> &)> &fun,
-                  const vector<TT> &initPoints, TT eps, size_t &iterCount) {
-    vector<TT> currPoints = initPoints;
-    auto diff = derivative(fun, COMPARE_RATE);
-    TT diffVal;
-    do {
-        vector<TT> newPoints(currPoints);
-        vectorDigit(fun(currPoints) / diff(currPoints), newPoints, '-');
-        diffVal = normInfVector(vectorOperation(newPoints, currPoints, '-'));
-        currPoints = newPoints;
-        ++iterCount;
-    } while (diffVal > eps);
-    return currPoints;
-}*/
-
-vector<TT> calcMethod(const size_t dim, const string& method, const vector<TT>& x0, const vector<TT>& y0) {
+vector<TT> calcMethod(const size_t dim, const string &method, const vector<TT> &x0, const vector<TT> &y0) {
     vector<TT> ans(dim);
 
     if (method == "Euler") {
@@ -49,30 +23,25 @@ vector<TT> calcMethod(const size_t dim, const string& method, const vector<TT>& 
     }
 
     if (method == "Symmetric")
-        for (size_t i = 0; i < dim; i++)
-        {
+        for (size_t i = 0; i < dim; i++) {
             ans[i] = x0[i] - y0[i] - step / 2 * (f(x0)[i] + f(y0)[i]);
         }
     return ans;
 }
 
 // Матрица Якоби
-vector<vector<TT>> Jacobi_matr(size_t const dim, const string& method, const vector<TT>& x0, const vector<TT>& y0)
-{
-    TT eps1 = 1e-05;
+vector<vector<TT>> Jacobi_matr(size_t const dim, const string &method, const vector<TT> &x0, const vector<TT> &y0) {
     vector<vector<TT>> Jacobi(dim, vector<TT>(dim));
     vector<TT> fx = calcMethod(dim, method, x0, y0);
-    vector<TT> temp1(dim);
-    vector<TT> temp2(dim);
+    vector<TT> x0Vect(dim);
+    vector<TT> xDiffVect(dim);
 
-    for (size_t i = 0; i < dim; i++)
-    {
-        temp1 = x0;
-        temp1[i] += eps1;
-        temp2 = calcMethod(dim, method, temp1, y0);
-        for (size_t j = 0; j < dim; j++)
-        {
-            Jacobi[j][i] = (temp2[j] - fx[j]) / eps1;
+    for (size_t i = 0; i < dim; i++) {
+        x0Vect = x0;
+        x0Vect[i] += COMPARE_RATE;
+        xDiffVect = calcMethod(dim, method, x0Vect, y0);
+        for (size_t j = 0; j < dim; j++) {
+            Jacobi[j][i] = (xDiffVect[j] - fx[j]) / COMPARE_RATE;
         }
     }
     return Jacobi;
@@ -80,36 +49,28 @@ vector<vector<TT>> Jacobi_matr(size_t const dim, const string& method, const vec
 
 
 // Метод Ньютона
-vector<TT> Newton(const string& method, const size_t dim, const vector<TT>& y0)
-{
+vector<TT> Newton(const string &method, const size_t dim, const vector<TT> &y0) {
     vector<vector<TT>> Jacobi(dim, vector<TT>(dim));
     vector<TT> ans(dim);
     vector<TT> x(dim);
     vector<TT> xk(dim);
-    TT temp; TT jacobian;
 
-    do
-    {
+    do {
         x = xk;
         Jacobi = Jacobi_matr(dim, method, x, y0);
 
-        if (dim == 2)
-        {
-            jacobian = Jacobi[0][0] * Jacobi[1][1] - Jacobi[1][0] * Jacobi[0][1];
-            temp = Jacobi[0][0];
+        if (dim == 2) {
+            TT jacobian = Jacobi[0][0] * Jacobi[1][1] - Jacobi[1][0] * Jacobi[0][1];
+            TT temp = Jacobi[0][0];
             Jacobi[0][0] = Jacobi[1][1] / jacobian;
             Jacobi[1][1] = temp / jacobian;
             Jacobi[0][1] /= -jacobian;
             Jacobi[1][0] /= -jacobian;
-        }
-        else Jacobi = inverseMatrix(Jacobi);
+        } else Jacobi = inverseMatrix(Jacobi);
 
         xk = vectorMatrixMultiplication(Jacobi, calcMethod(dim, method, xk, y0));
         xk = vectorOperation(x, xk, '-');
-        x = vectorOperation(x, xk, '-');
-
-        ans = xk;
-
-    } while (norm1Vector(x) > COMPARE_RATE);
+    } while (norm1Vector(vectorOperation(x, xk, '-')) > COMPARE_RATE);
+    ans = xk;
     return ans;
 }

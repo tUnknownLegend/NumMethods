@@ -410,7 +410,7 @@ vector<TT> vectorOperation(const vector<TT> &firstV, const vector<TT> &secondV, 
     return result;
 }
 
-vector<TT> vectorDigit(const TT &digit, vector<TT> secondV, const char &operation) {
+vector<TT> vectorRDigit(const TT &digit, vector<TT> secondV, const char &operation) {
     switch (operation) {
         case '*':
             for (auto &i: secondV) {
