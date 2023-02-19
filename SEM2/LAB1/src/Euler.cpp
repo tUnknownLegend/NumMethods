@@ -5,11 +5,14 @@
 
 using namespace std;
 
+int const cellSize = ceil((range.second - range.first) / step);
+
 vector<vector<TT>> explicitEuler(const vector<TT> &cond, int n) {
     vector<vector<TT>> y(n, vector<TT>(cond.size()));
     y[0] = cond;
 
     for (int i = 0; i < n - 1; ++i) {
+        y[i][0] =  (TT) i / cellSize;
         y[i + 1] = vectorOperation(y[i],
                                      vectorRDigit(step, f(y[i]), '*'), '+');
     }
@@ -21,6 +24,7 @@ vector<vector<TT>> implicitEuler(const vector<TT> &cond, const int n) {
     y[0] = cond;
 
     for (int i = 0; i < n - 1; i++) {
+        y[i][0] =  (TT) i / cellSize;
         y[i + 1] = Newton("Euler", cond.size(), y[i]);
     }
     return y;
@@ -31,6 +35,7 @@ vector<vector<TT>> symmetric(const vector<TT> &cond, const int n) {
     y[0] = cond;
 
     for (int i = 0; i < n - 1; i++) {
+        y[i][0] =  (TT) i / cellSize;
         y[i + 1] = Newton("Symmetric", cond.size(), y[i]);
     }
     return y;
@@ -97,18 +102,18 @@ vector<vector<TT>> rungeKutta(const vector<TT> &cond, const int n) {
 }
 
 void ImplicitEuler() {
-    outputOnTheScreenMatrix(explicitEuler(initPoints, sizeN));
+    outputOnTheScreenMatrix(explicitEuler(initPoints, cellSize));
 }
 
 void ExplicitEuler() {
-    outputOnTheScreenMatrix(implicitEuler(initPoints, sizeN));
+    outputOnTheScreenMatrix(implicitEuler(initPoints, cellSize));
 }
 
 void Symmetric() {
-    outputOnTheScreenMatrix(symmetric(initPoints, sizeN));
+    outputOnTheScreenMatrix(symmetric(initPoints, cellSize));
 }
 
 void RungeKutta() {
-    outputOnTheScreenMatrix(rungeKutta(initPoints, sizeN));
+    outputOnTheScreenMatrix(rungeKutta(initPoints, cellSize));
 }
 
