@@ -1,5 +1,5 @@
-#ifndef INC_LAB2_SHARED_H
-#define INC_LAB2_SHARED_H
+#ifndef INC_LAB_SHARED_H
+#define INC_LAB_SHARED_H
 
 #if (_MSC_VER >= 1600)
 #define ADD_DOTS "../../../"
@@ -100,4 +100,4 @@ std::vector<TT> vectorMatrixMultiplication(const std::vector<std::vector<TT>> &f
 
 std::vector<TT> vectorRDigit(const TT &digit, std::vector<TT> secondV, const char &operation);
 
-#endif //INC_LAB2_SHARED_H
+#endif //INC_LAB_SHARED_H

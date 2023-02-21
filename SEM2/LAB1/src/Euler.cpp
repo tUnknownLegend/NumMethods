@@ -6,6 +6,7 @@
 
 using namespace std;
 
+
 enum calcMethod {
     MexplicitEuler, MimplicitEuler, Msymmetric, MrungeKutta2, MrungeKutta4
 };
@@ -71,6 +72,7 @@ vector<vector<TT>> rungeKutta2(const vector<TT> &cond, const int n) {
         vector<TT> temp = vectorOperation(y[i],
                                           vectorRDigit(step, k1, '*'), '+');
         k2 = f(temp);
+        temp = vectorOperation(k1, k2, '+');
         y[i + 1] = vectorOperation(y[i], vectorRDigit((step / 2.0), temp, '*'), '+');
     }
     return y;
@@ -80,27 +82,24 @@ vector<vector<TT>> rungeKutta4(const vector<TT> &cond, const int n) {
     vector<vector<TT>> y(n, vector<TT>(cond.size()));
     y[0] = cond;
 
-    vector<TT> k1(cond.size());
-    vector<TT> k2(cond.size());
-    vector<TT> k3(cond.size());
-    vector<TT> k4(cond.size());
-    vector<TT> temp1(cond.size());
-    vector<TT> temp2(cond.size());
     const TT tau = 1.0;
+
     for (int i = 0; i < n - 1; i++) {
+        vector<TT> temp1(cond.size());
         // calc k_i
-        k1 = f(y[i]);
+        vector<TT> k1(f(y[i]));
         temp1 = vectorOperation(y[i], vectorRDigit(0.5 * step, k1, '*'), '+');
-        k2 = f(temp1);
+        vector<TT> k2(f(temp1));
         temp1 = vectorOperation(y[i], vectorRDigit(0.5 * step, k2, '*'), '+');
-        k3 = f(temp1);
+        vector<TT> k3(f(temp1));
         temp1 = vectorOperation(y[i], vectorRDigit(1.0 * step, k3, '*'), '+');
-        k4 = f(temp1);
+        vector<TT> k4(f(temp1));
 
         // sum k_i
         k_iSum(temp1, k1, k2, k3, k4, y[i]);
 
-        temp2 = y[i];
+        vector<TT> temp2(y[i]);
+        // auto step
         for (int j = 0; j < 2; j++) {
             k1 = f(y[i]);
             temp2 = vectorOperation(temp2,
