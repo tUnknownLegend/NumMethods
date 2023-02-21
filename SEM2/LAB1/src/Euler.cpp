@@ -6,9 +6,11 @@
 
 using namespace std;
 
-enum calcMethod { MexplicitEuler, MimplicitEuler, Msymmetric, MrungeKutta2, MrungeKutta4 };
+enum calcMethod {
+    MexplicitEuler, MimplicitEuler, Msymmetric, MrungeKutta2, MrungeKutta4
+};
 
-vector<vector<TT>> calcDiff(const vector<vector<TT>>& answer) {
+vector<vector<TT>> calcDiff(const vector<vector<TT>> &answer) {
     vector<vector<TT>> diff(answer);
 
     for (int i = 0; i < answer.size(); ++i) {
@@ -24,7 +26,7 @@ vector<vector<TT>> explicitEuler(const vector<TT> &cond, int n) {
 
     for (int i = 0; i < n - 1; ++i) {
         y[i + 1] = vectorOperation(y[i],
-                                     vectorRDigit(step, f(y[i]), '*'), '+');
+                                   vectorRDigit(step, f(y[i]), '*'), '+');
     }
     return y;
 }
@@ -49,13 +51,31 @@ vector<vector<TT>> symmetric(const vector<TT> &cond, const int n) {
     return y;
 }
 
-void k_iSum(vector<TT>& temp, const vector<TT>& k1, const vector<TT>& k2, const vector<TT>& k3,
-            const vector<TT>& k4, const vector<TT>& y_i) {
+void k_iSum(vector<TT> &temp, const vector<TT> &k1, const vector<TT> &k2, const vector<TT> &k3,
+            const vector<TT> &k4, const vector<TT> &y_i) {
     temp = vectorOperation(vectorRDigit(2.0, k2, '*'), vectorRDigit(2.0, k3, '*'), '+');
     temp = vectorOperation(k1, temp, '+');
     temp = vectorOperation(k4, temp, '+');
     temp = vectorRDigit(step / 6.0, temp, '*');
     temp = vectorOperation(y_i, temp, '+');
+}
+
+vector<vector<TT>> rungeKutta2(const vector<TT> &cond, const int n) {
+    vector<vector<TT>> y(n, vector<TT>(cond.size()));
+    y[0] = cond;
+
+//    vector<TT> k1(dim);
+//    vector<TT> k2(dim);
+//    //int t = 1200;
+//
+//    y[0] = cond;
+//    for (int i = 0; i < n - 1; i++) {
+//        k1 = f(i * h, y[i], dim);
+//        k2 = f((i + 1.0) * h, temp, dim);
+//        y[i + 1] = y[i] + h / 2.0 * temp;
+//    }
+    //cout << "Решение в k-м узле: " << y[t][0] << ", " << y[t][1] << endl;
+    return y;
 }
 
 vector<vector<TT>> rungeKutta4(const vector<TT> &cond, const int n) {
@@ -115,17 +135,21 @@ void templateOutput(const calcMethod method) {
     switch (method) {
         case MexplicitEuler:
             result = explicitEuler(initPoints, numOfPoints);
+            outputMatrix(result, "../data/outMexplicitEuler.txt");
             break;
         case MimplicitEuler:
             result = implicitEuler(initPoints, numOfPoints);
+            outputMatrix(result, "../data/outMimplicitEuler.txt");
             break;
         case Msymmetric:
             result = symmetric(initPoints, numOfPoints);
+            outputMatrix(result, "../data/outMsymmetric.txt");
             break;
         case MrungeKutta2:
             break;
         case MrungeKutta4:
             result = rungeKutta4(initPoints, numOfPoints);
+            outputMatrix(result, "../data/outMrungeKutta4.txt");
             break;
     }
     outputOnTheScreenMatrix(result);
@@ -143,6 +167,10 @@ void ExplicitEuler() {
 
 void Symmetric() {
     templateOutput(Msymmetric);
+}
+
+void RungeKutta2() {
+    templateOutput(MrungeKutta2);
 }
 
 void RungeKutta4() {

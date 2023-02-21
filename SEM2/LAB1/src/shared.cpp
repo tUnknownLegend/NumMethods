@@ -107,8 +107,8 @@ void outputVector(const vector<TT> &vect, const string& out) {
     outFile.close();
 }
 
-void outputMatrix(const vector<vector<TT>> &matrix) {
-    ofstream outFile(OUT_FILE_MATRIX);
+void outputMatrix(const vector<vector<TT>> &matrix, const string& fileName) {
+    ofstream outFile(fileName);
     if (!outFile.is_open()) {
         cerr << "error // output.txt open\n";
         return;

@@ -8,8 +8,10 @@ int main() {
     ExplicitEuler();
     std::cout << "\nSymmetric:\n";
     Symmetric();
-    std::cout << "\nRungeKutta:\n";
+    std::cout << "\nRungeKutta, 2:\n";
+    RungeKutta2();
+    std::cout << "\nRungeKutta, 4:\n";
     RungeKutta4();
 
-	return 0;
+    return 0;
 }

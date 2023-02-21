@@ -9,7 +9,7 @@
 #define IN_FILE_VECTOR "../../../inputVector.txt"
 //#define IN_FILE_VECTOR "../../../test12.txt"
 // output file for matrix
-#define OUT_FILE_MATRIX "../../../outputMatrix.txt"
+#define OUT_FILE_MATRIX "../outputMatrix.txt"
 // output file for vector
 #define OUT_FILE_VECTOR "../../../outputVector.txt"
 // compare for double
@@ -28,7 +28,7 @@ double GetRandomDouble(double i, double j);
 
 void inputMatrix(std::vector<std::vector<TT>> &matrix);
 
-void outputMatrix(const std::vector<std::vector<TT>> &matrix);
+void outputMatrix(const std::vector<std::vector<TT>> &matrix, const std::string& fileName = OUT_FILE_MATRIX);
 
 void outputMatrix(int amtOfVertices);
 
