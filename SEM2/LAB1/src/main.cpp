@@ -9,7 +9,7 @@ int main() {
     std::cout << "\nSymmetric:\n";
     Symmetric();
     std::cout << "\nRungeKutta:\n";
-    RungeKutta();
+    RungeKutta4();
 
 	return 0;
 }

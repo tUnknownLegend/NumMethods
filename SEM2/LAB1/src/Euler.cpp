@@ -1,18 +1,28 @@
 #include <cmath>
+#include <iostream>
 #include "shared.h"
 #include "nonLinearSolve.h"
 #include "SOLE.h"
 
 using namespace std;
 
-int const cellSize = ceil((range.second - range.first) / step);
+enum calcMethod { MexplicitEuler, MimplicitEuler, Msymmetric, MrungeKutta2, MrungeKutta4 };
+
+vector<vector<TT>> calcDiff(const vector<vector<TT>>& answer) {
+    vector<vector<TT>> diff(answer);
+
+    for (int i = 0; i < answer.size(); ++i) {
+        diff[i][0] = abs(cos(i * step) - answer[i][0]);
+        diff[i][1] = abs(-sin(i * step) - answer[i][1]);
+    }
+    return diff;
+}
 
 vector<vector<TT>> explicitEuler(const vector<TT> &cond, int n) {
     vector<vector<TT>> y(n, vector<TT>(cond.size()));
     y[0] = cond;
 
     for (int i = 0; i < n - 1; ++i) {
-        y[i][0] =  (TT) i / cellSize;
         y[i + 1] = vectorOperation(y[i],
                                      vectorRDigit(step, f(y[i]), '*'), '+');
     }
@@ -24,7 +34,6 @@ vector<vector<TT>> implicitEuler(const vector<TT> &cond, const int n) {
     y[0] = cond;
 
     for (int i = 0; i < n - 1; i++) {
-        y[i][0] =  (TT) i / cellSize;
         y[i + 1] = Newton("Euler", cond.size(), y[i]);
     }
     return y;
@@ -35,7 +44,6 @@ vector<vector<TT>> symmetric(const vector<TT> &cond, const int n) {
     y[0] = cond;
 
     for (int i = 0; i < n - 1; i++) {
-        y[i][0] =  (TT) i / cellSize;
         y[i + 1] = Newton("Symmetric", cond.size(), y[i]);
     }
     return y;
@@ -50,7 +58,7 @@ void k_iSum(vector<TT>& temp, const vector<TT>& k1, const vector<TT>& k2, const 
     temp = vectorOperation(y_i, temp, '+');
 }
 
-vector<vector<TT>> rungeKutta(const vector<TT> &cond, const int n) {
+vector<vector<TT>> rungeKutta4(const vector<TT> &cond, const int n) {
     vector<vector<TT>> y(n, vector<TT>(cond.size()));
     y[0] = cond;
 
@@ -101,19 +109,43 @@ vector<vector<TT>> rungeKutta(const vector<TT> &cond, const int n) {
     return y;
 }
 
+void templateOutput(const calcMethod method) {
+    vector<vector<TT>> result;
+
+    switch (method) {
+        case MexplicitEuler:
+            result = explicitEuler(initPoints, numOfPoints);
+            break;
+        case MimplicitEuler:
+            result = implicitEuler(initPoints, numOfPoints);
+            break;
+        case Msymmetric:
+            result = symmetric(initPoints, numOfPoints);
+            break;
+        case MrungeKutta2:
+            break;
+        case MrungeKutta4:
+            result = rungeKutta4(initPoints, numOfPoints);
+            break;
+    }
+    outputOnTheScreenMatrix(result);
+    std::cout << "diff:\n";
+    outputOnTheScreenMatrix(calcDiff(result));
+}
+
 void ImplicitEuler() {
-    outputOnTheScreenMatrix(explicitEuler(initPoints, cellSize));
+    templateOutput(MexplicitEuler);
 }
 
 void ExplicitEuler() {
-    outputOnTheScreenMatrix(implicitEuler(initPoints, cellSize));
+    templateOutput(MimplicitEuler);
 }
 
 void Symmetric() {
-    outputOnTheScreenMatrix(symmetric(initPoints, cellSize));
+    templateOutput(Msymmetric);
 }
 
-void RungeKutta() {
-    outputOnTheScreenMatrix(rungeKutta(initPoints, cellSize));
+void RungeKutta4() {
+    templateOutput(MrungeKutta4);
 }
 

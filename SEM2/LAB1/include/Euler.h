@@ -7,6 +7,8 @@ void ExplicitEuler();
 
 void Symmetric();
 
-void RungeKutta();
+void RungeKutta2();
+
+void RungeKutta4();
 
 #endif //LAB1_EULER_H
