@@ -64,17 +64,15 @@ vector<vector<TT>> rungeKutta2(const vector<TT> &cond, const int n) {
     vector<vector<TT>> y(n, vector<TT>(cond.size()));
     y[0] = cond;
 
-//    vector<TT> k1(dim);
-//    vector<TT> k2(dim);
-//    //int t = 1200;
-//
-//    y[0] = cond;
-//    for (int i = 0; i < n - 1; i++) {
-//        k1 = f(i * h, y[i], dim);
-//        k2 = f((i + 1.0) * h, temp, dim);
-//        y[i + 1] = y[i] + h / 2.0 * temp;
-//    }
-    //cout << "Решение в k-м узле: " << y[t][0] << ", " << y[t][1] << endl;
+    vector<TT> k1(numOfPoints);
+    vector<TT> k2(numOfPoints);
+    for (int i = 0; i < n - 1; i++) {
+        k1 = f(y[i]);
+        vector<TT> temp = vectorOperation(y[i],
+                                          vectorRDigit(step, k1, '*'), '+');
+        k2 = f(temp);
+        y[i + 1] = vectorOperation(y[i], vectorRDigit((step / 2.0), temp, '*'), '+');
+    }
     return y;
 }
 
@@ -146,6 +144,8 @@ void templateOutput(const calcMethod method) {
             outputMatrix(result, ADD_DOTS"data/outMsymmetric.txt");
             break;
         case MrungeKutta2:
+            result = rungeKutta2(initPoints, numOfPoints);
+            outputMatrix(result, ADD_DOTS"data/outMrungeKutta2.txt");
             break;
         case MrungeKutta4:
             result = rungeKutta4(initPoints, numOfPoints);
