@@ -1,6 +1,12 @@
 #ifndef INC_LAB2_SHARED_H
 #define INC_LAB2_SHARED_H
 
+#if (_MSC_VER >= 1600)
+#define ADD_DOTS "../../../"
+#else
+#define ADD_DOTS "../"
+#endif
+
 // input file for matrix
 //#define IN_FILE_MATRIX "../../../inputMatrix.txt"
 #define IN_FILE_MATRIX "../../../test12.txt"

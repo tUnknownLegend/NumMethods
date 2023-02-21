@@ -135,21 +135,21 @@ void templateOutput(const calcMethod method) {
     switch (method) {
         case MexplicitEuler:
             result = explicitEuler(initPoints, numOfPoints);
-            outputMatrix(result, "../data/outMexplicitEuler.txt");
+            outputMatrix(result, ADD_DOTS"data/outMexplicitEuler.txt");
             break;
         case MimplicitEuler:
             result = implicitEuler(initPoints, numOfPoints);
-            outputMatrix(result, "../data/outMimplicitEuler.txt");
+            outputMatrix(result, ADD_DOTS"data/outMimplicitEuler.txt");
             break;
         case Msymmetric:
             result = symmetric(initPoints, numOfPoints);
-            outputMatrix(result, "../data/outMsymmetric.txt");
+            outputMatrix(result, ADD_DOTS"data/outMsymmetric.txt");
             break;
         case MrungeKutta2:
             break;
         case MrungeKutta4:
             result = rungeKutta4(initPoints, numOfPoints);
-            outputMatrix(result, "../data/outMrungeKutta4.txt");
+            outputMatrix(result, ADD_DOTS"data/outMrungeKutta4.txt");
             break;
     }
     outputOnTheScreenMatrix(result);
