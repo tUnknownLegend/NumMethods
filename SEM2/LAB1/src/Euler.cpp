@@ -116,7 +116,7 @@ vector<vector<TT>> rungeKutta4(const vector<TT> &cond, const int n) {
             k_iSum(temp2, k1, k2, k3, k4, y[i]);
         }
         if (norm1Vector(vectorRDigit(1 / (pow(2, 4) - 1),
-                                     (vectorOperation(temp2, temp1, '-')), '*'))
+                                     vectorOperation(temp2, temp1, '-'), '*'))
             <= COMPARE_RATE) {
             y[i + 1] = temp2;
         } else {
