@@ -15,9 +15,10 @@ TT calcDiff(const vector<vector<TT>> &answer, const TT tau) {
     vector<vector<TT>> diff(answer);
 
     for (int i = 0; i < answer.size(); ++i) {
-        diff[i][0] = abs(cos(i * tau) - answer[i][0]);
-        diff[i][1] = abs(-sin(i * tau) - answer[i][1]);
+        diff[i][0] = abs(cos(i * step) - answer[i][0]);
+        diff[i][1] = abs(-sin(i * step) - answer[i][1]);
     }
+
     return norm1Matrix(diff);
 }
 
@@ -119,7 +120,7 @@ vector<vector<TT>> rungeKutta4(const vector<TT> &cond, const int n, const TT tau
         }
         if (norm1Vector(vectorRDigit(1 / (pow(2, 4) - 1),
                                      vectorOperation(changedStepResult, defaultStepResult, '-'), '*'))
-            <= COMPARE_RATE) {
+            > COMPARE_RATE) {
             y[i + 1] = changedStepResult;
         } else {
             y[i + 1] = defaultStepResult;
@@ -146,7 +147,7 @@ vector<vector<TT>> rungeKuttaRungeStep(const vector<TT> &cond, const int n, TT t
             }
         } while (norm1Vector(vectorRDigit(1 / (pow(2, 4) - 1),
                                           vectorOperation(changedStepResult, defaultStepResult, '-'), '*'))
-                 <= COMPARE_RATE);
+                 > COMPARE_RATE);
 
         y[i + 1] = changedStepResult;
         tau *= 2;
@@ -225,21 +226,23 @@ vector<vector<TT>> rungeKuttaGraph(const vector<TT> &cond, const int n, const TT
 void RungeKuttaGraph() {
     vector<vector<TT>> timeAndStep;
     timeAndStep.reserve(100);
-    for (int i = 0; i < 10; ++i) {
-        timeAndStep.push_back({(double) i / 10,
+    for (int i = 0; i < 100; ++i) {
+        timeAndStep.push_back({
                                MeasureFuncExecTime([i]() {
-                                   rungeKuttaRungeStep(initPoints, numOfPoints, (double) i / 10);
-                               })});
+                                   rungeKuttaRungeStep(initPoints, numOfPoints, (double) i / 100);
+                               }), (double) i / 100});
         cout << i << "\n";
     }
     outputMatrix(timeAndStep, ADD_DOTS"outTimeAndStep.txt");
 
     vector<vector<TT>> timeAndError;
     timeAndError.reserve(100);
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 100; ++i) {
         timeAndError.push_back(
-                {(double) i / 10, calcDiff(rungeKuttaRungeStep(initPoints, numOfPoints, (double) i / 10),
-                                            (double) i / 10)});
+                {MeasureFuncExecTime([i]() {
+                    rungeKuttaRungeStep(initPoints, numOfPoints, (double) i / 100);
+                }), calcDiff(rungeKuttaRungeStep(initPoints, numOfPoints, (double) i / 100),
+                                            (double) i / 100)});
         cout << i << "\n";
     }
     outputMatrix(timeAndError, ADD_DOTS"outTimeAndError.txt");
