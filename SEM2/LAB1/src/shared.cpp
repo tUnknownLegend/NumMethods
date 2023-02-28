@@ -528,3 +528,12 @@ vector<vector<TT>> inverseMatrix(vector<vector<TT>> &matrix) {
     return transpoceMatrix(resMatrix);
 }
 
+double MeasureFuncExecTime(const std::function<void()> &FuncToMeasure) {
+    unsigned int startingTime = clock();
+    FuncToMeasure();
+    unsigned int stopTime = clock();
+    unsigned int searchTime = stopTime - startingTime;   //  exec time
+    //cout << "\nSearch time: " << ((double) searchTime) / CLOCKS_PER_SEC << "\n";
+
+    return (((double) searchTime) / CLOCKS_PER_SEC);
+}

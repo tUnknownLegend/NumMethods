@@ -10,10 +10,12 @@ int main() {
 //    Symmetric();
 //    std::cout << "\nRungeKutta, 2:\n";
 //    RungeKutta2();
-    std::cout << "\nRungeKutta, 4:\n";
-    RungeKutta4();
-    std::cout << "\nRungeKutta, method Runge:\n";
-    RungeKuttaChangeStep();
+//    std::cout << "\nRungeKutta, 4:\n";
+//    RungeKutta4();
+//    std::cout << "\nRungeKutta, method Runge:\n";
+//    RungeKuttaChangeStep();
+
+    RungeKuttaGraph();
 
     return 0;
 }

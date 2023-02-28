@@ -100,4 +100,6 @@ std::vector<TT> vectorMatrixMultiplication(const std::vector<std::vector<TT>> &f
 
 std::vector<TT> vectorRDigit(const TT &digit, std::vector<TT> secondV, const char &operation);
 
+double MeasureFuncExecTime(const std::function<void()> &FuncToMeasure);
+
 #endif //INC_LAB_SHARED_H

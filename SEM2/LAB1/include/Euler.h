@@ -13,4 +13,6 @@ void RungeKutta4();
 
 void RungeKuttaChangeStep();
 
+void RungeKuttaGraph();
+
 #endif //LAB_EULER_H

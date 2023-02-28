@@ -13,7 +13,7 @@ vector<TT> f(const vector<TT> &x) {
     // example 3
 //    return {10 * (x[1] - x[0]), x[0] * (28 - x[2]) - x[1], x[0] * x[1] - 8 / 3 * x[2]};
     // pendulum
-    return {2 * x[1], -2 / 0.3 * x[0]};
+    return {x[1], -x[0]};
 }
 
 vector<TT> calcMethod(const size_t dim, const string &method, const vector<TT> &x0, const vector<TT> &y0) {
