@@ -11,4 +11,6 @@ void RungeKutta2();
 
 void RungeKutta4();
 
+void RungeKuttaChangeStep();
+
 #endif //LAB_EULER_H
