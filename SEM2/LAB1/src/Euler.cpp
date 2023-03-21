@@ -11,17 +11,6 @@ enum calcMethod {
     MexplicitEuler, MimplicitEuler, Msymmetric, MrungeKutta2, MrungeKutta4, MrungeKuttaRungeStep
 };
 
-TT calcDiff(const vector<vector<TT>> &answer, const TT tau) {
-    vector<vector<TT>> diff(answer);
-
-    for (int i = 0; i < answer.size(); ++i) {
-        diff[i][0] = abs(cos(i * step) - answer[i][0]);
-        diff[i][1] = abs(-sin(i * step) - answer[i][1]);
-    }
-
-    return norm1Matrix(diff);
-}
-
 vector<vector<TT>> calcDiff(const vector<vector<TT>> &answer) {
     vector<vector<TT>> diff(answer);
 
@@ -64,27 +53,27 @@ vector<vector<TT>> symmetric(const vector<TT> &cond, const int n) {
 }
 
 void k_iSum(vector<TT> &temp, const vector<TT> &k1, const vector<TT> &k2, const vector<TT> &k3,
-            const vector<TT> &k4, const vector<TT> &y_i) {
+            const vector<TT> &k4, const vector<TT> &y_i, const TT Tchange) {
     temp = vectorOperation(vectorRDigit(2.0, k2, '*'), vectorRDigit(2.0, k3, '*'), '+');
     temp = vectorOperation(k1, temp, '+');
     temp = vectorOperation(k4, temp, '+');
-    temp = vectorRDigit(step / 6.0, temp, '*');
+    temp = vectorRDigit(Tchange / 6.0, temp, '*');
     temp = vectorOperation(y_i, temp, '+');
 }
 
-vector<TT> rungeKutta4Calc(const vector<TT> &yi, vector<TT> &tempVector, const TT tau) {
+vector<TT> rungeKutta4Calc(const vector<TT> &yi, vector<TT> &tempVector, const TT tau, const TT Tchange) {
     vector<TT> resVector(yi.size());
     // calc k_i
     vector<TT> k1(f(yi));
-    resVector = vectorOperation(tempVector, vectorRDigit(0.5 * step * tau, k1, '*'), '+');
+    resVector = vectorOperation(tempVector, vectorRDigit(0.5 * Tchange * tau, k1, '*'), '+');
     vector<TT> k2(f(resVector));
-    resVector = vectorOperation(tempVector, vectorRDigit(0.5 * step * tau, k2, '*'), '+');
+    resVector = vectorOperation(tempVector, vectorRDigit(0.5 * Tchange * tau, k2, '*'), '+');
     vector<TT> k3(f(resVector));
-    resVector = vectorOperation(tempVector, vectorRDigit(step * tau, k3, '*'), '+');
+    resVector = vectorOperation(tempVector, vectorRDigit(Tchange * tau, k3, '*'), '+');
     vector<TT> k4(f(resVector));
 
     // sum k_i
-    k_iSum(resVector, k1, k2, k3, k4, yi);
+    k_iSum(resVector, k1, k2, k3, k4, yi, Tchange);
 
     return resVector;
 }
@@ -106,35 +95,38 @@ vector<vector<TT>> rungeKutta2(const vector<TT> &cond, const int n) {
     return y;
 }
 
-vector<vector<TT>> rungeKutta4(const vector<TT> &cond, const int n, const TT tau = 1.0) {
-    vector<vector<TT>> y(n, vector<TT>(cond.size()));
+//vector<vector<TT>> rungeKutta4(const vector<TT> &cond, const TT Tchange, const TT eps = COMPARE_RATE) {
+//    vector<vector<TT>> y(numOfPoints, vector<TT>(cond.size()));
+//    y[0] = cond;
+//
+//    for (int i = 0; i < numOfPoints - 1; i++) {
+//        vector<TT> defaultStepResult = rungeKutta4Calc(y[i], y[i], tau);
+//
+//        vector<TT> changedStepResult(defaultStepResult);
+//        // auto step
+//        for (int j = 0; j < numOfPoints - 1; j++) {
+//            changedStepResult = rungeKutta4Calc(y[i], changedStepResult, tau / 2);
+//        }
+//        if (norm1Vector(vectorRDigit(1 / (pow(2, 4) - 1),
+//                                     vectorOperation(changedStepResult, defaultStepResult, '-'), '*'))
+//            > COMPARE_RATE) {
+//            y[i + 1] = changedStepResult;
+//        } else {
+//            y[i + 1] = defaultStepResult;
+//        }
+//    }
+//    return y;
+//}
+
+pair<vector<vector<TT>>, TT>
+rungeKuttaRungeStep(const vector<TT> &cond, const TT Tchange, const TT eps = COMPARE_RATE) {
+    vector<vector<TT>> y(numOfPoints, vector<TT>(cond.size()));
     y[0] = cond;
+    TT tau = 1.0;
+    const TT Tstep = Tchange / TT(numOfPoints);
 
-    for (int i = 0; i < n - 1; i++) {
-        vector<TT> defaultStepResult = rungeKutta4Calc(y[i], y[i], tau);
-
-        vector<TT> changedStepResult(defaultStepResult);
-        // auto step
-        for (int j = 0; j < n - 1; j++) {
-            changedStepResult = rungeKutta4Calc(y[i], changedStepResult, tau / 2);
-        }
-        if (norm1Vector(vectorRDigit(1 / (pow(2, 4) - 1),
-                                     vectorOperation(changedStepResult, defaultStepResult, '-'), '*'))
-            > COMPARE_RATE) {
-            y[i + 1] = changedStepResult;
-        } else {
-            y[i + 1] = defaultStepResult;
-        }
-    }
-    return y;
-}
-
-vector<vector<TT>> rungeKuttaRungeStep(const vector<TT> &cond, const int n, TT tau = 1.0) {
-    vector<vector<TT>> y(n, vector<TT>(cond.size()));
-    y[0] = cond;
-
-    for (int i = 0; i < n - 1; i++) {
-        vector<TT> defaultStepResult = rungeKutta4Calc(y[i], y[i], tau);
+    for (int i = 0; i < numOfPoints - 1; i++) {
+        vector<TT> defaultStepResult = rungeKutta4Calc(y[i], y[i], tau, Tstep);
 
         vector<TT> changedStepResult(defaultStepResult);
         // auto step
@@ -142,17 +134,18 @@ vector<vector<TT>> rungeKuttaRungeStep(const vector<TT> &cond, const int n, TT t
             tau /= 2;
             defaultStepResult = changedStepResult;
 
-            for (int j = 0; j < n - 1; j++) {
-                changedStepResult = rungeKutta4Calc(y[i], changedStepResult, tau);
+            for (int j = 0; j < numOfPoints - 1; j++) {
+                changedStepResult = rungeKutta4Calc(y[i], changedStepResult, tau, Tstep);
             }
         } while (norm1Vector(vectorRDigit(1 / (pow(2, 4) - 1),
                                           vectorOperation(changedStepResult, defaultStepResult, '-'), '*'))
-                 > COMPARE_RATE);
+                 > eps);
 
         y[i + 1] = changedStepResult;
         tau *= 2;
     }
-    return y;
+
+    return {y, tau};
 }
 
 void templateOutput(const calcMethod method) {
@@ -176,11 +169,11 @@ void templateOutput(const calcMethod method) {
             outputMatrix(result, ADD_DOTS"data/outMrungeKutta2.txt");
             break;
         case MrungeKutta4:
-            result = rungeKutta4(initPoints, numOfPoints);
+//            result = rungeKutta4(initPoints, numOfPoints);
             outputMatrix(result, ADD_DOTS"data/outMrungeKutta4.txt");
             break;
         case MrungeKuttaRungeStep:
-            result = rungeKuttaRungeStep(initPoints, numOfPoints);
+            result = rungeKuttaRungeStep(initPoints, numOfPoints).first;
             outputMatrix(result, ADD_DOTS"data/outMrungeKuttaRungeStep.txt");
             break;
     }
@@ -213,25 +206,23 @@ void RungeKuttaChangeStep() {
     templateOutput(MrungeKuttaRungeStep);
 }
 
-vector<vector<TT>> rungeKuttaGraph(const vector<TT> &cond, const int n, const TT tau = 1.0) {
-    vector<vector<TT>> y(n, vector<TT>(cond.size()));
-    y[0] = cond;
+TT calcDiff(const vector<vector<TT>> &answer, const TT Tstep) {
+    vector<vector<TT>> diff(answer);//; = rungeKuttaRungeStep(initPoints, numOfPoints);
 
-    for (int i = 0; i < n - 1; i++) {
-        y[i + 1] = rungeKutta4Calc(y[i], y[i], tau);
+    for (int i = 0; i < answer.size(); ++i) {
+        diff[i][0] = abs(cos(i * Tstep) - answer[i][0]);
+        diff[i][1] = abs(-sin(i * Tstep) - answer[i][1]);
     }
-    return y;
+
+//    return norm1Matrix(matrixOperations(ans2, answer, '-'));
+    return norm1Matrix(diff);
 }
 
 void RungeKuttaGraph() {
     vector<vector<TT>> timeAndStep;
     timeAndStep.reserve(100);
     for (int i = 0; i < 100; ++i) {
-        timeAndStep.push_back({
-                               MeasureFuncExecTime([i]() {
-                                   rungeKuttaRungeStep(initPoints, numOfPoints, (double) i / 100);
-                               }), (double) i / 100});
-        cout << i << "\n";
+        timeAndStep.push_back({TT((double) i / 10), rungeKuttaRungeStep(initPoints, TT((double) i / 10)).second});
     }
     outputMatrix(timeAndStep, ADD_DOTS"outTimeAndStep.txt");
 
@@ -239,11 +230,8 @@ void RungeKuttaGraph() {
     timeAndError.reserve(100);
     for (int i = 0; i < 100; ++i) {
         timeAndError.push_back(
-                {MeasureFuncExecTime([i]() {
-                    rungeKuttaRungeStep(initPoints, numOfPoints, (double) i / 100);
-                }), calcDiff(rungeKuttaRungeStep(initPoints, numOfPoints, (double) i / 100),
-                                            (double) i / 100)});
-        cout << i << "\n";
+                {TT((double) i / 10) / numOfPoints, calcDiff(rungeKuttaRungeStep(initPoints, TT((double) i / 10)).first,
+                                                             (double) i / 10)});
     }
     outputMatrix(timeAndError, ADD_DOTS"outTimeAndError.txt");
 }
