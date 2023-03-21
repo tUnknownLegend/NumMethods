@@ -1,33 +1,30 @@
 #include <cmath>
-#include <iostream>
-#include "shared.h"
-#include "nonLinearSolve.h"
-#include "SOLE.h"
-
 #include <vector>
+
+#include "shared.h"
+#include "SOLE.h"
 
 using namespace std;
 
-TT u_x0(TT x) {
+TT u_x0(const TT x) {
     return 1.0;
 }
 
-TT u_Lt(TT x, TT t) {
+TT u_Lt(const TT x, const TT t) {
     return 1.0;
 }
 
-//TT ux0_0(TT x, TT u0, TT L)
-TT ux0_0(TT x, TT u0) {
+TT ux0_0(const TT x, const TT u0) {
     return 1 - x * (1 - x);
-    //return 0.;
+    //return 0.0;
 }
 
-TT Kx(TT x) {
-    TT k1 = 0.1;
-    TT k2 = 1;
-    TT x1 = 0.0;
-    TT x2 = 1.0;
-    TT L = 1;
+TT Kx(const TT x) {
+    const TT k1 = 0.1;
+    const TT k2 = 1;
+    const TT x1 = 0.0;
+    const TT x2 = 1.0;
+    const TT L = 1;
 
     //if (x >= 0 && x <= L)
     //{
@@ -45,13 +42,9 @@ TT Kx(TT x) {
     return 4;
 }
 
-TT Ku(TT u, TT sigma, TT kappa) {
-    return kappa * pow(u, sigma);
-}
-
-double Pt(double t) {
-    double t0 = 0.5;
-    double Q = 10;
+double Pt(const TT t) {
+    const TT t0 = 0.5;
+    const TT Q = 10;
     //if (t >= 0 && t < t0)
     //{
     //	//return 0;
@@ -80,9 +73,9 @@ tridiagonalMatrixAlgorithm(int dim, vector<TT> a, vector<TT> b, vector<TT> c, ve
     return beta;
 }
 
-typedef TT(*Fxt)(TT x, TT t);
+typedef TT(*Fxt)(const TT x, const TT t);
 
-typedef TT(*Fx)(TT x);
+typedef TT(*Fx)(const TT x);
 
 auto defaultMethod(const int k, const TT h, const TT tao, const TT c, const TT p, Fxt uLt, Fx Pt) {
     return [k, h, tao, uLt, c, p, Pt](int N,
@@ -189,7 +182,6 @@ integroInterpolation(const int n, const int k, const TT h, const TT tao, const T
 }
 
 void IntegroInterpolation(const bool isDefault) {
-    // известные параметры
     TT ro = 4;
     TT c = 0.5;
     TT t0 = 0.5;
@@ -206,9 +198,9 @@ void IntegroInterpolation(const bool isDefault) {
     const auto constantTempCalcFunction =
             constantTempMethod(k, h, tao, c, ro, u_x0);
 
-    auto answer = (isDefault ?
-                   integroInterpolation(n, k, h, tao, c, ro, ux0_0, Kx, defaultCalcFunction) :
-                   integroInterpolation(n, k, h, tao, c, ro, ux0_0, Kx, constantTempCalcFunction));
+    const auto answer = (isDefault ?
+                         integroInterpolation(n, k, h, tao, c, ro, ux0_0, Kx, defaultCalcFunction) :
+                         integroInterpolation(n, k, h, tao, c, ro, ux0_0, Kx, constantTempCalcFunction));
 
     (isDefault ? outputMatrix(answer, "../defaultMethod.txt") :
      outputMatrix(answer, "../constTempMethod.txt"));
