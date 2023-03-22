@@ -2,7 +2,6 @@
 #include "thermalConductivity.h"
 
 int main() {
-    IntegroInterpolation(true);
-    IntegroInterpolation(false);
+    IntegroInterpolation();
     return 0;
 }

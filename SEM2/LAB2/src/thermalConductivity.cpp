@@ -1,21 +1,22 @@
 #include <vector>
+#include <iostream>
 
 #include "shared.h"
 #include "SOLE.h"
 
 using namespace std;
 
-TT u_x0(const TT x) {
+TT u_0(const TT x) {
     return 1.0;
 }
 
-TT u_Lt(const TT x, const TT t) {
-    return 1.0;
+TT u_L(const TT x, const TT t) {
+//    return 1.0;
+    return sin(x) * exp(-t);
 }
 
-TT ux0_0(const TT x, const TT u0) {
-    return 1 - x * (1 - x);
-    //return 0.0;
+TT uInitial(const TT x, const TT L) {
+    return 0.1 + x * (L - x);
 }
 
 // depends on coordinate
@@ -35,7 +36,6 @@ double Ku(const TT u, const TT kappa) {
 }
 
 double Pt(const TT t) {
-
     return 0.0;
 
     if (t >= 0 && t < t0) {
@@ -69,12 +69,55 @@ typedef TT(*Fxt)(const TT x, const TT t);
 
 typedef TT(*Fx)(const TT x);
 
-auto defaultMethod(Fxt uLt, Fx Pt) {
-    return [uLt, Pt](vector<vector<TT>> &Y, const vector<TT> &a,
-                     const vector<TT> &diag1, const vector<TT> &diag2, const vector<TT> &diag3,
-                     const TT A0, const TT BN, const TT kappa, vector<TT> &right) {
+auto doublePtMethod(Fx firstPt, Fx secondPt) {
+    return [firstPt, secondPt](vector<vector<TT>> &Y, const vector<TT> &a,
+                               const vector<TT> &diag1, vector<TT> &diag2, const vector<TT> &diag3,
+                               const TT A0, const TT BN, const TT kappa, const TT secondKappa) {
         const TT L = N * h;
+        diag2[0] += A0 * secondKappa;
+        diag2[N - 2] += BN * kappa;
 
+        vector<TT> right(N - 1);
+
+        for (int j = 1; j < k; j++) {
+
+            for (int i = 0; i < N - 1; i++)
+                right[i] = -(c * ro * h / tao * Y[j - 1][i + 1] + (1 - sigma) * a[i] *
+                                                                  (Y[j - 1][i + 2] -
+                                                                   2 * Y[j - 1][i + 1] +
+                                                                   Y[j - 1][i]) / h);
+
+            TT mu1 = (c * ro * Y[j - 1][0] * h / (2 * tao) + sigma * firstPt(tao * j) +
+                      (1 - sigma) * (firstPt(tao * (j - 1)) + (Y[j - 1][1] - Y[j - 1][0]) / h)) /
+                     (c * ro * h / (2 * tao) + sigma * a[0] / h);
+            TT mu2 = (c * ro * Y[j - 1][N] * h / (2 * tao) + sigma * secondPt(tao * j) +
+                      (1 - sigma) * (secondPt(tao * (j - 1)) - (Y[j - 1][N] - Y[j - 1][N - 1]) / h)) /
+                     (c * ro * h / (2 * tao) + sigma * a[N - 1] / h);
+
+            right[0] -= A0 * mu1;
+            right[N - 2] -= BN * mu2;
+
+            vector<TT> temp = tridiagonalMatrixAlgorithm(N - 1, diag1, diag2, diag3, right);
+
+            for (int i = 1; i < N; i++) {
+                Y[j][i] = temp[i - 1];
+            }
+
+            Y[j][0] = kappa * Y[j][1] + mu1;
+            Y[j][N] = secondKappa * Y[j][N - 1] + mu2;
+        }
+        return Y;
+    };
+}
+
+auto singlePtMethod(Fxt u_L, Fx Pt) {
+    return [u_L, Pt](vector<vector<TT>> &Y, const vector<TT> &a,
+                     const vector<TT> &diag1, vector<TT> &diag2, const vector<TT> &diag3,
+                     const TT A0, const TT BN, const TT kappa, const TT secondKappa) {
+        const TT L = N * h;
+        diag2[N - 2] += BN * kappa;
+
+        vector<TT> right(N - 1);
         for (int j = 1; j < k; j++) {
 
             for (int i = 0; i < N - 1; i++) {
@@ -87,7 +130,7 @@ auto defaultMethod(Fxt uLt, Fx Pt) {
                           (c * ro * h / (2 * tao) + sigma * a[0] / h);
 
             right[0] -= A0 * mu;
-            right[N - 2] -= BN * uLt(L, j * tao);
+            right[N - 2] -= BN * u_L(L, j * tao);
 
             vector<TT> temp = tridiagonalMatrixAlgorithm(N - 1, diag1, diag2, diag3, right);
 
@@ -95,36 +138,38 @@ auto defaultMethod(Fxt uLt, Fx Pt) {
                 Y[j][i] = temp[i - 1];
 
             Y[j][0] = kappa * Y[j][1] + mu;
-            Y[j][N] = uLt(L, j * tao);
+            Y[j][N] = u_L(L, j * tao);
         }
         return Y;
     };
 }
 
-auto constantTempMethod(Fx u_0t) {
-    return [u_0t](vector<vector<TT>> &Y, const vector<TT> &a,
-                  const vector<TT> &diag1, const vector<TT> &diag2, const vector<TT> &diag3,
-                  const TT A0, const TT BN, const TT kappa, vector<TT> &right) {
+auto constantTempMethod(Fx u_0, Fxt u_L) {
+    return [u_0, u_L](vector<vector<TT>> &Y, const vector<TT> &a,
+                      const vector<TT> &diag1, const vector<TT> &diag2, const vector<TT> &diag3,
+                      const TT A0, const TT BN, const TT kappa, const TT secondKappa) {
 
         const TT L = N * h;
+
+        vector<TT> right(N - 1);
         for (int j = 1; j < k; j++) {
 
-            Y[j][0] = u_0t(j * tao);
+            Y[j][0] = u_0(j * tao);
 
             for (int i = 0; i < N - 1; i++) {
                 right[i] = -(c * ro * h / tao * Y[j - 1][i + 1] +
                              (1 - sigma) * a[i] * (Y[j - 1][i + 2] - 2 * Y[j - 1][i + 1] + Y[j - 1][i]) / h);
             }
 
-            right[0] -= A0 * u_0t(j * tao);
-            right[N - 2] -= BN * u_Lt(L, j * tao);
+            right[0] -= A0 * u_0(j * tao);
+            right[N - 2] -= BN * u_L(L, j * tao);
 
             vector<TT> temp = tridiagonalMatrixAlgorithm(N - 1, diag1, diag2, diag3, right);
 
             for (int i = 1; i < N; i++)
                 Y[j][i] = temp[i - 1];
 
-            Y[j][N] = u_Lt(L, j * tao);
+            Y[j][N] = u_L(L, j * tao);
         }
         return Y;
     };
@@ -132,12 +177,12 @@ auto constantTempMethod(Fx u_0t) {
 
 // Интегро-интерполяционный метод (для K = K(x))
 vector<vector<TT>>
-integroInterpolation(Fxt ux0, Fx Kx, const auto &calcFunction) {
+integroInterpolation(Fxt uInitial, Fx Kx, const auto &calcFunction) {
     vector<vector<TT>> Y(k, vector<TT>(N + 1));
 
     // начальные условия
     for (int i = 0; i <= N; i++) {
-        Y[0][i] = ux0(i * h, N * h);
+        Y[0][i] = uInitial(i * h, N * h);
     }
 
     vector<TT> a(N);
@@ -147,6 +192,7 @@ integroInterpolation(Fxt ux0, Fx Kx, const auto &calcFunction) {
     }
 
     const TT kappa = (sigma * a[0] / h) / (c * ro * h / (2 * tao) + sigma * a[0] / h);
+    const TT secondKappa = (sigma * a[N - 1] / h) / (c * ro * h / (2 * tao) + sigma * a[N - 1] / h);
 
     vector<TT> diag1(N - 1);
     vector<TT> diag2(N - 1);
@@ -162,24 +208,39 @@ integroInterpolation(Fxt ux0, Fx Kx, const auto &calcFunction) {
 
     diag1[0] = 0.0;
     diag3[N - 2] = 0.0;
-    diag2[N - 2] += BN * kappa;
 
-    vector<TT> right(N - 1);
-
-    return calcFunction(Y, a, diag1, diag2, diag3, A0, BN, kappa, right);
+    return calcFunction(Y, a, diag1, diag2, diag3, A0, BN, kappa, secondKappa);
 }
 
-void IntegroInterpolation(const bool isDefault) {
-    const auto defaultCalcFunction =
-            defaultMethod(u_Lt, Pt);
+TT calcDiff(const vector<vector<TT>> &answer) {
+    TT error = 0.0;
+    for (int j = 0; j < k; ++j) {
+        for (int i = 0; i < N + 1; ++i) {
+            error = max(abs(answer[j][i] - (cos(i * h) + sin(i * h)) * exp(-j * tao)), error);
+        }
+    }
+    return error;
+}
+
+void IntegroInterpolation() {
+    const auto doublePtFunction =
+            doublePtMethod(Pt, Pt);
+
+    const auto singlePtFunction =
+            singlePtMethod(u_L, Pt);
 
     const auto constantTempCalcFunction =
-            constantTempMethod(u_x0);
+            constantTempMethod(u_0, u_L);
 
-    const auto answer = (isDefault ?
-                         integroInterpolation(ux0_0, Kx, defaultCalcFunction) :
-                         integroInterpolation(ux0_0, Kx, constantTempCalcFunction));
+    const auto ansZero = integroInterpolation(uInitial, Kx, constantTempCalcFunction);
+    const auto ansSingle = integroInterpolation(uInitial, Kx, singlePtFunction);
+    const auto ansDouble = integroInterpolation(uInitial, Kx, doublePtFunction);
 
-    (isDefault ? outputMatrix(answer, "../defaultMethod.txt") :
-     outputMatrix(answer, "../constTempMethod.txt"));
+    std::cout << calcDiff(ansZero) << "\n";
+    std::cout << calcDiff(ansSingle) << "\n";
+    std::cout << calcDiff(ansDouble) << "\n";
+
+    outputMatrix(ansZero, "../data/zeroPt.txt");
+    outputMatrix(ansSingle, "../data/singlePt.txt");
+    outputMatrix(ansDouble, "../data/doublePt.txt");
 }

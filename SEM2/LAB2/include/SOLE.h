@@ -12,13 +12,13 @@
 
 /* equation params */
 // linear density
-const TT ro = 4;
+const TT ro = 1.0;
 // specific heat capacity
-const TT c = 0.5;
+const TT c = 1.0;
 
 /* stick data */
 // pivot temperature point of stick
-const TT t0 = 0.5;
+const TT t0 = 1.0;
 // length
 const TT l = 1.0;
 
@@ -26,15 +26,17 @@ const TT Q = 10;
 
 /* steps */
 // horizontal step
-const TT h = 0.08;
+const TT h = 0.32;
+//const TT h = 0.08;
 // vertical step
-const TT tao = 0.002;
+const TT tao = 0.008;
+//const TT tao = 0.002;
 /**/
 const int N = round(l / h + 1) - 1;
 const int k = round(t0 / tao + 1);
 
 
-const TT sigma = 0.2;
+const TT sigma = 1.0;
 
 // K calc
 const TT k1 = 0.1;
