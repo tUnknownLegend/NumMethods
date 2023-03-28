@@ -1,0 +1,154 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      5683,        146]
+NotebookOptionsPosition[      4864,        125]
+NotebookOutlinePosition[      5324,        142]
+CellTagsIndexPosition[      5281,        139]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"matr", "=", 
+   RowBox[{"Partition", "[", 
+    RowBox[{
+     RowBox[{"Delete", "[", 
+      RowBox[{
+       RowBox[{"ReadList", "[", 
+        RowBox[{"\"\<./data/kvaziImplicit.txt\>\"", ",", " ", "Real"}], "]"}],
+        ",", " ", "1"}], "]"}], ",", " ", "5"}], "]"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.889006283895613*^9, 3.8890063288396535`*^9}, 
+   3.8890078221657343`*^9, 3.8890080457529287`*^9},
+ CellLabel->"In[8]:=",ExpressionUUID->"60de506b-afd0-4dc3-86a6-3731d39e1ab9"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"diff", " ", "=", 
+   RowBox[{"List", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\"\<t\>\"", ",", " ", "\"\<diff\>\""}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", " ", "0"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"max", "=", "0"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"For", "[", 
+   RowBox[{
+    RowBox[{"i", "=", "2"}], ",", " ", 
+    RowBox[{"i", "<", 
+     RowBox[{"Length", "[", "matr", "]"}]}], ",", " ", 
+    RowBox[{"++", "i"}], ",", " ", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"res", "=", 
+      RowBox[{"Abs", "[", 
+       RowBox[{"Integrate", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"InterpolatingPolynomial", "[", 
+           RowBox[{
+            RowBox[{"matr", "[", 
+             RowBox[{"[", "i", "]"}], "]"}], ",", " ", 
+            RowBox[{"{", "x", "}"}]}], "]"}], "-", 
+          RowBox[{"InterpolatingPolynomial", "[", 
+           RowBox[{
+            RowBox[{"matr", "[", 
+             RowBox[{"[", 
+              RowBox[{"i", "-", "1"}], "]"}], "]"}], ",", " ", 
+            RowBox[{"{", "x", "}"}]}], "]"}]}], ",", " ", 
+         RowBox[{"{", 
+          RowBox[{"x", ",", " ", "0", ",", " ", "1"}], "}"}]}], "]"}], 
+       "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"AppendTo", "[", 
+      RowBox[{"diff", ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"i", "*", "0.0002"}], ",", " ", "res"}], "}"}]}], "]"}], ";",
+      "\[IndentingNewLine]", 
+     RowBox[{"max", "=", 
+      RowBox[{"Max", "[", 
+       RowBox[{"res", ",", " ", "max"}], "]"}]}], ";"}]}], 
+   "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.889006446434559*^9, 3.889006602593034*^9}, {
+   3.8890066639769754`*^9, 3.8890067805855026`*^9}, {3.8890068391716185`*^9, 
+   3.8890068570360937`*^9}, {3.889007052233568*^9, 3.889007061782341*^9}, {
+   3.8890075438038454`*^9, 3.8890075439340897`*^9}, {3.889007662895941*^9, 
+   3.889007686784156*^9}, {3.8890077389983826`*^9, 3.8890077476692038`*^9}, {
+   3.8890079170945787`*^9, 3.8890079749480734`*^9}, {3.889008026085745*^9, 
+   3.8890080376845465`*^9}, 3.889008132843916*^9, {3.889008186070031*^9, 
+   3.8890081956828036`*^9}, {3.8890082506564164`*^9, 
+   3.8890082508401566`*^9}, {3.889008318616691*^9, 3.8890083206726036`*^9}},
+ CellLabel->"In[10]:=",ExpressionUUID->"03e4da8a-2cad-47a3-9081-5201b8d20131"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"max", "//", "N"}]], "Input",
+ CellChangeTimes->{{3.8890066915571556`*^9, 3.8890066983296585`*^9}, {
+  3.88900678946498*^9, 3.8890068092436476`*^9}},
+ CellLabel->"In[13]:=",ExpressionUUID->"c7d79866-c5f4-4dd7-94ae-c9c07af65347"],
+
+Cell[BoxData["0.03025652550000006`"], "Output",
+ CellChangeTimes->{{3.889006793020554*^9, 3.889006847972618*^9}, 
+   3.8890068849869733`*^9, 3.889006951104514*^9, 3.8890070014783688`*^9, 
+   3.8890070742567387`*^9, 3.8890071052242427`*^9, 3.8890075721051645`*^9, 
+   3.88900773570469*^9, 3.8890077720350432`*^9, 3.889007948838335*^9, 
+   3.88900800061578*^9, {3.889008062929646*^9, 3.8890081030751114`*^9}, 
+   3.8890081603842583`*^9, 3.889008283397338*^9, 3.889008346465976*^9},
+ CellLabel->"Out[13]=",ExpressionUUID->"d066c298-b24d-4dc5-9eb0-064daa458d20"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Export", "[", 
+   RowBox[{"\"\<./data/diff.csv\>\"", ",", "diff", ",", "\"\<CSV\>\""}], 
+   "]"}], ";"}]], "Input",
+ CellChangeTimes->{{3.8890072765915904`*^9, 3.889007289789073*^9}, {
+  3.8890074096925325`*^9, 3.8890074234330597`*^9}},
+ CellLabel->"In[14]:=",ExpressionUUID->"da6629bd-98c0-4877-a9f9-1e03cce35d94"]
+},
+WindowSize->{583.7538461538461, 448.0615384615385},
+WindowMargins->{{234.83076923076922`, Automatic}, {
+  39.32307692307688, Automatic}},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"8740414a-7adb-4859-be4d-18f3451c15ab"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 648, 16, 86, "Input",ExpressionUUID->"60de506b-afd0-4dc3-86a6-3731d39e1ab9"],
+Cell[1209, 38, 2449, 58, 200, "Input",ExpressionUUID->"03e4da8a-2cad-47a3-9081-5201b8d20131"],
+Cell[CellGroupData[{
+Cell[3683, 100, 251, 4, 28, "Input",ExpressionUUID->"c7d79866-c5f4-4dd7-94ae-c9c07af65347"],
+Cell[3937, 106, 558, 7, 32, "Output",ExpressionUUID->"d066c298-b24d-4dc5-9eb0-064daa458d20"]
+}, Open  ]],
+Cell[4510, 116, 350, 7, 82, "Input",ExpressionUUID->"da6629bd-98c0-4877-a9f9-1e03cce35d94"]
+}
+]
+*)
+

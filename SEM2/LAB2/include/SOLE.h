@@ -26,14 +26,14 @@ const TT Q = 10;
 
 /* steps */
 // horizontal step
-const TT h = 0.32;
+const TT h = 0.2;
 //const TT h = 0.08;
 // vertical step
-const TT tao = 0.008;
+const TT tao = 0.0002;
 //const TT tao = 0.002;
 /**/
-const int N = round(l / h + 1) - 1;
-const int k = round(t0 / tao + 1);
+const int N = round(l / h - 1);
+const int k = round(t0 / tao);
 
 
 const TT sigma = 1.0;

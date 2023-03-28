@@ -7,20 +7,24 @@
 using namespace std;
 
 TT u_0(const TT x) {
-    return 1.0;
+    return 0.0;
 }
 
 TT u_L(const TT x, const TT t) {
-//    return 1.0;
+    return 0.0;
     return sin(x) * exp(-t);
 }
 
 TT uInitial(const TT x, const TT L) {
+    return x;
+//    return pow(sigma * pow(c, 2) / 0.5, 1 / sigma);
+//    return 2 * x + 3 + 4 * sin(x * numbers::pi);
     return 0.1 + x * (L - x);
 }
 
 // depends on coordinate
 TT Kx(const TT x) {
+    return 7.0;
     if (x <= x1) {
         return k1;
     } else if (x < x2) {
@@ -38,11 +42,11 @@ double Ku(const TT u, const TT kappa) {
 double Pt(const TT t) {
     return 0.0;
 
-    if (t >= 0 && t < t0) {
-        return 2 * Q * t;
-    } else {
-        return 0;
-    }
+//    if (t >= 0 && t < t0) {
+//        return 2 * Q * t;
+//    } else {
+//        return 0;
+//    }
 }
 
 vector<TT>
@@ -216,7 +220,12 @@ TT calcDiff(const vector<vector<TT>> &answer) {
     TT error = 0.0;
     for (int j = 0; j < k; ++j) {
         for (int i = 0; i < N + 1; ++i) {
-            error = max(abs(answer[j][i] - (cos(i * h) + sin(i * h)) * exp(-j * tao)), error);
+            error = max(abs(answer[j][i] -
+                            (3 + 2 * i * h +
+                             4 * pow(numbers::e, -7 * pow(numbers::pi, 2) * j * tao) *
+                             sin(numbers::pi * h * i))),
+                        error);
+//            error = max(abs(answer[j][i] - (cos(i * h) + sin(i * h)) * exp(-j * tao)), error);
         }
     }
     return error;
@@ -243,4 +252,146 @@ void IntegroInterpolation() {
     outputMatrix(ansZero, "../data/zeroPt.txt");
     outputMatrix(ansSingle, "../data/singlePt.txt");
     outputMatrix(ansDouble, "../data/doublePt.txt");
+}
+
+vector<vector<TT>> KvaziExplicit(Fxt uInitial, Fxt Ku) {
+    vector<vector<TT>> Y(k, vector<TT>(N + 1));
+
+    for (int i = 0; i < N; ++i) {
+        Y[0][i] = uInitial(i * h, N * h);
+    }
+
+    const TT kappa = 0.5;
+    const TT c1 = 5.0;
+    const TT u0 = sigma * pow(c1, 2) / kappa;
+
+    vector<TT> a(2, 0);
+
+    vector<TT> diag1(N - 1, 0);
+    vector<TT> diag2(N - 1, 0);
+    vector<TT> diag3(N - 1, 0);
+    vector<TT> right(N - 1, 0);
+    vector<vector<TT>> vspom2(2, vector<TT>(N - 1, 0));
+
+    for (int j = 1; j < k; ++j) {
+        const TT u0t = pow(u0 * j * tao, 1 / sigma);
+        TT ult;
+        if ((N + 1) * h < c1 * j * tao) {
+            ult = pow(u0 / c1 * (c1 * j * tao - (N + 1) * h), 1 / sigma);
+        } else { ult = 0; };
+
+        a[1] = 0.5 * (Ku(Y[j - 1][1], kappa) + Ku(Y[j - 1][0], kappa));
+        for (int i = 0; i < N - 1; i++) {
+            a[0] = a[1];
+            a[1] = 0.5 * (Ku(Y[j - 1][i + 1], kappa) + Ku(Y[j - 1][i], kappa));
+            diag1[i] = -a[0] / pow(h, 2);
+            diag3[i] = -a[1] / pow(h, 2);
+            diag2[i] = -(diag1[i] + diag3[i] - c / tao);
+            right[i] = c / tao * Y[j - 1][i + 1];
+        };
+        const TT A0 = diag1[0];
+        const TT BN = diag3[N - 2];
+        diag1[0] = 0.;
+        diag3[N - 2] = 0.;
+
+        right[0] -= A0 * u0t;
+        right[N - 2] -= BN * ult;
+
+        const vector<TT> vspom = tridiagonalMatrixAlgorithm(N - 1, diag1, diag2, diag3, right);
+
+        for (int i = 1; i < N; ++i) {
+            Y[j][i] = vspom[i - 1];
+        }
+
+        Y[j][0] = u0t;
+        Y[j][N] = ult;
+    }
+    return Y;
+}
+
+vector<vector<TT>> KvaziImplicit(Fxt uInitial, Fxt Ku, const unsigned int M) {
+    vector<vector<TT>> Y(k, vector<TT>(N + 1));
+
+    for (int i = 0; i < N; i++) {
+        Y[0][i] = uInitial(i * h, N * h);
+    }
+
+    const TT kappa = 0.5;
+    const TT c1 = 5.0;
+    const TT u0 = sigma * pow(c1, 2) / kappa;
+
+    vector<TT> a(2, 0);
+
+    vector<TT> diag1(N - 1, 0);
+    vector<TT> diag2(N - 1, 0);
+    vector<TT> diag3(N - 1, 0);
+    vector<TT> right(N - 1, 0);
+    vector<vector<TT>> vspom2(2, vector<TT>(N - 1, 0));
+
+    for (int j = 1; j < k; ++j) {
+
+        TT ult;
+        TT u0t = pow(u0 * j * tao, 1 / sigma);
+        if ((N + 1) * h < c1 * j * tao) {
+            ult = pow(u0 / c1 * (c1 * j * tao - (N + 1) * h), 1 / sigma);
+//            ult = pow(u0 * j * tao, 1 / sigma);
+        } else {
+            ult = 0;
+        };
+
+        vspom2[1] = Y[j - 1];
+        vspom2[1][0] = u0t;
+        vspom2[1][N] = ult;
+        for (int m = 1; m <= M; ++m) {
+            vspom2[0] = vspom2[1];
+            a[1] = kappa * (Ku(vspom2[0][1], kappa) + Ku(vspom2[0][0], kappa));
+            for (int i = 0; i < N - 1; ++i) {
+                a[0] = a[1];
+                a[1] = kappa * (Ku(vspom2[0][i + 1], kappa) + Ku(vspom2[0][i], kappa));
+                diag1[i] = -a[0] / pow(h, 2);
+                diag3[i] = -a[1] / pow(h, 2);
+                diag2[i] = -(diag1[i] + diag3[i] - c / tao);
+                right[i] = c / tao * vspom2[0][i + 1];
+            };
+            const TT A0 = diag1[0];
+            const TT BN = diag3[N - 2];
+            diag1[0] = 0.0;
+            diag3[N - 2] = 0.;
+
+            right[0] -= A0 * u0t;
+            right[N - 2] -= BN * ult;
+
+            const vector<TT> vspom1 = tridiagonalMatrixAlgorithm(N - 1, diag1, diag2, diag3, right);
+
+            for (int i = 1; i < N; ++i) {
+                vspom2[1][i] = vspom1[i - 1];
+            }
+        }
+        Y[j] = vspom2[1];
+    }
+    return Y;
+}
+
+TT calcKvaziDiff(const vector<vector<TT>> &answer) {
+    TT error = 0.0;
+    const TT c1 = 5.0;
+    for (int j = 0; j < k; ++j) {
+        for (int i = 0; i < N + 1; ++i) {
+            if (i * h <= c1 * j * tao) {
+                error = max(abs(answer[j][i] -
+                                pow(sigma * c1 * 2 * (c1 * j * tao - i * h), 1 / sigma)),
+                            error);
+            } else {
+                error = max(abs(answer[j][i]), error);
+            }
+        }
+    }
+    return error;
+}
+
+void kvazi() {
+//    const auto result = KvaziExplicit(uInitial, Ku);
+    const auto result = KvaziImplicit(uInitial, Ku, 2);
+    outputMatrix(result, "../data/kvaziImplicit.txt");
+    std::cout << "DIFF, kvazi: " << calcKvaziDiff(result);
 }

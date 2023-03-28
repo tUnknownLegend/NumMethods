@@ -3,4 +3,6 @@
 
 void IntegroInterpolation();
 
+void kvazi();
+
 #endif //LAB_EULER_H
