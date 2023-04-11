@@ -13,12 +13,9 @@ const TT h = 0.1;
 // vertical step
 const TT tao = 0.01;
 /**/
-const int n = round(lh / h) + 1;
-const int k = round(lv / tao) + 1;
-
-/**/
+const int n = round(lh / h);
+const int k = round(lv / tao);
 
 const TT a = 1.0;
-
 
 #endif //INC_LAB_SOLE_H
