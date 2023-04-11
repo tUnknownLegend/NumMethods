@@ -35,7 +35,7 @@ vector<vector<TT>> approxInitialCondition() {
 }
 
 void getFirstStep(vector<vector<TT>> &result) {
-    for (unsigned int i = 1; i < n - 1; ++i) {
+    for (unsigned int i = 1; i < n; ++i) {
         result[1][i] = result[0][i] + tao * g(i * h) +
                        pow(a, 2) * pow(tao, 2) / 2 *
                        Fxx(i * h);
@@ -43,12 +43,12 @@ void getFirstStep(vector<vector<TT>> &result) {
 }
 
 void getFurtherSteps(vector<vector<TT>> &result) {
-    for (unsigned int j = 2; j < k; ++j) {
+    for (unsigned int j = 1; j < k - 1; ++j) {
         for (unsigned int i = 1; i < n - 1; ++i) {
-            result[j][i] = pow(a, 2) / pow(h, 2) *
-                           (result[j - 1][i + 1] - 2 * result[j - 1][i] + result[j - 1][i - 1]) *
+            result[j + 1][i] = pow(a, 2) / pow(h, 2) *
+                           (result[j][i + 1] - 2 * result[j][i] + result[j][i - 1]) *
                            pow(tao, 2) -
-                           (-2 * result[j - 1][i] + result[j - 2][i]);
+                           (-2 * result[j][i] + result[j - 1][i]);
         }
     }
 }
