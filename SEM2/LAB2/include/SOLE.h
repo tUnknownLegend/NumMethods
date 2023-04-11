@@ -4,12 +4,6 @@
 #include <cmath>
 #include "shared.h"
 
-// const std::pair<TT, TT> range = {0, 3.5};
-//const std::vector<TT> initPoints = {1.0, 0.0};
-//const int numOfPoints = 100;
-//const std::pair<TT, TT> range = {0.0, 1.0};
-//const TT step = TT(range.second - range.first) / TT(numOfPoints);
-
 /* equation params */
 // linear density
 const TT ro = 1.0;
@@ -29,14 +23,13 @@ const TT Q = 10;
 const TT h = 0.2;
 //const TT h = 0.08;
 // vertical step
-const TT tao = 0.0002;
+const TT tao = 0.2;
 //const TT tao = 0.002;
 /**/
 const int N = round(l / h - 1);
 const int k = round(t0 / tao);
 
-
-const TT sigma = 1.0;
+const TT sigma = 0.0;
 
 // K calc
 const TT k1 = 0.1;
