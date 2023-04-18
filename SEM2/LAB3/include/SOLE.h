@@ -5,7 +5,7 @@
 #include "shared.h"
 
 const unsigned int lh = 4;
-const unsigned int lv = 2;
+const unsigned int lv = 4;
 
 const unsigned int leftBorder = -2;
 
