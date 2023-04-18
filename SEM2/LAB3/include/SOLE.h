@@ -4,17 +4,19 @@
 #include <cmath>
 #include "shared.h"
 
-const unsigned int lh = 1;
-const unsigned int lv = 1;
+const unsigned int lh = 4;
+const unsigned int lv = 2;
+
+const unsigned int leftBorder = -2;
 
 /* steps */
 // horizontal step
-const TT h = 0.1;
+const TT h = 0.01;
 // vertical step
 const TT tao = 0.01;
 /**/
-const int n = round(lh / h);
-const int k = round(lv / tao);
+const int n = round(lh / h) + 1;
+const int k = round(lv / tao) + 1;
 
 const TT a = 1.0;
 

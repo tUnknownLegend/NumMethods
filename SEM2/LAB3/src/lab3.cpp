@@ -5,45 +5,57 @@ using namespace std;
 
 TT f(const TT x) {
     // test 1
-    // return sin(M_PI * x);
+//     return sin(M_PI * x);
 
     // test 2
 //    return x - pow(x, 2);
 
     // test 13
-    return (pow(x, 2) + 1) / 2;
+//    return (pow(x, 2) + 1) / 2;
+
+    // task 1
+    return (x <= 1.0 / 3 && x >= -1.0 / 3 ? 1 : 0);
+}
+
+TT numDifferential(const TT x) {
+    return (f(x + h) - 2 * f(x) + f(x - h)) / pow(h, 2);
 }
 
 TT Fxx(const TT x) {
     // test 1
-    // return -M_PI * M_PI * sin(M_PI * x);
+//     return -M_PI * M_PI * sin(M_PI * x);
 
     // test 2
 //    return -2.0;
 
     // test 13
-    return 1.0;
+//    return 1.0;
+
+    // task 1
+//    return 0.0;
+
+    return numDifferential(x);
 }
 
 TT g(const TT x) {
-//    return 0.0;
+    return 0.0;
 
     // test 13
     return x * sin(2 * x);
 }
 
 TT phi(const TT t) {
-//    return 0.0;
+    return 0.0;
 
     // test 13
-//    return 0.5 + 3 * t;
+    return 0.5 + 3 * t;
 }
 
 TT rho(const TT t) {
-//    return 0.0;
+    return 0.0;
 
     // test 13
-//    return 1.0;
+    return 1.0;
 }
 
 TT preciseSolution(const int test,
@@ -75,7 +87,7 @@ vector<vector<TT>> approxInitialCondition() {
     vector<vector<TT>> result(k, vector<TT>(n, 0.0));
 
     for (unsigned int i = 0; i < n; ++i) {
-        result[0][i] = f(i * h);
+        result[0][i] = f((i + leftBorder) * h);
     }
 
     for (unsigned int j = 0; j < k; ++j) {
@@ -87,10 +99,10 @@ vector<vector<TT>> approxInitialCondition() {
 }
 
 void getFirstStep(vector<vector<TT>> &result) {
-    for (unsigned int i = 0; i < n; ++i) {
-        result[1][i] = result[0][i] + tao * g(i * h) +
+    for (unsigned int i = 1; i < n - 1; ++i) {
+        result[1][i] = result[0][i] + tao * g((i + leftBorder) * h) +
                        pow(a, 2) * pow(tao, 2) / 2 *
-                       Fxx(i * h);
+                       Fxx((i + leftBorder) * h);
     }
 }
 
@@ -120,7 +132,7 @@ TT getDiff(const vector<vector<TT>> &result) {
     for (unsigned int j = 0; j < k; ++j) {
         for (unsigned int i = 0; i < n; ++i) {
             diff = max(diff, abs(
-                    preciseSolution(2, i, j) -
+                    preciseSolution(1, (i + leftBorder), j) -
                     result[j][i]));
         }
     }

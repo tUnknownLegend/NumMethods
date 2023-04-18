@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[      5030,        141]
-NotebookOptionsPosition[      4304,        121]
-NotebookOutlinePosition[      4764,        138]
-CellTagsIndexPosition[      4721,        135]
+NotebookDataLength[     10231,        261]
+NotebookOptionsPosition[      9344,        240]
+NotebookOutlinePosition[      9769,        256]
+CellTagsIndexPosition[      9726,        253]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -24,104 +24,222 @@ Cell[BoxData[{
    RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"matr", "=", 
+  RowBox[{"test1", "=", 
+   RowBox[{"Partition", "[", 
+    RowBox[{
+     RowBox[{"Delete", "[", 
+      RowBox[{
+       RowBox[{"ReadList", "[", 
+        RowBox[{"\"\<./data/test1.txt\>\"", ",", " ", "Real"}], "]"}], ",", 
+       " ", "1"}], "]"}], ",", " ", "11"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"test2", " ", "=", " ", 
+   RowBox[{"Partition", "[", 
+    RowBox[{
+     RowBox[{"Delete", "[", 
+      RowBox[{
+       RowBox[{"ReadList", "[", 
+        RowBox[{"\"\<./data/test2.txt\>\"", ",", " ", "Real"}], "]"}], ",", 
+       " ", "1"}], "]"}], ",", " ", "11"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"var13", " ", "=", 
+   RowBox[{"Partition", "[", 
+    RowBox[{
+     RowBox[{"Delete", "[", 
+      RowBox[{
+       RowBox[{"ReadList", "[", 
+        RowBox[{"\"\<./data/var13.txt\>\"", ",", " ", "Real"}], "]"}], ",", 
+       " ", "1"}], "]"}], ",", " ", "11"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"task1", " ", "=", 
    RowBox[{"Partition", "[", 
     RowBox[{
      RowBox[{"Delete", "[", 
       RowBox[{
        RowBox[{"ReadList", "[", 
         RowBox[{"\"\<./outputMatrix.txt\>\"", ",", " ", "Real"}], "]"}], ",", 
-       " ", "1"}], "]"}], ",", " ", "10"}], "]"}]}], ";"}]}], "Input",
+       " ", "1"}], "]"}], ",", " ", "401"}], "]"}]}], ";"}]}], "Input",
  CellChangeTimes->{{3.8902204402213736`*^9, 3.890220441154815*^9}, {
-  3.890223487050716*^9, 3.8902235097184334`*^9}},
- CellLabel->"In[39]:=",ExpressionUUID->"0bbd41d9-3ac9-4000-ae91-a3e395ab9dca"],
+   3.890223487050716*^9, 3.8902235097184334`*^9}, {3.8902793821253757`*^9, 
+   3.8902793822414126`*^9}, {3.890280357776425*^9, 3.8902803629461126`*^9}, {
+   3.8902804251955757`*^9, 3.8902804464373565`*^9}, {3.890280502008405*^9, 
+   3.8902805143625298`*^9}, {3.8902821623739405`*^9, 3.890282176051715*^9}, {
+   3.8902823702477245`*^9, 3.8902823704483023`*^9}, {3.8902829433159695`*^9, 
+   3.890282950200856*^9}, 3.890283359560449*^9},
+ CellLabel->"In[1]:=",ExpressionUUID->"0bbd41d9-3ac9-4000-ae91-a3e395ab9dca"],
 
 Cell[BoxData[
- RowBox[{"(*", 
-  RowBox[{
-   RowBox[{"xArr", " ", "=", 
-    RowBox[{
-     RowBox[{"Range", "[", 
-      RowBox[{"1", ",", " ", 
-       RowBox[{"Length", "[", "matr", "]"}]}], "]"}], "/", " ", 
-     RowBox[{"Length", "[", "matr", "]"}]}]}], ";", "\[IndentingNewLine]", 
-   RowBox[{"data", "=", 
-    RowBox[{"Thread", "[", 
-     RowBox[{"{", 
-      RowBox[{"xArr", ",", " ", "matr"}], "}"}], "]"}]}], ";"}], 
-  "*)"}]], "Input",
- CellChangeTimes->{{3.8902235473832707`*^9, 3.8902235762388577`*^9}, {
-  3.890223630702838*^9, 3.8902236329773307`*^9}},
- CellLabel->"In[41]:=",ExpressionUUID->"12cc22b5-7d09-45b9-81b1-b478104819d3"],
+ RowBox[{
+  RowBox[{"Animate", "[", 
+   RowBox[{
+    RowBox[{"ListPlot", "[", 
+     RowBox[{
+      RowBox[{"test1", "[", 
+       RowBox[{"[", "a", "]"}], "]"}], ",", " ", 
+      RowBox[{"Joined", "\[Rule]", "True"}], ",", " ", 
+      RowBox[{"MeshStyle", "\[Rule]", 
+       RowBox[{"PointSize", "[", "Medium", "]"}]}], ",", " ", 
+      RowBox[{"Mesh", "\[Rule]", "All"}], ",", 
+      RowBox[{"PlotRange", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"0", ",", "12"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "1.2"}], ",", "1.2"}], "}"}]}], "}"}]}]}], "]"}], ",",
+     " ", 
+    RowBox[{"{", 
+     RowBox[{"a", ",", "1", ",", 
+      RowBox[{"Length", "[", "test1", "]"}], ",", " ", "1"}], "}"}]}], "]"}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.8902235147159605`*^9, 3.8902235180286684`*^9}, {
+   3.890223549942307*^9, 3.8902235505020204`*^9}, {3.8902236360406027`*^9, 
+   3.8902236756552424`*^9}, {3.890223706074404*^9, 3.8902237149171147`*^9}, {
+   3.8902790572340446`*^9, 3.8902791094781675`*^9}, {3.8902797961022925`*^9, 
+   3.8902799185470576`*^9}, {3.8902799582180223`*^9, 3.890280043547063*^9}, 
+   3.8902804338013506`*^9, 3.8902821393502293`*^9, 3.8902822030544434`*^9, {
+   3.8902826654935074`*^9, 3.890282677334434*^9}},
+ CellLabel->"In[6]:=",ExpressionUUID->"21c4fd40-0778-4737-8566-03ed632a8204"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Animate", "[", 
+   RowBox[{
+    RowBox[{"ListPlot", "[", 
+     RowBox[{
+      RowBox[{"test2", "[", 
+       RowBox[{"[", "a", "]"}], "]"}], ",", " ", 
+      RowBox[{"Joined", "\[Rule]", "True"}], ",", " ", 
+      RowBox[{"MeshStyle", "\[Rule]", 
+       RowBox[{"PointSize", "[", "Medium", "]"}]}], ",", " ", 
+      RowBox[{"Mesh", "\[Rule]", "All"}], ",", 
+      RowBox[{"PlotRange", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"0", ",", "12"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "0.5"}], ",", "0.5"}], "}"}]}], "}"}]}]}], "]"}], ",",
+     " ", 
+    RowBox[{"{", 
+     RowBox[{"a", ",", "1", ",", 
+      RowBox[{"Length", "[", "test2", "]"}], ",", " ", "1"}], "}"}]}], "]"}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.890280455837268*^9, 3.890280489919067*^9}, 
+   3.8902821459976735`*^9, 3.8902822001688023`*^9},
+ CellLabel->"In[7]:=",ExpressionUUID->"d03bff02-ed0a-4c2a-80fe-f37376bcdf19"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Animate", "[", 
+   RowBox[{
+    RowBox[{"ListPlot", "[", 
+     RowBox[{
+      RowBox[{"var13", "[", 
+       RowBox[{"[", "a", "]"}], "]"}], ",", " ", 
+      RowBox[{"Joined", "\[Rule]", "True"}], ",", " ", 
+      RowBox[{"MeshStyle", "\[Rule]", 
+       RowBox[{"PointSize", "[", "Medium", "]"}]}], ",", " ", 
+      RowBox[{"Mesh", "\[Rule]", "All"}], ",", 
+      RowBox[{"PlotRange", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"0", ",", "12"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"0", ",", "4"}], "}"}]}], "}"}]}]}], "]"}], ",", " ", 
+    RowBox[{"{", 
+     RowBox[{"a", ",", "1", ",", 
+      RowBox[{"Length", "[", "var13", "]"}], ",", " ", "1"}], "}"}]}], "]"}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.8902805210354958`*^9, 3.8902805219535093`*^9}, {
+   3.890280589000551*^9, 3.8902806409629655`*^9}, 3.8902821490687447`*^9, {
+   3.890282196189695*^9, 3.89028219696074*^9}},
+ CellLabel->"In[8]:=",ExpressionUUID->"18c12e24-59c3-47ad-9b68-d33da51c2485"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"ListPlot", "[", 
-  RowBox[{
-   RowBox[{"matr", "[", 
-    RowBox[{"[", "1", "]"}], "]"}], ",", " ", 
-   RowBox[{"Joined", "\[Rule]", "True"}], ",", " ", 
-   RowBox[{"MeshStyle", "\[Rule]", 
-    RowBox[{"PointSize", "[", "Medium", "]"}]}], ",", " ", 
-   RowBox[{"Mesh", "\[Rule]", "All"}]}], "]"}]], "Input",
- CellChangeTimes->{{3.8902235147159605`*^9, 3.8902235180286684`*^9}, {
-  3.890223549942307*^9, 3.8902235505020204`*^9}, {3.8902236360406027`*^9, 
-  3.8902236756552424`*^9}, {3.890223706074404*^9, 3.8902237149171147`*^9}},
- CellLabel->"In[42]:=",ExpressionUUID->"21c4fd40-0778-4737-8566-03ed632a8204"],
+ RowBox[{"gif", "=", 
+  RowBox[{"Animate", "[", 
+   RowBox[{
+    RowBox[{"ListPlot", "[", 
+     RowBox[{
+      RowBox[{"task1", "[", 
+       RowBox[{"[", "a", "]"}], "]"}], ",", " ", 
+      RowBox[{"Joined", "\[Rule]", "True"}], ",", " ", 
+      RowBox[{"MeshStyle", "\[Rule]", 
+       RowBox[{"PointSize", "[", "Medium", "]"}]}], ",", " ", 
+      RowBox[{"Mesh", "\[Rule]", "All"}], ",", 
+      RowBox[{"PlotRange", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"0", ",", "402"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "}"}]}]}], "]"}], ",", 
+    " ", 
+    RowBox[{"{", 
+     RowBox[{"a", ",", "1", ",", 
+      RowBox[{"Length", "[", "task1", "]"}], ",", " ", "1"}], "}"}]}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.8902821917620473`*^9, 3.890282244068391*^9}, {
+  3.8902823965042686`*^9, 3.890282435514699*^9}, {3.8902833678471518`*^9, 
+  3.89028337110225*^9}, {3.890283401218917*^9, 3.8902834540186563`*^9}, {
+  3.8908007498541718`*^9, 3.890800752841286*^9}},
+ CellLabel->"In[13]:=",ExpressionUUID->"d957c3df-adb3-499a-a4dc-749ebba2925d"],
 
 Cell[BoxData[
- GraphicsBox[{{}, GraphicsComplexBox[CompressedData["
-1:eJxTTMoPSmViYGAQAWIQDQEf7CH0AyjN4KAZ03/oqwaMz+GwpMCW6/piGF/A
-oRDELXgI5Ys4gFTH9D+C8iUcIPQTKF/G4TBI+tBTKF/BAagZaMJzKF/JAWyc
-7SsoX8UB1V2D130AVhtKfg==
-    "], {{{}, {}, 
-      {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
-       0.012833333333333334`], AbsoluteThickness[1.6], 
-       LineBox[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}]}}, {
-      {RGBColor[0.368417, 0.506779, 0.709798], PointSize[Medium], 
-       AbsoluteThickness[1.6], 
-       PointBox[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}]}, {}}}], {{}, {}}},
-  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
-  Axes->{True, True},
-  AxesLabel->{None, None},
-  AxesOrigin->{0., 0},
-  DisplayFunction->Identity,
-  Frame->{{False, False}, {False, False}},
-  FrameLabel->{{None, None}, {None, None}},
-  FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
-  GridLines->{None, None},
-  GridLinesStyle->Directive[
-    GrayLevel[0.5, 0.4]],
-  Method->{
-   "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
-    "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
-        Identity[
-         Part[#, 1]], 
-        Identity[
-         Part[#, 2]]}& ), "CopiedValueFunction" -> ({
-        Identity[
-         Part[#, 1]], 
-        Identity[
-         Part[#, 2]]}& )}},
-  PlotRange->{{0., 10.}, {0, 1.}},
-  PlotRangeClipping->True,
-  PlotRangePadding->{{
-     Scaled[0.02], 
-     Scaled[0.02]}, {
-     Scaled[0.02], 
-     Scaled[0.05]}},
-  Ticks->{Automatic, Automatic}]], "Output",
- CellChangeTimes->{
-  3.890223518825609*^9, {3.890223551887663*^9, 3.890223577356251*^9}, {
-   3.8902236405831275`*^9, 3.890223676541392*^9}, {3.890223707129718*^9, 
-   3.890223715533907*^9}},
- CellLabel->"Out[42]=",ExpressionUUID->"90f1495c-89ec-4e1c-89c6-03ca7acd6e8d"]
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`a$$ = 48, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{
+      Hold[$CellContext`a$$], 1, 201, 1}}, Typeset`size$$ = {
+    360., {105., 110.469861973966}}, Typeset`update$$ = 0, Typeset`initDone$$,
+     Typeset`skipInitDone$$ = True}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, "Variables" :> {$CellContext`a$$ = 1}, 
+      "ControllerVariables" :> {}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> ListPlot[
+        Part[$CellContext`task1, $CellContext`a$$], Joined -> True, MeshStyle -> 
+        PointSize[Medium], Mesh -> All, PlotRange -> {{0, 402}, {-1, 1}}], 
+      "Specifications" :> {{$CellContext`a$$, 1, 201, 1, 
+         AppearanceElements -> {
+          "ProgressSlider", "PlayPauseButton", "FasterSlowerButtons", 
+           "DirectionButton"}}}, 
+      "Options" :> {
+       ControlType -> Animator, AppearanceElements -> None, DefaultBaseStyle -> 
+        "Animate", DefaultLabelStyle -> "AnimateLabel", SynchronousUpdating -> 
+        True, ShrinkingDelay -> 10.}, "DefaultOptions" :> {}],
+     ImageSizeCache->{408., {140.63403330663076`, 146.36596669336924`}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Animate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{3.890800919684352*^9},
+ CellLabel->"Out[13]=",ExpressionUUID->"664fc82e-88e0-49a2-a84a-a4b9916c95f3"]
 }, Open  ]]
 },
-WindowSize->{583.7538461538461, 448.0615384615385},
-WindowMargins->{{234.83076923076922`, Automatic}, {
-  39.32307692307688, Automatic}},
+WindowSize->{1053.4153846153847`, 526.7076923076924},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
 FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
 StyleDefinitions->"Default.nb",
 ExpressionUUID->"9fe96129-c292-44a5-9309-343d3f5b7104"
@@ -137,11 +255,13 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 643, 16, 67, "Input",ExpressionUUID->"0bbd41d9-3ac9-4000-ae91-a3e395ab9dca"],
-Cell[1204, 38, 640, 16, 48, "Input",ExpressionUUID->"12cc22b5-7d09-45b9-81b1-b478104819d3"],
+Cell[558, 20, 2006, 51, 105, "Input",ExpressionUUID->"0bbd41d9-3ac9-4000-ae91-a3e395ab9dca"],
+Cell[2567, 73, 1408, 32, 48, "Input",ExpressionUUID->"21c4fd40-0778-4737-8566-03ed632a8204"],
+Cell[3978, 107, 1018, 27, 48, "Input",ExpressionUUID->"d03bff02-ed0a-4c2a-80fe-f37376bcdf19"],
+Cell[4999, 136, 1059, 26, 48, "Input",ExpressionUUID->"18c12e24-59c3-47ad-9b68-d33da51c2485"],
 Cell[CellGroupData[{
-Cell[1869, 58, 631, 12, 48, "Input",ExpressionUUID->"21c4fd40-0778-4737-8566-03ed632a8204"],
-Cell[2503, 72, 1785, 46, 266, "Output",ExpressionUUID->"90f1495c-89ec-4e1c-89c6-03ca7acd6e8d"]
+Cell[6083, 166, 1174, 29, 48, "Input",ExpressionUUID->"d957c3df-adb3-499a-a4dc-749ebba2925d"],
+Cell[7260, 197, 2068, 40, 328, "Output",ExpressionUUID->"664fc82e-88e0-49a2-a84a-a4b9916c95f3"]
 }, Open  ]]
 }
 ]
