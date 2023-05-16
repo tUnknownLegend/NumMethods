@@ -2,26 +2,26 @@
 
 // test 1
 double f(double x1, double x2) {
-    return (-4.0);
+    return (0.);
 }
 
 double G1(double x1) {
-    return (1.0 + pow(x1, 2));
+    return (1.);
 }
 
 
 double G2(double x1) {
-    return (pow(x1, 2));
+    return (1.);
 }
 
 
 double G3(double x2) {
-    return (0.0);
+    return (1.);
 }
 
 
 double G4(double x2) {
-    return (2.0);
+    return (1.);
 }
 
 
@@ -99,4 +99,26 @@ double G4(double x2) {
 //
 //double G4(double x2) {
 //    return (2 * pow((x2 - 1), 2));
+//}
+
+// side
+
+//
+//double G1(double x1) {
+//    return (0.0);
+//}
+//
+//
+//double G2(double x1) {
+//    return (0.0);
+//}
+//
+//
+//double G3(double x2) {
+//    return (0.0);
+//}
+//
+//
+//double G4(double x2) {
+//    return (0.0);
 //}

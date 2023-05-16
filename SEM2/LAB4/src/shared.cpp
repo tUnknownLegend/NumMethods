@@ -123,6 +123,22 @@ void outputPair(const std::vector<std::pair<TT, TT>> &matrix, const string &file
     outFile.close();
 }
 
+void outputTriple(const std::vector<triple> &matrix, const string &fileName) {
+    ofstream outFile(fileName);
+    if (!outFile.is_open()) {
+        cerr << "error // output.txt open\n";
+        return;
+    }
+
+    {
+        for (const auto &pair: matrix) {
+            outFile << std::setprecision(8) << pair.x
+                    << " " << pair.y << " " << pair.value << std::endl;
+        }
+    }
+    outFile.close();
+}
+
 void outputMatrix(const vector<vector<TT>> &matrix, const string &fileName) {
     ofstream outFile(fileName);
     if (!outFile.is_open()) {

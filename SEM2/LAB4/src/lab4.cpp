@@ -20,7 +20,7 @@ double L[2] = {1.0, 1.0};
 
 // test 3
 
-//std::vector<std::function <double (double)>> G = {G1,G2,G3,G4};
+//std::vector<std::function<double(double)>> G = {G1, G2, G3, G4};
 //std::vector<int> IndG = {0, 0, 1, 1};
 //double L[2] = {1.0, 1.0};
 
@@ -29,6 +29,7 @@ double L[2] = {1.0, 1.0};
 //std::vector<std::function<double(double)>> G = {G1, G2, G3, G4};
 //std::vector<int> IndG = {0, 0, 0, 0};
 //double L[2] = {2.0, 1.0};
+
 
 TT norm(const std::vector<std::vector<TT>> &a, const std::vector<std::vector<TT>> &b, TT h1, TT h2) {
     size_t N = a.size(), M = a[0].size();
@@ -42,16 +43,18 @@ TT norm(const std::vector<std::vector<TT>> &a, const std::vector<std::vector<TT>
 }
 
 unsigned int solve(const std::string &path, const std::array<size_t, 2> &N, TT tau, TT eps) {
+    // side task
+    //    const auto f = [tau](double x1, double x2) {
+    //        return (-1 + 2 * pow(M_PI, 2) / pow(L[0], 2)) * (exp(-tau) * sin(M_PI / L[0] * x1) * sin(M_PI / L[1] * x2));
+    //    };
+
     std::ofstream file;
     file.open(path);
     std::ofstream fnorms;
     fnorms.open("./output/norms.dat");
 
-    //const TT tau = 0.001;//sqrt(sqr(L[0])/sqr(N[0]) + sqr(L[1])/sqr(N[1])) / sqrt(1/sqr(L[0]) + 1/sqr(L[1])) / pi/100;
-
     const TT h1 = L[0] / N[0], h2 = L[1] / N[1];   //Шаги
     const TT hh1 = 1 / pow(h1, 2), hh2 = 1 / pow(h2, 2), tautau = 1 / tau; //Вспомогательные переменные
-    //std::cout << h1 << " " << h2 << " " << tau << "\n";
 
     std::vector<std::vector<TT>> phi(N[1] + 1, std::vector<TT>(N[0] + 1, 0));
     std::vector<std::vector<TT>> actual(N[1] + 1, std::vector<TT>(N[0] + 1, 0));
@@ -97,15 +100,13 @@ unsigned int solve(const std::string &path, const std::array<size_t, 2> &N, TT t
     std::vector<TT> norms = {100, 90};
     size_t k = 1;
     //Осноной расчет
-    while (norms[k] >= eps * (1 - norms[k] / norms[k - 1])) {
+    while (norms[k] >= eps) {
         //Идем по строкам
         for (size_t i = 1; i < N[1]; ++i) {
             if (IndG[2]) { //Условие 2 рода
                 B0[0] = (1 / h1 + h1 / 2);
                 C0[0] = -1 / h1;
                 F0[0] = (G[2](i * h2) + h1 / 2);
-                // B0[0] = - (2* tautau + hh1);
-                // F0[0] =  -(2* tautau * prev[i][0] + sch2(i,0,prev) + phi[i][0] + G[2](i*h2)/h1);
             } else { //Условие 1 рода
                 B0[0] = -1;
                 C0[0] = 0;
@@ -120,8 +121,6 @@ unsigned int solve(const std::string &path, const std::array<size_t, 2> &N, TT t
                 A0[N[0] - 1] = -1 / h1;
                 B0[N[0]] = 1 / h1 + h1 / 2;
                 F0[N[0]] = (G[3](i * h2) + h1 / 2);
-                // B0[N[0]] = - (2*tautau + hh1);
-                // F0[N[0]] = -(2*tautau * prev[i][N[0]] + sch2(i,N[0],prev) + phi[i][N[0]] + G[3](i*h2)/h1);
             } else { //Условие 1 рода
                 A0[N[0] - 1] = 0;
                 B0[N[0]] = -1;
@@ -138,8 +137,6 @@ unsigned int solve(const std::string &path, const std::array<size_t, 2> &N, TT t
                 B1[0] = -(1 / h2 + h2 / 2);
                 C1[0] = 1 / h2;
                 F1[0] = -(G[1](j * h1) + h2 / 2);
-                // B1[0] = - (2 * tautau + hh2);
-                // F1[0] = -(tautau * 2 * prev[0][j] + sch1(0,j,prev) + phi[0][j] + G[1](j*h1)/h2);
             } else { //Условие 1 рода
                 B1[0] = -1;
                 C1[0] = 0;
@@ -154,8 +151,6 @@ unsigned int solve(const std::string &path, const std::array<size_t, 2> &N, TT t
                 A1[N[1] - 1] = -1 / h2;
                 B1[N[1]] = 1 / h2 + h2 / 2;
                 F1[N[1]] = G[0](j * h1) + h2 / 2;
-                // B1[N[1]] = - (2 * tautau + hh2);
-                // F1[N[1]] = -(tautau * 2 * prev[N[1]][j] + sch1(N[1],j,prev) + phi[N[1]][j] + G[0](j*h1)/h2);
             } else { //Условие 1 рода
                 A1[N[1] - 1] = 0;
                 B1[N[1]] = -1;
@@ -166,40 +161,41 @@ unsigned int solve(const std::string &path, const std::array<size_t, 2> &N, TT t
             for (size_t i = 0; i < N[1] + 1; ++i) {
                 actual[i][j] = yj[i];
             }
-        };
-        //
+        }
+
         k++;
         norms.push_back(norm(actual, prev, h1, h2));
         prev = actual;
     }
 
-    // for(size_t i = 0; i < N[1] + 1; ++i)
-    // {
-    // 	std::cout << "| ";
-    // 	for(size_t j = 0; j < N[0] + 1; ++j)
-    // 		std::cout <<std::setw(7)<<std::setprecision(3)<< prev[i][j] << " ";
-    // 	std::cout << "|\n";
-    // }
-
-    // std::cout << "|\n";
-
-    // for(size_t i = 0; i < N[1] + 1; ++i)
-    // {
-    // 	std::cout << "| ";
-    // 	for(size_t j = 0; j < N[0] + 1; ++j)
-    // 		std::cout <<std::setw(7)<<std::setprecision(3)<< actual[i][j] << " ";
-    // 	std::cout << "|\n";
-    // }
-
     std::cout << "iters = " << k << "\n";
     std::cout << "finish = " << k * tau << "\n";
-    //std::cout << norms;
 
     for (size_t i = 0; i < N[1] + 1; ++i) {
         for (size_t j = 0; j < N[0] + 1; ++j)
             file << actual[i][j] << ' ';
         file << std::endl;
-    };
+    }
+
+    vector<triple> diff;
+    TT maxDiff = 0.0;
+    diff.reserve((N[0] + 1) * (N[1] + 1));
+    for (size_t i = 0; i < N[1]; ++i) {
+        for (size_t j = 1; j < N[0]; ++j) {
+//            const TT currentDiff = fabs(
+//                    actual[i][j] - (exp(-tau) * sin(M_PI / L[0] * h1 * i) * sin(M_PI / L[1] * h2 * j)));
+//            maxDiff = (i == 8 && j == 8) ? currentDiff : maxDiff;
+            diff.push_back(
+                    {i * h1,
+                     j * h2,
+                     fabs(actual[i][j] - 1)
+//                     fabs(actual[i][j] - pow(h1 * i, 2) - pow(h2 * j, 2))
+//                     currentDiff
+                    });
+        }
+    }
+
+    outputTriple(diff, "../output/diffGraph.txt");
 
     for (double norm: norms)
         fnorms << norm << " ";
@@ -208,6 +204,8 @@ unsigned int solve(const std::string &path, const std::array<size_t, 2> &N, TT t
     file << N[1] << " " << L[1] << std::endl;
     file.close();
     fnorms.close();
+
+//    std::cout << "max diff: " << maxDiff << "\n";
 
     return k;
 }

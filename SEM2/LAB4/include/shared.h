@@ -29,12 +29,18 @@
 
 #define TT double
 
+struct triple {
+    TT x;
+    TT y;
+    TT value;
+};
+
 //  This function generates a random TT in [i, j]
 double GetRandomDouble(double i, double j);
 
 void inputMatrix(std::vector<std::vector<TT>> &matrix);
 
-void outputMatrix(const std::vector<std::vector<TT>> &matrix, const std::string& fileName = OUT_FILE_MATRIX);
+void outputMatrix(const std::vector<std::vector<TT>> &matrix, const std::string &fileName = OUT_FILE_MATRIX);
 
 void outputMatrix(int amtOfVertices);
 
@@ -64,6 +70,8 @@ std::vector<std::vector<TT>> identityMatrix(int size, TT digit = 1.0);
 void outputOnTheScreenMatrix(const std::vector<std::vector<TT>> &matrix);
 
 void outputOnTheScreenVector(const std::vector<TT> &vector);
+
+void outputTriple(const std::vector<triple> &matrix, const std::string &fileName);
 
 void outputPair(const std::vector<std::pair<TT, TT>> &matrix, const std::string &fileName);
 
